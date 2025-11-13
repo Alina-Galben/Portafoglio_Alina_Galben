@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "icon": "Code",
+    "title": "Sviluppo Frontend Moderno",
+    "description": "Creazione di interfacce reattive, accessibili e performanti utilizzando React, Vite e TailwindCSS. Mi occupo di sviluppare UI eleganti e ottimizzate per tutti i dispositivi, con attenzione a design, performance e user experience. Ideale per siti aziendali, e-commerce, dashboard e web app moderne.",
+    "category": "frontend",
+    "cta": "Richiedi Preventivo"
+  },
+  {
+    "id": 2,
+    "icon": "Server",
+    "title": "Sviluppo Backend & API Personalizzate",
+    "description": "Costruzione di server sicuri e scalabili con Node.js ed Express, gestione database MongoDB o SQL, autenticazioni e API REST personalizzate. Perfetto per attività che necessitano di un'infrastruttura solida e integrabile con app o frontend esistenti.",
+    "category": "backend",
+    "cta": "Richiedi Preventivo"
+  },
+  {
+    "id": 3,
+    "icon": "Rocket",
+    "title": "Soluzioni Full-Stack Complete",
+    "description": "Offro un servizio end-to-end: dalla progettazione al deploy su Render o Vercel, con gestione completa di frontend, backend e database. Realizzo applicazioni web su misura, ottimizzate per prestazioni, sicurezza e scalabilità.",
+    "category": "fullstack",
+    "cta": "Richiedi Preventivo"
+  },
+  {
+    "id": 4,
+    "icon": "Bot",
+    "title": "Chatbot & Automazioni Intelligenti",
+    "description": "Sviluppo chatbot personalizzati per Telegram, Web, WhatsApp o API. Automazione di risposte, raccolta dati, prenotazioni o processi interni tramite Node.js, FastAPI o Dialogflow. Ideale per aziende che vogliono migliorare l'interazione con i clienti.",
+    "category": "automation",
+    "cta": "Richiedi Preventivo"
+  },
+  {
+    "id": 5,
+    "icon": "LayoutDashboard",
+    "title": "Applicazioni Web Interattive",
+    "description": "Creazione di app web dinamiche, single-page o multi-page, con logiche avanzate, autenticazioni e gestione real-time. Ideali per piattaforme educative, gestionali o community digitali.",
+    "category": "webapp",
+    "cta": "Richiedi Preventivo"
+  },
+  {
+    "id": 6,
+    "icon": "Handshake",
+    "title": "Consulenze Tecniche & Collaborazioni Digitali",
+    "description": "Supporto tecnico per startup e aziende: revisione del codice, ottimizzazione prestazioni, miglioramento UX/UI e strategie di crescita digitale. Collaboro su progetti esistenti o sviluppo soluzioni su misura.",
+    "category": "consulting",
+    "cta": "Richiedi Preventivo"
+  },
+  {
+    "id": 7,
+    "icon": "Brain",
+    "title": "Integrazione ChatGPT & Soluzioni AI",
+    "description": "Implementazione di ChatGPT e intelligenza artificiale all'interno di applicazioni o siti web. Creazione di assistenti virtuali, generatori di contenuti e sistemi di automazione intelligente personalizzati.",
+    "category": "ai",
+    "cta": "Richiedi Preventivo"
+  },
+  {
+    "id": 8,
+    "icon": "Search",
+    "title": "Ottimizzazione SEO Tecnica",
+    "description": "Analisi approfondita delle performance, struttura e accessibilità dei siti web sviluppati con React o altre tecnologie moderne. Interventi mirati per migliorare posizionamento, velocità e visibilità su motori di ricerca.",
+    "category": "seo",
+    "cta": "Richiedi Preventivo"
+  },
+  {
+    "id": 9,
+    "icon": "Palette",
+    "title": "UI/UX Design & Prototipazione",
+    "description": "Progettazione di esperienze utente intuitive e design coerenti con il brand, realizzati in Figma. Dalla wireframe al prototipo interattivo, seguendo le best practice di UX Design moderno.",
+    "category": "design",
+    "cta": "Richiedi Preventivo"
+  },
+  {
+    "id": 10,
+    "icon": "Wrench",
+    "title": "Manutenzione & Aggiornamenti Post-Deploy",
+    "description": "Monitoraggio, aggiornamenti e miglioramenti continui dopo il rilascio del progetto. Servizi di ottimizzazione, sicurezza, aggiornamento dipendenze e nuove funzionalità.",
+    "category": "maintenance",
+    "cta": "Richiedi Preventivo"
+  }
+]

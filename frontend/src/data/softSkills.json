@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "icon": "Lightbulb",
+    "title": "Problem Solving Creativo",
+    "description": "Capacità di trovare soluzioni tecniche e strategiche innovative con approccio analitico e visione d'insieme per risolvere sfide complesse.",
+    "category": "cognitive"
+  },
+  {
+    "id": 2,
+    "icon": "MessageSquare",
+    "title": "Comunicazione Chiara",
+    "description": "Abilità di spiegare concetti tecnici in modo semplice e collaborativo, facilitando la comprensione tra team e clienti.",
+    "category": "interpersonal"
+  },
+  {
+    "id": 3,
+    "icon": "Clock",
+    "title": "Autonomia e Responsabilità",
+    "description": "Gestione efficace del tempo, rispetto delle scadenze e capacità di lavorare in modo indipendente con risultati di qualità.",
+    "category": "personal"
+  },
+  {
+    "id": 4,
+    "icon": "BookOpen",
+    "title": "Adattabilità & Apprendimento Continuo",
+    "description": "Capacità di imparare nuove tecnologie rapidamente e adattarsi ai cambiamenti del settore con entusiasmo e flessibilità.",
+    "category": "personal"
+  },
+  {
+    "id": 5,
+    "icon": "Users",
+    "title": "Empatia e Team Collaboration",
+    "description": "Lavoro di squadra efficace, rispetto reciproco e comunicazione positiva per creare un ambiente collaborativo e produttivo.",
+    "category": "interpersonal"
+  },
+  {
+    "id": 6,
+    "icon": "Target",
+    "title": "Attenzione ai Dettagli e Qualità",
+    "description": "Cura meticolosa nella scrittura del codice, testing accurato e dedizione per offrire sempre la migliore esperienza utente.",
+    "category": "professional"
+  },
+  {
+    "id": 7,
+    "icon": "Sparkles",
+    "title": "Creatività & Innovazione",
+    "description": "Capacità di trasformare idee astratte in soluzioni digitali funzionali e creative, pensando fuori dagli schemi.",
+    "category": "creative"
+  },
+  {
+    "id": 8,
+    "icon": "Brain",
+    "title": "Pensiero Strategico",
+    "description": "Visione a lungo termine nello sviluppo di progetti, analisi approfondita dei requisiti e pianificazione architettonica.",
+    "category": "cognitive"
+  },
+  {
+    "id": 9,
+    "icon": "Heart",
+    "title": "Orientamento al Cliente",
+    "description": "Comprensione profonda delle esigenze degli utenti e dedizione nel creare soluzioni che risolvano realmente i loro problemi.",
+    "category": "interpersonal"
+  },
+  {
+    "id": 10,
+    "icon": "Zap",
+    "title": "Proattività e Iniziativa",
+    "description": "Capacità di anticipare le necessità, proporre miglioramenti e prendere iniziative per ottimizzare processi e risultati.",
+    "category": "professional"
+  }
+]

@@ -1,0 +1,43 @@
+{
+  "name": "portfolio-backend",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "dev:watch": "nodemon server.js",
+    "build": "echo \"No build step needed for plain JS\" && exit 0",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "health": "curl http://localhost:3020/health",
+    "logs:create": "mkdir -p logs"
+  },
+  "keywords": [
+    "portfolio",
+    "api",
+    "express",
+    "contentful"
+  ],
+  "author": "Alina Galben",
+  "license": "MIT",
+  "description": "Backend API for Alina Galben's portfolio website",
+  "dependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.9.2",
+    "contentful": "^11.8.9",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
+    "express-validator": "^7.3.0",
+    "helmet": "^8.1.0",
+    "joi": "^18.0.1",
+    "nodemon": "^3.1.10",
+    "resend": "^6.4.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "uuid": "^13.0.0",
+    "winston": "^3.18.3"
+  }
+}

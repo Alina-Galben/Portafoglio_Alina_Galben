@@ -1,0 +1,29 @@
+{
+  "name": "portafoglio-alina-galben",
+  "version": "1.0.0",
+  "description": "Portfolio completo di Alina Galben - Full Stack Developer",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "start cmd /k \"cd backend && npm run dev\" && timeout /t 3 && cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "clean:frontend": "cd frontend && rmdir /s /q node_modules dist",
+    "clean:backend": "cd backend && rmdir /s /q node_modules",
+    "clean": "npm run clean:frontend && npm run clean:backend",
+    "health": "cd backend && npm run health"
+  },
+  "keywords": [
+    "portfolio",
+    "fullstack",
+    "react",
+    "typescript",
+    "node",
+    "express",
+    "contentful"
+  ],
+  "author": "Alina Galben",
+  "license": "MIT"
+}

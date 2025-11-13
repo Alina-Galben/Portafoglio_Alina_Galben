@@ -1,0 +1,130 @@
+[
+  {
+    "id": 1,
+    "icon": "Code",
+    "title": "React & Frontend Development",
+    "description": "Sviluppo interfacce moderne e performanti con React, Vite e componenti riutilizzabili, curando UX e accessibilità.",
+    "category": "frontend",
+    "level": 5
+  },
+  {
+    "id": 2,
+    "icon": "Palette",
+    "title": "TailwindCSS & Responsive Design",
+    "description": "Creazione di layout responsive e design systems scalabili con TailwindCSS, Bootstrap e CSS3 moderno.",
+    "category": "frontend",
+    "level": 5
+  },
+  {
+    "id": 3,
+    "icon": "FileCode",
+    "title": "JavaScript ES6+ & TypeScript",
+    "description": "Programmazione avanzata con JavaScript moderno, TypeScript per type safety e best practices di sviluppo.",
+    "category": "frontend",
+    "level": 5
+  },
+  {
+    "id": 4,
+    "icon": "Zap",
+    "title": "Framer Motion & Animazioni",
+    "description": "Implementazione di animazioni fluide e micro-interazioni per migliorare l'esperienza utente.",
+    "category": "frontend",
+    "level": 4
+  },
+  {
+    "id": 5,
+    "icon": "Server",
+    "title": "Node.js & Express.js",
+    "description": "Sviluppo backend scalabile con Node.js, Express.js, middleware personalizzati e architetture RESTful.",
+    "category": "backend",
+    "level": 5
+  },
+  {
+    "id": 6,
+    "icon": "Globe",
+    "title": "REST API & Webhooks",
+    "description": "Progettazione e implementazione di API REST, gestione webhooks e integrazione con servizi esterni.",
+    "category": "backend",
+    "level": 5
+  },
+  {
+    "id": 7,
+    "icon": "Shield",
+    "title": "JWT Auth & Security",
+    "description": "Implementazione di sistemi di autenticazione sicura con JWT, middleware di sicurezza e validazione dati.",
+    "category": "backend",
+    "level": 4
+  },
+  {
+    "id": 8,
+    "icon": "Mail",
+    "title": "Email APIs & Communication",
+    "description": "Integrazione con Resend, SendGrid e Nodemailer per sistemi di email transazionali e notifiche.",
+    "category": "backend",
+    "level": 4
+  },
+  {
+    "id": 9,
+    "icon": "Database",
+    "title": "MongoDB & Mongoose",
+    "description": "Progettazione database NoSQL con MongoDB, schema design ottimizzato e query performance.",
+    "category": "database",
+    "level": 4
+  },
+  {
+    "id": 10,
+    "icon": "Table",
+    "title": "SQL & Database Design",
+    "description": "Conoscenza di SQL, PostgreSQL e principi di database relazionali per progetti strutturati.",
+    "category": "database",
+    "level": 3
+  },
+  {
+    "id": 11,
+    "icon": "GitBranch",
+    "title": "Git & Version Control",
+    "description": "Gestione avanzata del versioning con Git, GitHub, branching strategies e collaborative workflows.",
+    "category": "tools",
+    "level": 5
+  },
+  {
+    "id": 12,
+    "icon": "Workflow",
+    "title": "CI/CD & GitHub Actions",
+    "description": "Implementazione di pipeline di deployment automatico, testing e continuous integration.",
+    "category": "tools",
+    "level": 4
+  },
+  {
+    "id": 13,
+    "icon": "Cloud",
+    "title": "Cloud Deployment",
+    "description": "Deploy e hosting su Render, Vercel, Netlify e Railway con configurazioni ottimizzate per performance.",
+    "category": "cloud",
+    "level": 5
+  },
+  {
+    "id": 14,
+    "icon": "Layers",
+    "title": "CMS & Headless Solutions",
+    "description": "Integrazione con Contentful, gestione contenuti dinamici e architetture headless moderne.",
+    "category": "tools",
+    "level": 4
+  },
+  {
+    "id": 15,
+    "icon": "Figma",
+    "title": "Design Tools & Prototyping",
+    "description": "Progettazione UI/UX con Figma, Canva e Adobe XD, dalla wireframe al prototipo interattivo.",
+    "category": "design",
+    "level": 4
+  },
+  {
+    "id": 16,
+    "icon": "Code2",
+    "title": "HTML5 & CSS3 Avanzato",
+    "description": "Markup semantico, accessibilità web, CSS Grid, Flexbox e tecniche di styling moderne.",
+    "category": "frontend",
+    "level": 5
+  }
+]

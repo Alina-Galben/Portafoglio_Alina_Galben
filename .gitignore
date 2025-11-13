@@ -1,0 +1,13 @@
+.vscode/
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+logs/
+*.log
+build/
+.cache/
+pnpm-lock.yaml
+yarn.lock
+.turbo/

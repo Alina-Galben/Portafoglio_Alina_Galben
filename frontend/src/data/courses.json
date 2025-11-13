@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "icon": "BookOpen",
+    "title": "Corso Full Stack Web Developer — Epicode",
+    "institution": "Epicode School",
+    "duration": "Part-Time (2024–2025)",
+    "description": "Percorso completo per lo sviluppo web moderno: frontend, backend, database, API, React e Node.js. Include progetti reali e lavoro su GitHub.",
+    "certificate": "Diploma finale"
+  },
+  {
+    "id": 2,
+    "icon": "MonitorCheck",
+    "title": "Corso Autodidatta — UX/UI Design con Figma",
+    "institution": "Autoformazione",
+    "duration": "Ongoing",
+    "description": "Approfondimento sul design UI/UX e sulla prototipazione professionale con Figma e principi di design accessibile.",
+    "certificate": "Portfolio progetti"
+  },
+  {
+    "id": 3,
+    "icon": "Code",
+    "title": "JavaScript ES6+ & Moderne Tecnologie Frontend",
+    "institution": "Autoformazione",
+    "duration": "Continuous Learning",
+    "description": "Studio continuo delle ultime tecnologie JavaScript, framework moderni come React, Vue.js, e best practices per lo sviluppo frontend.",
+    "certificate": "Progetti GitHub"
+  },
+  {
+    "id": 4,
+    "icon": "Database",
+    "title": "Database Design & API Development",
+    "institution": "Autoformazione",
+    "duration": "2024-2025",
+    "description": "Approfondimento su progettazione database, ottimizzazione query, creazione API RESTful e integrazione con sistemi cloud.",
+    "certificate": "Progetti pratici"
+  }
+]

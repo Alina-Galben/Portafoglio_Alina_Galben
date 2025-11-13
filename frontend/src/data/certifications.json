@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "icon": "Award",
+    "title": "Modulo — VSCode, HTML5 & CSS",
+    "date": "29/01/2025",
+    "institution": "Epicode School",
+    "description": "Certificazione del primo modulo del corso Full Stack Web Developer. Competenze acquisite: utilizzo professionale di VSCode, strutturazione HTML semantica e design CSS responsive.",
+    "file": "/pdf/Certificatto - VSCode HTML CSS.pdf"
+  },
+  {
+    "id": 2,
+    "icon": "Award",
+    "title": "Modulo — Git, DOM & JavaScript",
+    "date": "21/03/2025",
+    "institution": "Epicode School",
+    "description": "Versionamento del codice con Git e GitHub, manipolazione del DOM, programmazione JavaScript ES6+, funzioni e gestione eventi.",
+    "file": "/pdf/Certificatto - GIT DOM JavaScript.pdf"
+  },
+  {
+    "id": 3,
+    "icon": "Award",
+    "title": "Modulo — CSS3 & Bootstrap",
+    "date": "27/01/2025",
+    "institution": "Epicode School",
+    "description": "Stilizzazione avanzata con CSS3, layout flessibili e componenti dinamici utilizzando Bootstrap 5 e tecniche di responsive design.",
+    "file": "/pdf/Certificatto - CSS3 e Bootstrap.pdf"
+  },
+  {
+    "id": 4,
+    "icon": "Award",
+    "title": "Modulo — API, ES6, AJAX & Async",
+    "date": "21/03/2025",
+    "institution": "Epicode School",
+    "description": "Integrazione di API esterne, gestione asincrona dei dati con fetch e async/await, ottimizzazione dei flussi client-server.",
+    "file": "/pdf/Certificatto - API ES6 AJAX Async.pdf"
+  },
+  {
+    "id": 5,
+    "icon": "Award",
+    "title": "Modulo — React Single Page Applications",
+    "date": "07/04/2025",
+    "institution": "Epicode School",
+    "description": "Sviluppo di applicazioni SPA con React: componenti, props, state management, React Router e architettura modulare.",
+    "file": "/pdf/Certificatto - React Single Page Applications.pdf"
+  },
+  {
+    "id": 6,
+    "icon": "Award",
+    "title": "Modulo — Node.js, Express & MongoDB",
+    "date": "18/06/2025",
+    "institution": "Epicode School",
+    "description": "Creazione di server e API REST con Node.js ed Express, integrazione database MongoDB e deploy cloud.",
+    "file": "/pdf/Certificatto - NodeJS Express MongoDB Claud.pdf"
+  },
+  {
+    "id": 7,
+    "icon": "GraduationCap",
+    "title": "Diploma Full Stack Web Developer",
+    "date": "24/06/2025",
+    "institution": "Epicode School",
+    "description": "Diploma finale del percorso Full Stack Web Developer. Competenze: HTML5, CSS3, JavaScript, React, Node.js, Express, MongoDB, API REST e Cloud Deployment.",
+    "file": "/pdf/Diploma.pdf"
+  }
+]

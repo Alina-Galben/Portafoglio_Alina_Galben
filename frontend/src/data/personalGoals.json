@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "title": "Primo Progetto Full-Stack",
+    "description": "Completato il primo progetto con React e Node.js",
+    "date": "2024-03-15",
+    "category": "sviluppo",
+    "achieved": true
+  },
+  {
+    "id": 2,
+    "title": "Certificazione HTML/CSS",
+    "description": "Ottenuta la prima certificazione Epicode",
+    "date": "2025-01-29",
+    "category": "formazione",
+    "achieved": true
+  },
+  {
+    "id": 3,
+    "title": "Padronanza React",
+    "description": "Sviluppati 5+ progetti con React e componenti avanzati",
+    "date": "2025-04-07",
+    "category": "competenza",
+    "achieved": true
+  },
+  {
+    "id": 4,
+    "title": "API REST Master",
+    "description": "Creazione autonoma di API complete con Node.js",
+    "date": "2025-06-18",
+    "category": "backend",
+    "achieved": true
+  },
+  {
+    "id": 5,
+    "title": "Portfolio Professionale",
+    "description": "Lancio del portfolio completo con CMS integration",
+    "date": "2025-11-02",
+    "category": "milestone",
+    "achieved": true
+  },
+  {
+    "id": 6,
+    "title": "Primo Cliente Freelance",
+    "description": "Obiettivo: acquisire il primo progetto cliente",
+    "date": "2025-12-31",
+    "category": "business",
+    "achieved": false
+  }
+]
