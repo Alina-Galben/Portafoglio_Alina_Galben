@@ -32,7 +32,7 @@ export const generalLimiter = rateLimit({
  */
 export const contactLimiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 3, // limit each IP to 3 contact form submissions per 10 minutes
+  max: process.env.NODE_ENV === 'development' ? 50 : 3, // 50 in dev, 3 in prod
   message: {
     error: 'Too many contact form submissions. Please wait before sending another message.',
     retryAfter: '10 minutes'

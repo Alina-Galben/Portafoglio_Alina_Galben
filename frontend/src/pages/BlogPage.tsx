@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import { toast } from 'react-hot-toast';
 import { useSSE } from '../hooks/useSSE';
 import SectionTitle from '../components/SectionTitle';
+import { getAllBlogPosts } from '../services/api';
 
 interface BlogPost {
   sys: {
@@ -45,12 +46,19 @@ const BlogPage: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Fetcher for SWR
-  const fetcher = (url: string) => fetch(url).then(res => res.json());
+  // Fetcher for SWR - uses the API service
+  const fetcher = async () => {
+    try {
+      return await getAllBlogPosts({ limit: 100 });
+    } catch (error) {
+      console.error('Error fetching blog posts:', error);
+      throw error;
+    }
+  };
 
-  // Fetch blog posts from Contentful
+  // Fetch blog posts from backend API
   const { data, error, isLoading, mutate } = useSWR(
-    '/api/contentful/entries?content_type=blogPost&fields.status=Published&order=-fields.date',
+    '/api/blog',
     fetcher,
     {
       refreshInterval: 60000,
@@ -71,7 +79,11 @@ const BlogPage: React.FC = () => {
     }
   });
 
-  const posts: BlogPost[] = data?.items || [];
+  const posts: BlogPost[] = useMemo(() => {
+    if (!data) return [];
+    // Handle both direct array response and { items: [...] } response
+    return Array.isArray(data) ? data : (data.items || []);
+  }, [data]);
 
   // Extract all unique tags
   const allTags = useMemo(() => {

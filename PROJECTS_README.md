@@ -46,10 +46,10 @@ La sezione **💼 Progetti** è ora completamente configurata e funzionante con:
 ### Variabili d'Ambiente:
 
 ```env
-VITE_CONTENTFUL_SPACE_ID=mavgsj5oj6sw
-VITE_CONTENTFUL_ACCESS_TOKEN=pgWGrl4fYiOq1oUmcNeQQZ_vrngY9zBnO9HBOOq9bOk
-VITE_CONTENTFUL_ENVIRONMENT=master
-VITE_API_BASE_URL=http://localhost:3001
+VITE_CONTENTFUL_SPACE_ID=
+VITE_CONTENTFUL_ACCESS_TOKEN=
+VITE_CONTENTFUL_ENVIRONMENT=
+VITE_API_BASE_URL=
 ```
 
 ## 🚀 Come Testare
@@ -67,7 +67,7 @@ VITE_API_BASE_URL=http://localhost:3001
    ```
 
 3. **Visita la Pagina Progetti:**
-   - URL: http://localhost:5173/projects
+   - URL: http://localhost:5174/projects
    - Verifica che i progetti vengano caricati da Contentful
    - Controlla la connessione SSE (icona verde)
 
@@ -77,7 +77,7 @@ Per testare gli aggiornamenti in tempo reale:
 
 1. **Configura Webhook su Contentful:**
    - Vai in Settings → Webhooks → Add Webhook
-   - URL: `http://localhost:3001/api/contentful-webhook`
+   - URL: `http://localhost:3020/api/contentful-webhook`
    - Eventi: Entry published, unpublished, deleted
    - Content type filter: project
 

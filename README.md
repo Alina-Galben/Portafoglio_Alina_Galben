@@ -71,7 +71,7 @@ Il progetto è **deployato su Vercel** (frontend) e collegato direttamente al re
 ## **💡 Come eseguire il progetto in locale**
 
 \# 1️⃣ Clona la repository  
-git clone https://github.com/Alina-Galben/Portafoglio\_Alina\_Galben.git
+git clone <https://github.com/Alina-Galben/Portafoglio_Alina_Galben.git>
 
 \# 2️⃣ Entra nella cartella  
 cd Portafoglio\_Alina\_Galben/frontend
@@ -82,7 +82,7 @@ npm install
 \# 4️⃣ Avvia l’applicazione  
 npm run dev
 
-L’app sarà disponibile su `http://localhost:5173`.
+L’app sarà disponibile su `http://localhost:5174`.
 
 ---
 
@@ -92,7 +92,7 @@ Puoi contattarmi direttamente tramite i miei canali ufficiali:
 
 * 🔗 **LinkedIn:** [linkedin.com/in/alina-galben](https://linkedin.com/in/alina-galben)
 
-* 📬 **Email:** ciao@alinagalben.com
+* 📬 **Email:** <ciao@alinagalben.com>
 
 * 💬 **WhatsApp:** [wa.me/393347600899](https://wa.me/393347600899)
 
@@ -122,6 +122,6 @@ Questo progetto è distribuito con licenza **MIT**, liberamente consultabile e r
 
 **👩‍💻 Alina Galben**  
  Full-Stack Web Developer • Creatrice di contenuti tech • Appassionata di innovazione, crypto e UX design  
- 📍 Italia — [alinagalben.com](https://chatgpt.com/c/690a1dde-4654-8333-a49b-d9601a33aec1#)
+ 📍 Italia — [alinagalben.com](https://alinagalben.com)
 
 ---

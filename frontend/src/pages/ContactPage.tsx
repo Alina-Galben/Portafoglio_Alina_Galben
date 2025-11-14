@@ -139,7 +139,7 @@ const ContactPage: React.FC = () => {
         <link rel="canonical" href="https://alinagalben.com/contact" />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-yellow-50 to-rose-50 pt-16">
+      <div className="min-h-screen bg-linear-to-br from-violet-50 via-yellow-50 to-rose-50 pt-16">
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
           <motion.div
             variants={containerVariants}
@@ -212,7 +212,7 @@ const ContactPage: React.FC = () => {
                         key={cta.id}
                         onClick={() => scrollToForm(cta.subject)}
                         className={`
-                          w-full p-8 bg-gradient-to-r ${cta.gradient} text-white rounded-xl
+                          w-full p-8 bg-linear-to-r ${cta.gradient} text-white rounded-xl
                           shadow-lg hover:shadow-xl transition-all duration-300 group
                           focus:ring-2 focus:ring-purple-500 focus:outline-none
                         `}
@@ -221,7 +221,7 @@ const ContactPage: React.FC = () => {
                         aria-label={`${cta.text}: ${cta.description}`}
                       >
                         <div className="flex items-center gap-6">
-                          <div className="flex-shrink-0">
+                          <div className="shrink-0">
                             <div className="w-14 h-14 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors">
                               <Icon className="w-7 h-7 text-white" />
                             </div>
@@ -234,7 +234,7 @@ const ContactPage: React.FC = () => {
                               {cta.description}
                             </div>
                           </div>
-                          <div className="flex-shrink-0">
+                          <div className="shrink-0">
                             <motion.div
                               className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center"
                               whileHover={{ rotate: 15 }}
@@ -255,7 +255,7 @@ const ContactPage: React.FC = () => {
                 className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200 shadow-sm"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center shrink-0">
                     <MessageCircle className="w-5 h-5 text-green-600" />
                   </div>
                   <div>
@@ -277,7 +277,7 @@ const ContactPage: React.FC = () => {
               variants={itemVariants}
               className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
             >
-              <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6">
+              <div className="bg-linear-to-r from-purple-600 to-pink-600 p-6">
                 <h2 className="text-2xl font-bold text-white mb-2">
                   ✉️ Scrivimi ora
                 </h2>

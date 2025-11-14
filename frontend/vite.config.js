@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    host: '127.0.0.1',
+    host: 'localhost',
     port: 5174,
     strictPort: true, // Forza Vite a usare solo questa porta
     proxy: {
