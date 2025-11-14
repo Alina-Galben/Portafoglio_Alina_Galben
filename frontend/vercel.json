@@ -1,31 +1,18 @@
 {
   "version": 2,
   "name": "alina-galben-portfolio",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/assets/(.*)",
-      "headers": {
-        "cache-control": "max-age=31536000, immutable"
-      }
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "max-age=31536000, immutable"
+        }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
@@ -44,10 +31,10 @@
       ]
     }
   ],
-  "env": {
-    "VITE_API_BASE_URL": "@vite_api_base_url",
-    "VITE_CONTENTFUL_SPACE_ID": "@vite_contentful_space_id",
-    "VITE_CONTENTFUL_ACCESS_TOKEN": "@vite_contentful_access_token",
-    "VITE_CONTENTFUL_ENVIRONMENT": "@vite_contentful_environment"
-  }
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
