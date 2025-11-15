@@ -45,6 +45,11 @@ const Navbar = () => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
+  // Ensure menu is closed on component mount
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, []);
+
   // Prevent scroll when mobile menu is open
   useEffect(() => {
     if (isMobile && isMenuOpen) {
