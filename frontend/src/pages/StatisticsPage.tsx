@@ -46,9 +46,13 @@ interface Project {
   sys: { id: string; createdAt: string; updatedAt: string };
   fields: {
     title: string;
-    slug: string;
-    status: string;
+    description: string;
     technologies?: string[];
+    coverImage?: any;
+    gitHubURL?: string;
+    liveDemoURL?: string;
+    featured?: boolean;
+    order?: number;
   };
 }
 
@@ -64,9 +68,9 @@ const StatisticsPage: React.FC = () => {
   // Fetcher functions for SWR
   const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-  // Fetch blog posts from Contentful
+  // Fetch blog posts
   const { data: blogPostsData, mutate: mutateBlogPosts } = useSWR(
-    '/api/contentful/entries?content_type=blogPost&fields.status=Published',
+    '/api/blog',
     fetcher,
     {
       refreshInterval: 60000,
@@ -74,9 +78,9 @@ const StatisticsPage: React.FC = () => {
     }
   );
 
-  // Fetch projects from Contentful
+  // Fetch projects
   const { data: projectsData, mutate: mutateProjects } = useSWR(
-    '/api/contentful/entries?content_type=project',
+    '/api/projects',
     fetcher,
     {
       refreshInterval: 60000,

@@ -40,10 +40,10 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menu on route change or when switching between mobile/desktop
+  // Close menu on route change
   useEffect(() => {
     setIsMenuOpen(false);
-  }, [location.pathname, isMobile]);
+  }, [location.pathname]);
 
   // Prevent scroll when mobile menu is open
   useEffect(() => {

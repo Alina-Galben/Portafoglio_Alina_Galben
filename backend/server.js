@@ -19,6 +19,7 @@ import { errorHandler, notFoundHandler, timeoutHandler } from './src/middleware/
 // Import routes
 import contactRoutes from './src/routes/contact.routes.js';
 import blogRoutes from './src/routes/blog.routes.js';
+import projectsRoutes from './src/routes/projects.routes.js';
 import webhookRoutes from './src/routes/webhook.routes.js';
 import eventsRoutes from './src/routes/events.routes.js';
 import healthRoutes from './src/routes/health.routes.js';
@@ -103,6 +104,7 @@ app.use((req, res, next) => {
 // API Routes
 app.use('/api/contact', contactRoutes);
 app.use('/api/blog', blogRoutes);
+app.use('/api/projects', projectsRoutes);
 app.use('/api/contentful-webhook', webhookRoutes);
 app.use('/api/events', eventsRoutes);
 app.use('/health', healthRoutes);
