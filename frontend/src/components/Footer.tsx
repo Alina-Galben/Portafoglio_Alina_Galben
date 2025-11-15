@@ -59,7 +59,7 @@ const Footer: React.FC = () => {
                 <motion.a
                   key={label}
                   href={href}
-                  target="_blank"
+                  target={label === 'Email' ? '_self' : '_blank'}
                   rel="noopener noreferrer"
                   className="p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
                   whileHover={{ scale: 1.1, rotate: 5 }}
