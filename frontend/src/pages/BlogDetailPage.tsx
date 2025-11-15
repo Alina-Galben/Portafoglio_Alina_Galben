@@ -25,6 +25,8 @@ import BlogLoadingSkeleton from '../components/BlogLoadingSkeleton';
 import ArticleContent from '../components/ArticleContent';
 import { getBlogPostBySlug, getAllBlogPosts } from '../services/api';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3020';
+
 interface BlogPost {
   sys: {
     id: string;
@@ -93,14 +95,16 @@ const BlogDetailPage: React.FC = () => {
   );
 
   // SSE for real-time updates
-  useSSE('/api/events', (event) => {
-    if (event.type === 'blog-updated') {
-      mutate();
-      setLastUpdate(new Date());
-      toast.success('✅ Articolo aggiornato', {
-        duration: 3000,
-        position: 'top-right'
-      });
+  useSSE(`${API_BASE_URL}/api/events`, {
+    onMessage: (event: any) => { 
+      if (event.type === 'blog-updated') {
+        mutate();
+        setLastUpdate(new Date());
+        toast.success('✅ Articolo aggiornato', {
+          duration: 3000,
+          position: 'top-right'
+        });
+      }
     }
   });
 

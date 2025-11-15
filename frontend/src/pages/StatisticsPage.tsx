@@ -31,6 +31,8 @@ import personalGoalsData from '../data/personalGoals.json';
 import servicesData from '../data/services.json';
 import technicalSkillsData from '../data/technicalSkills.json';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3020';
+
 interface BlogPost {
   sys: { id: string; createdAt: string; updatedAt: string };
   fields: {
@@ -66,7 +68,7 @@ const StatisticsPage: React.FC = () => {
   }, []);
 
   // Fetcher functions for SWR
-  const fetcher = (url: string) => fetch(url).then(res => res.json());
+  const fetcher = (url: string) => fetch(`${API_BASE_URL}${url}`).then(res => res.json());
 
   // Fetch blog posts
   const { data: blogPostsData, mutate: mutateBlogPosts } = useSWR(
@@ -89,15 +91,17 @@ const StatisticsPage: React.FC = () => {
   );
 
   // SSE for real-time updates
-  useSSE('/api/events', (event: any) => {
-    if (event.type === 'stats-updated') {
-      mutateBlogPosts();
-      mutateProjects();
-      setLastUpdate(new Date());
-      toast.success('✅ Statistiche aggiornate', {
-        duration: 3000,
-        position: 'top-right'
-      });
+  useSSE(`${API_BASE_URL}/api/events`, {
+    onMessage: (event: any) => {
+      if (event.type === 'stats-updated') {
+        mutateBlogPosts();
+        mutateProjects();
+        setLastUpdate(new Date());
+        toast.success('✅ Statistiche aggiornate', {
+          duration: 3000,
+          position: 'top-right'
+        });
+      }
     }
   });
 
@@ -159,7 +163,7 @@ const StatisticsPage: React.FC = () => {
     return months.map(month => {
       const monthStr = format(month, 'yyyy-MM');
       const articlesCount = blogPosts.filter(post => 
-        format(parseISO(post.fields.date), 'yyyy-MM') === monthStr
+        post.fields.date && format(parseISO(post.fields.date), 'yyyy-MM') === monthStr
       ).length;
       
       return {
