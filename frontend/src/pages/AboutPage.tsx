@@ -172,55 +172,58 @@ const AboutPage: React.FC = () => {
               {/* Mobile: Info Cards */}
               <div className="space-y-6">
                 
+                {/* === MODIFICA INIZIA QUI (Mobile) === */}
                 {/* Location */}
                 <motion.div 
                   variants={itemVariants}
-                  className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-shadow duration-300"
+                  className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-shadow duration-300"
                 >
-                  <div className="flex items-start gap-6">
-                    <div className="p-4 bg-violet-100 rounded-lg flex-shrink-0">
-                      <MapPin className="w-7 h-7 text-violet-600" />
+                  <div className="flex flex-col gap-6">
+                    {/* Header Card (Icona + Titolo) */}
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-violet-100 rounded-lg flex-shrink-0">
+                        <MapPin className="w-6 h-6 text-violet-600" />
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-800">Modalità di Lavoro</h4>
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-4">
-                        <Globe className="w-5 h-5 text-violet-600" />
-                        <h4 className="text-lg font-semibold text-gray-800">Modalità di Lavoro</h4>
-                      </div>
-                      
-                      <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-100 rounded-xl border border-green-200 mb-4">
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl">🌍</span>
-                          <div>
-                            <span className="text-green-700 text-lg font-semibold block">Collaborazioni Remote</span>
-                            <p className="text-base text-green-600 mt-1">Disponibile ovunque per progetti internazionali</p>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="border-t border-gray-200 pt-4">
-                        <div className="flex items-center gap-3 mb-4">
-                          <MapPin className="w-5 h-5 text-gray-600" />
-                          <span className="text-base font-medium text-gray-700">Basi operative locali:</span>
-                        </div>
+                    
+                    {/* Contenuto card (full width) */}
+                    <div className="w-full">
+                      {/* Lista unificata */}
+                      <div className="grid grid-cols-1 gap-3">
                         
-                        <div className="grid grid-cols-1 gap-3">
-                          <div className="flex items-center justify-between py-3 px-4 bg-violet-50 rounded-xl border border-violet-100">
-                            <span className="text-violet-700 text-base font-medium">🏖️ Catania</span>
-                            <span className="text-violet-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Sicilia</span>
-                          </div>
-                          <div className="flex items-center justify-between py-3 px-4 bg-rose-50 rounded-xl border border-rose-100">
-                            <span className="text-rose-700 text-base font-medium">🛶 Venezia</span>
-                            <span className="text-rose-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Veneto</span>
-                          </div>
-                          <div className="flex items-center justify-between py-3 px-4 bg-yellow-50 rounded-xl border border-yellow-100">
-                            <span className="text-yellow-700 text-base font-medium">🎓 Padova</span>
-                            <span className="text-yellow-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Veneto</span>
-                          </div>
+                        {/* 1. Remoto (Primaria) */}
+                        <div className="flex items-center justify-between py-3 px-4 bg-green-100 rounded-xl border border-green-200">
+                          <span className="text-green-800 text-base font-semibold">🌍 Collaborazioni Remote</span>
+                          <span className="text-green-700 text-sm bg-white px-3 py-1 rounded-full font-medium">Primaria</span>
+                        </div>
+
+                        {/* 2. Titolo Basi Locali */}
+                        <div className="flex items-center gap-2 pt-3">
+                          <MapPin className="w-4 h-4 text-gray-500" />
+                          <span className="text-sm font-medium text-gray-600">Basi operative locali:</span>
+                        </div>
+
+                        {/* 3. Basi Locali */}
+                        <div className="flex items-center justify-between py-3 px-4 bg-violet-50 rounded-xl border border-violet-100">
+                          <span className="text-violet-700 text-base font-medium">🏖️ Catania</span>
+                          <span className="text-violet-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Sicilia</span>
+                        </div>
+                        <div className="flex items-center justify-between py-3 px-4 bg-rose-50 rounded-xl border border-rose-100">
+                          <span className="text-rose-700 text-base font-medium">🛶 Venezia</span>
+                          <span className="text-rose-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Veneto</span>
+                        </div>
+                        <div className="flex items-center justify-between py-3 px-4 bg-yellow-50 rounded-xl border border-yellow-100">
+                          <span className="text-yellow-700 text-base font-medium">🎓 Padova</span>
+                          <span className="text-yellow-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Veneto</span>
                         </div>
                       </div>
+                      
                     </div>
                   </div>
                 </motion.div>
+                {/* === MODIFICA FINISCE QUI (Mobile) === */}
+
 
                 {/* Role */}
                 <motion.div 
@@ -391,6 +394,7 @@ const AboutPage: React.FC = () => {
               {/* Info Cards */}
               <div className="space-y-6">
                 
+                {/* === MODIFICA INIZIA QUI (Desktop) === */}
                 {/* Location */}
                 <motion.div 
                   variants={itemVariants}
@@ -400,46 +404,49 @@ const AboutPage: React.FC = () => {
                     <div className="p-4 bg-violet-100 rounded-lg flex-shrink-0">
                       <MapPin className="w-7 h-7 text-violet-600" />
                     </div>
+                    
+                    {/* Contenuto card destra */}
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-4">
+                      <div className="flex items-center gap-3 mb-6">
                         <Globe className="w-5 h-5 text-violet-600" />
                         <h4 className="text-lg font-semibold text-gray-800">Modalità di Lavoro</h4>
                       </div>
                       
-                      <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-100 rounded-xl border border-green-200 mb-4">
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl">🌍</span>
-                          <div>
-                            <span className="text-green-700 text-lg font-semibold block">Collaborazioni Remote</span>
-                            <p className="text-base text-green-600 mt-1">Disponibile ovunque per progetti internazionali</p>
-                          </div>
+                      {/* Lista unificata */}
+                      <div className="grid grid-cols-1 gap-3">
+                        
+                        {/* 1. Remoto (Primaria) */}
+                        <div className="flex items-center justify-between py-3 px-4 bg-green-100 rounded-xl border border-green-200">
+                          <span className="text-green-800 text-base font-semibold">🌍 Collaborazioni Remote</span>
+                          <span className="text-green-700 text-sm bg-white px-3 py-1 rounded-full font-medium">Primaria</span>
+                        </div>
+
+                        {/* 2. Titolo Basi Locali */}
+                        <div className="flex items-center gap-2 pt-3">
+                          <MapPin className="w-4 h-4 text-gray-500" />
+                          <span className="text-sm font-medium text-gray-600">Basi operative locali:</span>
+                        </div>
+
+                        {/* 3. Basi Locali */}
+                        <div className="flex items-center justify-between py-3 px-4 bg-violet-50 rounded-xl border border-violet-100">
+                          <span className="text-violet-700 text-base font-medium">🏖️ Catania</span>
+                          <span className="text-violet-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Sicilia</span>
+                        </div>
+                        <div className="flex items-center justify-between py-3 px-4 bg-rose-50 rounded-xl border border-rose-100">
+                          <span className="text-rose-700 text-base font-medium">🛶 Venezia</span>
+                          <span className="text-rose-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Veneto</span>
+                        </div>
+                        <div className="flex items-center justify-between py-3 px-4 bg-yellow-50 rounded-xl border border-yellow-100">
+                          <span className="text-yellow-700 text-base font-medium">🎓 Padova</span>
+                          <span className="text-yellow-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Veneto</span>
                         </div>
                       </div>
                       
-                      <div className="border-t border-gray-200 pt-4">
-                        <div className="flex items-center gap-3 mb-4">
-                          <MapPin className="w-5 h-5 text-gray-600" />
-                          <span className="text-base font-medium text-gray-700">Basi operative locali:</span>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 gap-3">
-                          <div className="flex items-center justify-between py-3 px-4 bg-violet-50 rounded-xl border border-violet-100">
-                            <span className="text-violet-700 text-base font-medium">🏖️ Catania</span>
-                            <span className="text-violet-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Sicilia</span>
-                          </div>
-                          <div className="flex items-center justify-between py-3 px-4 bg-rose-50 rounded-xl border border-rose-100">
-                            <span className="text-rose-700 text-base font-medium">🛶 Venezia</span>
-                            <span className="text-rose-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Veneto</span>
-                          </div>
-                          <div className="flex items-center justify-between py-3 px-4 bg-yellow-50 rounded-xl border border-yellow-100">
-                            <span className="text-yellow-700 text-base font-medium">🎓 Padova</span>
-                            <span className="text-yellow-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Veneto</span>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </motion.div>
+                {/* === MODIFICA FINISCE QUI (Desktop) === */}
+
 
                 {/* Role */}
                 <motion.div 
