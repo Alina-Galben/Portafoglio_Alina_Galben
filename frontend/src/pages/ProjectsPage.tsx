@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { RefreshCw, Calendar, Zap, AlertCircle, Wifi, WifiOff, Briefcase } from 'lucide-react';
@@ -34,6 +35,7 @@ interface ContentfulProject {
 }
 
 const ProjectsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<ContentfulProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -431,9 +433,7 @@ const ProjectsPage: React.FC = () => {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => {
-                    window.location.href = '/contact';
-                  }}
+                  onClick={() => navigate('/contact')}
                   className="bg-white text-purple-600 font-bold py-5 px-10 rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30 text-lg"
                 >
                   Iniziamo a collaborare

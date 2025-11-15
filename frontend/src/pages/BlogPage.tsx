@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
+import { useNavigate } from 'react-router-dom';
 import { Search, Filter, SortAsc, RefreshCw, Calendar, User, Hash, ArrowRight, X, ChevronDown } from 'lucide-react';
 import useSWR from 'swr';
 import { toast } from 'react-hot-toast';
@@ -37,6 +38,7 @@ interface BlogPost {
 }
 
 const BlogPage: React.FC = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'a-z' | 'z-a'>('newest');
@@ -390,19 +392,22 @@ const BlogPage: React.FC = () => {
                   variants={cardVariants}
                   whileHover={{ y: -8, transition: { duration: 0.2 } }}
                   className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-violet-200 transition-all duration-300 overflow-hidden group cursor-pointer"
-                  onClick={() => window.location.href = `/blog/${post.fields.slug}`}
+                  onClick={() => navigate(`/blog/${post.fields.slug}`)}
                 >
-                  {/* Cover Image */}
-                  {post.fields.coverImage && (
-                    <div className="relative h-48 overflow-hidden">
+                  <div className="relative h-48 overflow-hidden">
+                    {post.fields.coverImage ? (
                       <img
                         src={post.fields.coverImage.fields.file.url}
                         alt={post.fields.coverImage.fields.title || post.fields.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
-                      <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                  )}
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-violet-100 to-purple-200 flex items-center justify-center">
+                        <Hash className="w-10 h-10 text-violet-400 opacity-50" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
 
                   {/* Content */}
                   <div className="p-6">

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Code, Heart, ArrowRight } from 'lucide-react';
@@ -25,6 +26,7 @@ interface SoftSkill {
 }
 
 const SkillsPage: React.FC = () => {
+  const navigate = useNavigate();
   const technicalSkills: TechnicalSkill[] = technicalSkillsData;
   const softSkills: SoftSkill[] = softSkillsData;
 
@@ -89,7 +91,7 @@ const SkillsPage: React.FC = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: [0.25, 0.1, 0.25, 1]
       }
     }
   };
@@ -268,12 +270,11 @@ const SkillsPage: React.FC = () => {
             <p className="text-xl md:text-xl opacity-90 mb-10 max-w-2xl mx-auto">
               Esplora i miei progetti per vedere come applico queste competenze nella creazione di soluzioni web innovative.
             </p>
+            
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                window.location.href = '/progetti';
-              }}
+              onClick={() => navigate('/projects')}
               className="inline-flex items-center bg-white text-purple-600 font-bold py-5 px-10 rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30 text-lg"
             >
               Esplora i miei progetti

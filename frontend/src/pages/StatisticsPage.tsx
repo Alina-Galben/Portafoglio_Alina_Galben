@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { format, parseISO, startOfMonth, eachMonthOfInterval, subMonths } from 'date-fns';
@@ -59,6 +60,7 @@ interface Project {
 }
 
 const StatisticsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [timeFilter, setTimeFilter] = useState<'7d' | '1m' | '6m' | 'all'>('all');
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
@@ -259,7 +261,7 @@ const StatisticsPage: React.FC = () => {
                 value={stats.articles}
                 description="Articoli tecnici su blog e piattaforme"
                 gradient="from-blue-500 to-cyan-500"
-                onClick={() => window.location.href = '/blog'}
+                onClick={() => navigate('/blog')}
               />
             </motion.div>
 
@@ -270,7 +272,7 @@ const StatisticsPage: React.FC = () => {
                 value={stats.projects}
                 description="Progetti full-stack e applicazioni web"
                 gradient="from-violet-500 to-purple-600"
-                onClick={() => window.location.href = '/projects'}
+                onClick={() => navigate('/projects')}
               />
             </motion.div>
 
@@ -281,7 +283,7 @@ const StatisticsPage: React.FC = () => {
                 value={stats.certifications}
                 description="Certificati professionali conseguiti"
                 gradient="from-green-500 to-emerald-600"
-                onClick={() => window.location.href = '/certifications'}
+                onClick={() => navigate('/certifications')}
               />
             </motion.div>
 
@@ -322,7 +324,7 @@ const StatisticsPage: React.FC = () => {
                 value={stats.services}
                 description="Servizi professionali disponibili"
                 gradient="from-yellow-500 to-orange-500"
-                onClick={() => window.location.href = '/servizi'}
+                onClick={() => navigate('/servizi')}
               />
             </motion.div>
 
@@ -333,7 +335,7 @@ const StatisticsPage: React.FC = () => {
                 value={stats.skills}
                 description="Tecnologie e framework padroneggiati"
                 gradient="from-indigo-500 to-blue-500"
-                onClick={() => window.location.href = '/competenze'}
+                onClick={() => navigate('/competenze')}
               />
             </motion.div>
           </motion.div>
@@ -399,7 +401,7 @@ const StatisticsPage: React.FC = () => {
                     label={tag.name}
                     count={tag.value}
                     color={['violet', 'blue', 'green', 'yellow', 'red', 'purple', 'pink', 'orange'][index % 8] as any}
-                    onClick={() => window.location.href = `/blog?tag=${encodeURIComponent(tag.name)}`}
+                    onClick={() => navigate(`/blog?tag=${encodeURIComponent(tag.name)}`)}
                   />
                 ))}
               </div>
@@ -459,7 +461,7 @@ const StatisticsPage: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => window.location.href = '/projects'}
+                onClick={() => navigate('/projects')}
                 className="inline-flex items-center bg-white text-violet-600 font-bold py-4 px-8 rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30"
               >
                 Esplora i progetti
@@ -468,7 +470,7 @@ const StatisticsPage: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => window.location.href = '/contact'}
+                onClick={() => navigate('/contact')}
                 className="inline-flex items-center bg-transparent border-2 border-white text-white font-bold py-4 px-8 rounded-xl hover:bg-white hover:text-violet-600 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30"
               >
                 Parliamone insieme

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
 import { Calendar, Building, ExternalLink, Mail, FileText } from 'lucide-react';
@@ -21,6 +22,8 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
   description,
   file
 }) => {
+  const navigate = useNavigate();
+
   // Dynamic icon loading with fallback
   const IconComponent = (LucideIcons as any)[icon] || LucideIcons.Award;
 
@@ -29,13 +32,8 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
   };
 
   const handleRequestByEmail = () => {
-    // Scroll to contact section or navigate to contact page
-    const contactSection = document.querySelector('#contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.location.href = '/contact';
-    }
+    // Naviga direttamente alla pagina contatti in modo veloce (SPA)
+    navigate('/contact');
   };
 
   // Category-based gradient colors
@@ -59,7 +57,7 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
       className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-violet-200 transition-all duration-300 overflow-hidden group"
     >
       {/* Header with Icon */}
-      <div className={`bg-gradient-to-r ${getCategoryGradient()} p-6 text-white`}>
+      <div className={`bg-linear-to-r ${getCategoryGradient()} p-6 text-white`}>
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-4">
             <motion.div
@@ -97,7 +95,7 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleViewPDF}
-            className={`flex-1 inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r ${getCategoryGradient()} text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-violet-500/30`}
+            className={`flex-1 inline-flex items-center justify-center px-4 py-3 bg-linear-to-r ${getCategoryGradient()} text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-violet-500/30`}
           >
             <FileText className="w-5 h-5 mr-2" />
             📄 Visualizza PDF
@@ -116,7 +114,7 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
       </div>
 
       {/* Hover Effect Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-r from-violet-500/5 to-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
     </motion.div>
   );
 };

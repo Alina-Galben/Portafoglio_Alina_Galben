@@ -246,7 +246,7 @@ const BlogDetailPage: React.FC = () => {
       <div className="min-h-screen bg-gray-50 pt-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb & Back Button */}
-          <div className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
+          <div className="flex items-center space-x-2 text-sm text-gray-500 mb-8 pt-8 sm:pt-0">
             <button
               onClick={() => navigate('/blog')}
               className="flex items-center space-x-1 hover:text-violet-600 transition-colors"
@@ -258,6 +258,8 @@ const BlogDetailPage: React.FC = () => {
             <span className="text-gray-900 font-medium truncate">{post.fields.title}</span>
           </div>
 
+          {/* === MODIFICA INIZIA QUI === */}
+          
           {/* Article Header */}
           <header className="mb-8">
             {/* Cover Image */}
@@ -271,10 +273,22 @@ const BlogDetailPage: React.FC = () => {
               />
             )}
 
-            {/* Title */}
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              {post.fields.title}
-            </h1>
+            {/* --- NUOVO LAYOUT: Titolo e Bottone Condividi affiancati --- */}
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+              {/* Title */}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight flex-1">
+                {post.fields.title}
+              </h1>
+              {/* Share Button */}
+              <button
+                onClick={handleShare}
+                disabled={isSharing}
+                className="flex-shrink-0 flex items-center space-x-2 px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors disabled:opacity-50 w-full sm:w-auto justify-center"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>{isSharing ? 'Condivisione...' : 'Condividi'}</span>
+              </button>
+            </div>
 
             {/* Description */}
             {post.fields.description && (
@@ -283,54 +297,64 @@ const BlogDetailPage: React.FC = () => {
               </p>
             )}
 
-            {/* Meta Information */}
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-6">
-              <div className="flex items-center space-x-2">
-                <Calendar className="w-4 h-4" />
-                <span>{new Date(post.fields.date).toLocaleDateString('it-IT', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}</span>
-              </div>
-              
-              {post.fields.author && (
-                <div className="flex items-center space-x-2">
-                  <User className="w-4 h-4" />
-                  <span>{post.fields.author}</span>
+            {/* --- NUOVO BOX: Metadati e Tag raggruppati --- */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-8">
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
+                {/* Meta Information */}
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500">
+                  <div className="flex items-center space-x-2">
+                    <Calendar className="w-4 h-4" />
+                    <span>{new Date(post.fields.date).toLocaleDateString('it-IT', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}</span>
+                  </div>
+                  {post.fields.author && (
+                    <div className="flex items-center space-x-2">
+                      <User className="w-4 h-4" />
+                      <span>{post.fields.author}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4" />
+                    <span>{formatReadingTime(post.fields.readingTime)}</span>
+                  </div>
+                  {post.fields.views && (
+                    <div className="flex items-center space-x-2">
+                      <Eye className="w-4 h-4" />
+                      <span>{post.fields.views.toLocaleString()} visualizzazioni</span>
+                    </div>
+                  )}
                 </div>
-              )}
-              
-              <div className="flex items-center space-x-2">
-                <Clock className="w-4 h-4" />
-                <span>{formatReadingTime(post.fields.readingTime)}</span>
+                
+                {/* Tags */}
+                {post.fields.tags && post.fields.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {post.fields.tags.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-violet-100 text-violet-700"
+                      >
+                        <Hash className="w-3 h-3 mr-1" />
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
-              
-              {post.fields.views && (
-                <div className="flex items-center space-x-2">
-                  <Eye className="w-4 h-4" />
-                  <span>{post.fields.views.toLocaleString()} visualizzazioni</span>
-                </div>
-              )}
             </div>
 
-            {/* Tags */}
-            {post.fields.tags && post.fields.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-6">
-                {post.fields.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-violet-100 text-violet-700"
-                  >
-                    <Hash className="w-3 h-3 mr-1" />
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
+          </header>
+          {/* === MODIFICA FINISCE QUI === */}
 
-            {/* Action Buttons */}
-            <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+
+          {/* Article Content */}
+          <article className={`bg-white rounded-xl shadow-sm border border-gray-100 mb-12 ${isMobile ? 'p-4' : 'p-8'}`}>
+            <ArticleContent content={post.fields.content} isMobile={isMobile} />
+
+            {/* --- NUOVA POSIZIONE: Info di aggiornamento --- */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="flex items-center space-x-3">
                 <RefreshCw className="w-4 h-4 text-green-600" />
                 <span className="text-sm text-gray-600">
@@ -343,21 +367,8 @@ const BlogDetailPage: React.FC = () => {
                   Aggiorna 🔄
                 </button>
               </div>
-              
-              <button
-                onClick={handleShare}
-                disabled={isSharing}
-                className="flex items-center space-x-2 px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors disabled:opacity-50"
-              >
-                <Share2 className="w-4 h-4" />
-                <span>{isSharing ? 'Condivisione...' : 'Condividi'}</span>
-              </button>
             </div>
-          </header>
-
-          {/* Article Content */}
-          <article className={`bg-white rounded-xl shadow-sm border border-gray-100 mb-12 ${isMobile ? 'p-4' : 'p-8'}`}>
-            <ArticleContent content={post.fields.content} isMobile={isMobile} />
+            
           </article>
 
           {/* Related Articles */}

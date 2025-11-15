@@ -1,4 +1,6 @@
 import React from 'react';
+// --- MODIFICA 1: Importa useNavigate ---
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as Icons from 'lucide-react';
 
@@ -19,6 +21,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   category, 
   cta 
 }) => {
+  // --- MODIFICA 2: Inizializza useNavigate ---
+  const navigate = useNavigate();
+  
   // Dinamicamente importa l'icona da Lucide React
   const IconComponent = (Icons as any)[icon] || Icons.Code;
 
@@ -39,11 +44,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     return gradients[category] || 'from-purple-500 to-pink-500';
   };
 
-  // Scroll smooth alla sezione contatti
+  // --- MODIFICA 3: Usa useNavigate invece di window.location.href ---
   const handleCTAClick = (e: React.MouseEvent) => {
     e.preventDefault();
     // Naviga alla pagina contatti passando il servizio come parametro
-    window.location.href = `/contact?service=${encodeURIComponent(title)}`;
+    navigate(`/contact?service=${encodeURIComponent(title)}`);
   };
 
   return (

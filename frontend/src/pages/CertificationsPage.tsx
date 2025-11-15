@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Award, BookOpen, ArrowRight, Mail, Download } from 'lucide-react';
@@ -29,6 +30,7 @@ interface Course {
 }
 
 const CertificationsPage: React.FC = () => {
+  const navigate = useNavigate();
   const certifications: Certification[] = certificationsData;
   const courses: Course[] = coursesData;
 
@@ -75,19 +77,14 @@ const CertificationsPage: React.FC = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
+        ease: [0.25, 0.46, 0.45, 0.94]
       }
     }
   };
 
   const handleRequestAllCertificates = () => {
-    // Scroll to contact section or navigate to contact page
-    const contactSection = document.querySelector('#contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.location.href = '/contact';
-    }
+    // Naviga direttamente alla pagina contatti
+    navigate('/contact');
   };
 
   return (
@@ -246,7 +243,7 @@ const CertificationsPage: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => window.location.href = '/progetti'}
+                onClick={() => navigate('/projects')}
                 className="inline-flex items-center bg-white text-violet-600 font-bold py-5 px-10 rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30 text-lg"
               >
                 Vedi i miei progetti
@@ -255,7 +252,7 @@ const CertificationsPage: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => window.location.href = '/contact'}
+                onClick={() => navigate('/contact')}
                 className="inline-flex items-center bg-transparent border-2 border-white text-white font-bold py-5 px-10 rounded-xl hover:bg-white hover:text-violet-600 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30 text-lg"
               >
                 <Mail className="mr-3 w-6 h-6" />

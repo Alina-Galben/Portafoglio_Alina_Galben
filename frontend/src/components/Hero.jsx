@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { 
@@ -19,12 +20,14 @@ import CollaborationModal from './CollaborationModal';
 import QuickQuoteModal from './QuickQuoteModal';
 
 const Hero = () => {
+  const navigate = useNavigate();
+  
   const [isCollaborationModalOpen, setIsCollaborationModalOpen] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [typewriterText, setTypewriterText] = useState('');
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
 
-  // Handle email click
+  // Handle email click (Questo è corretto, non va modificato!)
   const handleEmailClick = (e) => {
     e.preventDefault();
     const email = 'ciao@alinagalben.com';
@@ -266,15 +269,15 @@ const Hero = () => {
                 Collabora con me
               </motion.button>
 
-              <motion.a
-                href="/projects"
+              <motion.button
+                onClick={() => navigate('/projects')}
                 className="inline-flex items-center px-8 py-4 bg-linear-to-r from-yellow-500 to-orange-500 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <FolderOpen className="w-5 h-5 mr-2" />
                 Guarda i miei progetti
-              </motion.a>
+              </motion.button>
             </motion.div>
 
             {/* Social Links */}
@@ -293,7 +296,7 @@ const Hero = () => {
                   key={label}
                   href={href}
                   onClick={label === 'Email' ? handleEmailClick : undefined}
-                  target={href.startsWith('http') ? '_blank' : '_self'}
+                  target={href.startsWith('http') || label === 'CV Download' ? '_blank' : '_self'} // Apri CV in new tab
                   rel={href.startsWith('http') ? 'noopener noreferrer' : ''}
                   className="p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-md hover:shadow-lg transition-all duration-300 text-gray-600 hover:text-violet-600"
                   whileHover={{ scale: 1.1, rotate: 5 }}
@@ -315,7 +318,7 @@ const Hero = () => {
             <div className="relative">
               {/* Avatar */}
               <motion.div
-                className="relative w-96 h-96 md:w-[420px] md:h-[420px]"
+                className="relative w-72 h-72 md:w-96 md:h-96 lg:w-[420px] lg:h-[420px]"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1, ease: "easeOut" }}

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import ServiceCard from '../components/ServiceCard';
@@ -15,6 +16,7 @@ interface Service {
 }
 
 const ServicesPage: React.FC = () => {
+  const navigate = useNavigate();
   const services: Service[] = servicesData;
 
   // Scroll to top on page load
@@ -146,9 +148,7 @@ const ServicesPage: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                window.location.href = '/contact';
-              }}
+              onClick={() => navigate('/contact')}
               className="bg-white text-purple-600 font-bold py-4 px-8 rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30"
             >
               Inizia il tuo progetto

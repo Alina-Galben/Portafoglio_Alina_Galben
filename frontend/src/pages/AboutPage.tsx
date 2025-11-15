@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, Briefcase, Globe, Heart, Lightbulb, Settings, Monitor, Mail, ArrowRight } from 'lucide-react';
 
 const AboutPage: React.FC = () => {
+  const navigate = useNavigate();
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -26,14 +29,8 @@ const AboutPage: React.FC = () => {
   };
 
   const handleContactClick = () => {
-    // Scroll to contact section
-    const contactSection = document.querySelector('#contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      // If contact section doesn't exist, navigate to contact page
-      window.location.href = '/contact';
-    }
+    // Naviga direttamente alla pagina contatti (più veloce e pulito)
+    navigate('/contact');
   };
 
   return (
