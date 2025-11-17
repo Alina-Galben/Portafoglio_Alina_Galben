@@ -1,3 +1,4 @@
+import React from 'react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';

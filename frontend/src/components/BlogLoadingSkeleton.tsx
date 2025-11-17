@@ -1,3 +1,4 @@
+import React from 'react';
 
 const BlogLoadingSkeleton: React.FC = () => {
   return (

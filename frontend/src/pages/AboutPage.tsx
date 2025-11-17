@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, Briefcase, Globe, Heart, Lightbulb, Settings, Monitor, Mail, ArrowRight } from 'lucide-react';

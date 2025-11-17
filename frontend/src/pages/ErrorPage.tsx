@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, useRouteError } from 'react-router-dom';
 import { Home, AlertCircle } from 'lucide-react';
 
