@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
@@ -44,11 +44,6 @@ const BlogPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'a-z' | 'z-a'>('newest');
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isTagsDropdownOpen, setIsTagsDropdownOpen] = useState(false);
-
-  // Scroll to top on page load
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   // Fetcher for SWR - uses the API service
   const fetcher = async () => {

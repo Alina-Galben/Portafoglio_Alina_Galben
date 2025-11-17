@@ -1,4 +1,3 @@
-import React from 'react';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';
 
 const SimpleMobilePage = ({ title, children, className = "" }) => {

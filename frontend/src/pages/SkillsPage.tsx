@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
@@ -31,10 +30,7 @@ const SkillsPage: React.FC = () => {
   const softSkills: SoftSkill[] = softSkillsData;
 
   // Scroll to top on page load
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
+  
   // Raggruppa le skills tecniche per categoria
   const groupedTechnicalSkills = technicalSkills.reduce((acc, skill) => {
     if (!acc[skill.category]) {

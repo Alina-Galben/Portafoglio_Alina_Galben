@@ -82,7 +82,7 @@ Per testare gli aggiornamenti in tempo reale:
    - Content type filter: project
 
 2. **Pubblica un Progetto:**
-   - Modifica o pubblica un progetto su Contentful
+   -  o pubblica un progetto su Contentful
    - La pagina dovrebbe aggiornarsi automaticamente
    - Apparirà la notifica "Progetti aggiornati ✅"
 

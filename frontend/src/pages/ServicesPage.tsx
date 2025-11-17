@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
@@ -19,10 +18,6 @@ const ServicesPage: React.FC = () => {
   const navigate = useNavigate();
   const services: Service[] = servicesData;
 
-  // Scroll to top on page load
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   // Animation variants
   const containerVariants = {

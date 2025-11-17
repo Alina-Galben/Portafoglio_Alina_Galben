@@ -27,7 +27,7 @@ const Hero = () => {
   const [typewriterText, setTypewriterText] = useState('');
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
 
-  // Handle email click (Questo è corretto, non va modificato!)
+  // Handle email click
   const handleEmailClick = (e) => {
     e.preventDefault();
     const email = 'ciao@alinagalben.com';

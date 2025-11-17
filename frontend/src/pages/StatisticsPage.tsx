@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
@@ -63,11 +63,6 @@ const StatisticsPage: React.FC = () => {
   const navigate = useNavigate();
   const [timeFilter, setTimeFilter] = useState<'7d' | '1m' | '6m' | 'all'>('all');
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
-
-  // Scroll to top on page load
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   // Fetcher functions for SWR
   const fetcher = (url: string) => fetch(`${API_BASE_URL}${url}`).then(res => res.json());

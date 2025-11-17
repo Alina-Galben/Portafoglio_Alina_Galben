@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, Briefcase, Globe, Heart, Lightbulb, Settings, Monitor, Mail, ArrowRight } from 'lucide-react';
@@ -172,7 +171,6 @@ const AboutPage: React.FC = () => {
               {/* Mobile: Info Cards */}
               <div className="space-y-6">
                 
-                {/* === MODIFICA INIZIA QUI (Mobile) === */}
                 {/* Location */}
                 <motion.div 
                   variants={itemVariants}
@@ -222,7 +220,6 @@ const AboutPage: React.FC = () => {
                     </div>
                   </div>
                 </motion.div>
-                {/* === MODIFICA FINISCE QUI (Mobile) === */}
 
 
                 {/* Role */}
@@ -394,7 +391,6 @@ const AboutPage: React.FC = () => {
               {/* Info Cards */}
               <div className="space-y-6">
                 
-                {/* === MODIFICA INIZIA QUI (Desktop) === */}
                 {/* Location */}
                 <motion.div 
                   variants={itemVariants}
@@ -436,16 +432,11 @@ const AboutPage: React.FC = () => {
                           <span className="text-rose-700 text-base font-medium">🛶 Venezia</span>
                           <span className="text-rose-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Veneto</span>
                         </div>
-                        <div className="flex items-center justify-between py-3 px-4 bg-yellow-50 rounded-xl border border-yellow-100">
-                          <span className="text-yellow-700 text-base font-medium">🎓 Padova</span>
-                          <span className="text-yellow-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Veneto</span>
-                        </div>
                       </div>
                       
                     </div>
                   </div>
                 </motion.div>
-                {/* === MODIFICA FINISCE QUI (Desktop) === */}
 
 
                 {/* Role */}

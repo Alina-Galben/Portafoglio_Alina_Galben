@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { BLOCKS, MARKS, INLINES } from '@contentful/rich-text-types';
 import { 
   ArrowLeft, 
   Calendar, 
@@ -12,7 +9,6 @@ import {
   Share2, 
   Eye, 
   Clock,
-  ExternalLink,
   ChevronRight,
   RefreshCw
 } from 'lucide-react';
@@ -63,11 +59,6 @@ const BlogDetailPage: React.FC = () => {
   
   // Ottimizzazioni per dispositivi mobile
   const { isMobile, shouldReduceAnimations, animationConfig, imageConfig } = useDeviceOptimization();
-
-  // Scroll to top on page load
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   // Fetch specific blog post
   const { data, error, isLoading, mutate } = useSWR(
@@ -258,7 +249,6 @@ const BlogDetailPage: React.FC = () => {
             <span className="text-gray-900 font-medium truncate">{post.fields.title}</span>
           </div>
 
-          {/* === MODIFICA INIZIA QUI === */}
           
           {/* Article Header */}
           <header className="mb-8">
@@ -346,7 +336,6 @@ const BlogDetailPage: React.FC = () => {
             </div>
 
           </header>
-          {/* === MODIFICA FINISCE QUI === */}
 
 
           {/* Article Content */}
