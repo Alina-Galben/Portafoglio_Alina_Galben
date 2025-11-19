@@ -34,7 +34,7 @@ const AboutPage: React.FC = () => {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-violet-50 via-yellow-50 to-rose-50 relative overflow-hidden pt-16">
+    <section className="min-h-screen bg-gradient-to-br from-violet-50 via-yellow-50 to-rose-50 relative overflow-hidden pt-8">
       {/* Background decorative elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-32 h-32 bg-violet-200/30 rounded-full blur-3xl"></div>

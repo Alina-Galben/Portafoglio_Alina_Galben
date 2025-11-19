@@ -202,7 +202,7 @@ const BlogPage: React.FC = () => {
         <link rel="canonical" href="/blog" />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 pt-16">
+      <div className="min-h-screen bg-gray-50 pt-8">
         <section className="min-h-screen bg-gray-50 pt-0">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {/* Page Header */}
@@ -213,113 +213,112 @@ const BlogPage: React.FC = () => {
             className="pt-8"
           />
 
-          {/* Search and Filters */}
+          {/* Search and Filters - Modern Minimal Style */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 sm:p-5 mb-8"
+            className="max-w-4xl mx-auto mb-12" // Centrato e con larghezza limitata
           >
-            {/* Search Bar */}
-            <div className="relative mb-4 sm:mb-5">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+            <div className="flex flex-col md:flex-row gap-4 items-center">
+              {/* Search Bar - Espansa */}
+              <div className="relative grow w-full">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-violet-500" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Cerca un articolo..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="block w-full pl-11 pr-10 py-4 bg-white border-1 rounded-full shadow-lg shadow-violet-100/50 focus:ring-2 focus:ring-violet-500 text-gray-700 placeholder-gray-400 transition-all hover:shadow-xl"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={clearSearch}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                  >
+                    <X className="h-5 w-5 text-gray-400 hover:text-red-500 transition-colors" />
+                  </button>
+                )}
               </div>
-              <input
-                type="text"
-                placeholder="Cerca un articolo..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="block w-full pl-10 pr-10 py-2 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors text-sm sm:text-base"
-              />
-              {searchTerm && (
-                <button
-                  onClick={clearSearch}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                >
-                  <X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 hover:text-gray-600" />
-                </button>
-              )}
+
+              {/* Filters Row - Compatta a destra */}
+              <div className="flex flex-shrink-0 gap-3 w-full md:w-auto">
+                {/* Sort Dropdown */}
+                <div className="relative">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as any)}
+                    className="appearance-none w-full md:w-48 bg-white py-4 pl-5 pr-10 rounded-full shadow-lg shadow-violet-100/50 border-1 text-gray-700 font-medium focus:ring-2 focus:ring-violet-500 cursor-pointer hover:bg-gray-50 transition-all"
+                  >
+                    <option value="newest">Più recenti</option>
+                    <option value="oldest">Meno recenti</option>
+                    <option value="a-z">Alfabetico A-Z</option>
+                    <option value="z-a">Alfabetico Z-A</option>
+                  </select>
+                  <SortAsc className="absolute right-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-violet-500 pointer-events-none" />
+                </div>
+
+                {/* Tags Filter Button */}
+                {allTags.length > 0 && (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsTagsDropdownOpen(!isTagsDropdownOpen)}
+                      className={`flex items-center justify-center w-12 h-full aspect-square bg-white rounded-full shadow-lg shadow-violet-100/50 text-gray-600 hover:text-violet-600 hover:bg-violet-50 transition-all ${isTagsDropdownOpen ? 'ring-2 ring-violet-500 text-violet-600' : ''}`}
+                      title="Filtra per Tag"
+                    >
+                      <Filter className="h-5 w-5" />
+                    </button>
+
+                    {/* Dropdown Menu dei Tag */}
+                    {isTagsDropdownOpen && (
+                      <div className="absolute top-full right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-20 w-64 p-4 animate-in fade-in slide-in-from-top-2">
+                        <h4 className="text-sm font-bold text-gray-900 mb-3">Filtra per argomenti</h4>
+                        <div className="max-h-60 overflow-y-auto space-y-1 custom-scrollbar">
+                          {allTags.map((tag) => (
+                            <label key={tag} className="flex items-center space-x-3 p-2 hover:bg-violet-70 rounded-lg cursor-pointer transition-colors">
+                              <input
+                                type="checkbox"
+                                checked={selectedTags.includes(tag)}
+                                onChange={() => handleTagToggle(tag)}
+                                className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500"
+                              />
+                              <span className="text-sm text-gray-700">#{tag}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Filters Row */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-              {/* Sort Dropdown */}
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <SortAsc className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="border border-gray-300 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
-                >
-                  <option value="newest">Più recenti</option>
-                  <option value="oldest">Meno recenti</option>
-                  <option value="a-z">Alfabetico A-Z</option>
-                  <option value="z-a">Alfabetico Z-A</option>
-                </select>
-              </div>
-
-              {/* Tags Dropdown */}
-              {allTags.length > 0 && (
-                <div className="relative">
-                  <button
-                    onClick={() => setIsTagsDropdownOpen(!isTagsDropdownOpen)}
-                    className="inline-flex items-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-3 py-1.5 sm:py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-sm"
+            {/* Selected Tags & Clear Filters - Appaiono sotto se necessario */}
+            {(searchTerm || selectedTags.length > 0 || sortBy !== 'newest') && (
+              <div className="flex flex-wrap items-center gap-3 mt-4 justify-center md:justify-start px-2">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Filtri attivi:</span>
+                
+                {selectedTags.map((tag) => (
+                  <motion.button
+                    key={tag}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    onClick={() => handleTagToggle(tag)}
+                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-violet-100 text-violet-700 hover:bg-violet-200 hover:text-violet-800 transition-colors"
                   >
-                    <Filter className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
-                    <span className="text-gray-700 font-medium">Tag ({selectedTags.length})</span>
-                    <ChevronDown className={`w-3 h-3 sm:w-4 sm:h-4 text-gray-600 transition-transform ${isTagsDropdownOpen ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {isTagsDropdownOpen && (
-                    <div className="absolute top-full left-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 w-48 sm:w-56">
-                      <div className="p-3 sm:p-4 max-h-64 overflow-y-auto">
-                        {allTags.map((tag) => (
-                          <label key={tag} className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded cursor-pointer mb-1 last:mb-0">
-                            <input
-                              type="checkbox"
-                              checked={selectedTags.includes(tag)}
-                              onChange={() => handleTagToggle(tag)}
-                              className="w-4 h-4 rounded border-gray-300 text-violet-600 focus:ring-violet-500"
-                            />
-                            <span className="text-xs sm:text-sm text-gray-700">#{tag}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Clear All Filters */}
-              {(searchTerm || selectedTags.length > 0 || sortBy !== 'newest') && (
+                    #{tag}
+                    <X className="w-3 h-3 ml-1.5" />
+                  </motion.button>
+                ))}
+                
                 <button
                   onClick={clearAllFilters}
-                  className="text-xs sm:text-sm text-gray-600 hover:text-gray-800 underline"
+                  className="text-xs text-red-500 hover:text-red-700 hover:underline font-medium ml-auto"
                 >
-                  Cancella filtri
+                  Cancella tutto
                 </button>
-              )}
-            </div>
-
-            {/* Selected Tags */}
-            {selectedTags.length > 0 && (
-              <div className="mt-3 sm:mt-4">
-                <div className="flex flex-wrap gap-1 sm:gap-2">
-                  {selectedTags.map((tag) => (
-                    <motion.button
-                      key={tag}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      onClick={() => handleTagToggle(tag)}
-                      className="inline-flex items-center px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-xs bg-violet-100 text-violet-700 hover:bg-violet-200 transition-colors"
-                    >
-                      #{tag}
-                      <X className="w-3 h-3 ml-1 sm:ml-1.5" />
-                    </motion.button>
-                  ))}
-                </div>
               </div>
             )}
           </motion.div>

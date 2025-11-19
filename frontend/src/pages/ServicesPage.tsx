@@ -68,7 +68,7 @@ const ServicesPage: React.FC = () => {
         <link rel="canonical" href="/servizi" />
       </Helmet>
 
-              <section className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50 pt-16">
+      <section className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50 pt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Page Header */}
           <SectionTitle
