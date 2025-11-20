@@ -2,11 +2,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Code, Heart, ArrowRight } from 'lucide-react';
+import { Code, Heart, ArrowRight, Cpu, MessageCircle, Calendar } from 'lucide-react';
 import SkillCard from '../components/SkillCard';
 import SectionTitle from '../components/SectionTitle';
 import technicalSkillsData from '../data/technicalSkills.json';
 import softSkillsData from '../data/softSkills.json';
+import ElegantStatCard from '../components/ElegantStatCard';
 
 interface TechnicalSkill {
   id: number;
@@ -142,18 +143,9 @@ const SkillsPage: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
           >
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-              <div className="text-3xl font-bold text-blue-600 mb-2">{technicalSkills.length}</div>
-              <div className="text-gray-600 text-sm font-medium">Competenze Tecniche</div>
-            </div>
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-              <div className="text-3xl font-bold text-purple-600 mb-2">{softSkills.length}</div>
-              <div className="text-gray-600 text-sm font-medium">Soft Skills</div>
-            </div>
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-              <div className="text-3xl font-bold text-green-600 mb-2">1+</div>
-              <div className="text-gray-600 text-sm font-medium">Anni di Esperienza</div>
-            </div>
+            <ElegantStatCard value={technicalSkills.length} label="Competenze Tecniche" color="blue" icon={<Cpu className="w-6 h-6" />} />
+            <ElegantStatCard value={softSkills.length} label="Soft Skills" color="pink" icon={<MessageCircle className="w-6 h-6" />} />
+            <ElegantStatCard value="1+" label="Anni di Esperienza" color="green" icon={<Calendar className="w-6 h-6" />} />
           </motion.div>
 
           {/* Technical Skills Section */}

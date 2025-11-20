@@ -2,12 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Award, BookOpen, ArrowRight, Mail, Download } from 'lucide-react';
+import { Award, BookOpen, ArrowRight, Mail, Download, CalendarRange } from 'lucide-react';
 import CertificationCard from '../components/CertificationCard';
 import CourseCard from '../components/CourseCard';
 import SectionTitle from '../components/SectionTitle';
 import certificationsData from '../data/certifications.json';
 import coursesData from '../data/courses.json';
+import ElegantStatCard from '../components/ElegantStatCard';
 
 interface Certification {
   id: number;
@@ -116,18 +117,9 @@ const CertificationsPage: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
           >
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-              <div className="text-3xl font-bold text-violet-600 mb-2">{certifications.length}</div>
-              <div className="text-gray-600 text-sm font-medium">Certificazioni Conseguite</div>
-            </div>
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-              <div className="text-3xl font-bold text-blue-600 mb-2">{courses.length}</div>
-              <div className="text-gray-600 text-sm font-medium">Corsi di Formazione</div>
-            </div>
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-              <div className="text-3xl font-bold text-green-600 mb-2">2024-2025</div>
-              <div className="text-gray-600 text-sm font-medium">Periodo di Studio</div>
-            </div>
+            <ElegantStatCard value={certifications.length} label="Certificazioni Conseguite" color="violet" icon={<Award className="w-6 h-6" />} />
+            <ElegantStatCard value={courses.length} label="Corsi di Formazione" color="blue" icon={<BookOpen className="w-6 h-6" />} />
+            <ElegantStatCard value="2024-2025" label="Periodo di Studio" color="green" icon={<CalendarRange className="w-6 h-6" />} />
           </motion.div>
 
           {/* Certifications Section */}

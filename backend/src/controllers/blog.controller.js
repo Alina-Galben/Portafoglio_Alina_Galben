@@ -9,7 +9,7 @@ const getContentfulClient = () => {
 };
 
 // Opzioni per la cache (5 minuti)
-const CACHE_DURATION = 5 * 60 * 1000;
+const CACHE_DURATION = 0;
 let cache = {
   blogPosts: { data: null, timestamp: 0 },
   singlePost: new Map()

@@ -234,7 +234,7 @@ const BlogDetailPage: React.FC = () => {
         <link rel="canonical" href={window.location.href} />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 pt-16">
+      <div className="min-h-screen bg-gray-50 pt-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb & Back Button */}
           <div className="flex items-center space-x-2 text-sm text-gray-500 mb-8 pt-8 sm:pt-0">
@@ -342,12 +342,11 @@ const BlogDetailPage: React.FC = () => {
           <article className={`bg-white rounded-xl shadow-sm border border-gray-100 mb-12 ${isMobile ? 'p-4' : 'p-8'}`}>
             <ArticleContent content={post.fields.content} isMobile={isMobile} />
 
-            {/* --- NUOVA POSIZIONE: Info di aggiornamento --- */}
             <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="flex items-center space-x-3">
                 <RefreshCw className="w-4 h-4 text-green-600" />
                 <span className="text-sm text-gray-600">
-                  Aggiornato: {new Date(post.sys.updatedAt).toLocaleTimeString('it-IT')}
+                  Ultimo aggiornamento: {lastUpdate.toLocaleTimeString('it-IT')}
                 </span>
                 <button
                   onClick={handleRefresh}

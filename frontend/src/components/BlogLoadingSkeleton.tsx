@@ -2,7 +2,7 @@ import React from 'react';
 
 const BlogLoadingSkeleton: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
+    <div className="min-h-screen bg-gray-50 pt-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb skeleton */}
         <div className="flex items-center space-x-2 mb-8">

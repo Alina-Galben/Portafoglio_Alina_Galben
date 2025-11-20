@@ -210,7 +210,6 @@ const BlogPage: React.FC = () => {
             emoji="📝"
             title="Blog Tecnico & Insights"
             subtitle="Articoli, tutorial e riflessioni sul mondo dello sviluppo web moderno. Aggiornamenti in tempo reale da Contentful."
-            className="pt-8"
           />
 
           {/* Search and Filters - Modern Minimal Style */}

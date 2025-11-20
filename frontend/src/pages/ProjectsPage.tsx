@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { RefreshCw, Calendar, Zap, AlertCircle, Wifi, WifiOff, Briefcase } from 'lucide-react';
+import { RefreshCw, Calendar, Zap, AlertCircle, Wifi, WifiOff, Briefcase, FolderOpen, Star, Code } from 'lucide-react';
 import { fetchProjects } from '../contentfulClient';
 import useSSE from '../hooks/useSSE';
 import ProjectCard from '../components/ProjectCard';
 import SectionTitle from '../components/SectionTitle';
+import ElegantStatCard from '../components/ElegantStatCard';
 
 // Tipo per i progetti direttamente da Contentful
 interface ContentfulProject {
@@ -184,7 +185,7 @@ const ProjectsPage: React.FC = () => {
           <meta name="description" content="Scopri i progetti realizzati da Alina Galben: applicazioni web moderne, dashboard interattive e soluzioni full-stack." />
         </Helmet>
         
-        <div className="min-h-screen bg-gray-50 pt-16">
+        <div className="min-h-screen bg-gray-50 pt-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionTitle
               emoji="💼"
@@ -245,7 +246,7 @@ const ProjectsPage: React.FC = () => {
         <link rel="canonical" href="/progetti" />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 pt-16">
+      <div className="min-h-screen bg-gray-50 pt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <SectionTitle
@@ -262,20 +263,24 @@ const ProjectsPage: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
           >
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-              <div className="text-3xl font-bold text-purple-600 mb-2">{projects.length}</div>
-              <div className="text-gray-600 text-sm font-medium">Progetti Totali</div>
-            </div>
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-              <div className="text-3xl font-bold text-pink-600 mb-2">{projects.filter(p => p.fields.featured).length}</div>
-              <div className="text-gray-600 text-sm font-medium">Progetti in Evidenza</div>
-            </div>
-            <div className="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-              <div className="text-3xl font-bold text-red-600 mb-2">
-                {Array.from(new Set(projects.flatMap(p => p.fields.technologies || []))).length}
-              </div>
-              <div className="text-gray-600 text-sm font-medium">Tecnologie Utilizzate</div>
-            </div>
+            <ElegantStatCard 
+              value={projects.length} 
+              label="Progetti Totali" 
+              color="violet" 
+              icon={<FolderOpen className="w-6 h-6" />} 
+            />
+            <ElegantStatCard 
+              value={projects.filter(p => p.fields.featured).length} 
+              label="Progetti in Evidenza" 
+              color="yellow" 
+              icon={<Star className="w-6 h-6" />} 
+            />
+            <ElegantStatCard 
+              value={Array.from(new Set(projects.flatMap(p => p.fields.technologies || []))).length} 
+              label="Tecnologie Utilizzate" 
+              color="red" 
+              icon={<Code className="w-6 h-6" />} 
+            />
           </motion.div>
 
           {/* Notification */}

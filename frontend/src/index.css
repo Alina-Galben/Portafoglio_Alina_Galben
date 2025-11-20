@@ -59,6 +59,21 @@ html, body {
   text-shadow: 0 6px 12px rgba(0, 0, 0, 0.9), 0 3px 6px rgba(0, 0, 0, 0.7);
 }
 
+/* --- GLOBAL CURSOR FIX --- */
+/* Forza la manina su tutti i bottoni, link e elementi cliccabili */
+button, 
+a, 
+[role="button"],
+input[type="submit"],
+input[type="button"] {
+  cursor: pointer !important;
+}
+
+/* Assicura che anche i bottoni disabilitati mostrino lo stato corretto */
+button:disabled {
+  cursor: not-allowed !important;
+}
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
   /* Improve touch targets */
