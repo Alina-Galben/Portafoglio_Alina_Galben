@@ -95,7 +95,7 @@ Puoi contattarmi direttamente tramite i miei canali ufficiali:
 
 - 📬 **Email:** <ciao@alinagalben.com>
 
-- 💬 **WhatsApp:** [wa.me/393347600899](https://wa.me/393793250179)
+- 💬 **WhatsApp:** [3347600899](https://wa.me/393793250179)
 
 - 💻 **GitHub:** [github.com/Alina-Galben](https://github.com/Alina-Galben)
 
