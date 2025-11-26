@@ -6,7 +6,7 @@ import ServiceCard from '../components/ServiceCard';
 import SectionTitle from '../components/SectionTitle';
 import servicesData from '../data/services.json';
 import ElegantStatCard from '../components/ElegantStatCard';
-import { Briefcase, CheckCircle, Clock, Users, Zap, Headphones } from 'lucide-react';
+import { Briefcase, CheckCircle, Users, Zap, Headphones, Heart } from 'lucide-react';
 
 interface Service {
   id: number;
@@ -21,8 +21,6 @@ const ServicesPage: React.FC = () => {
   const navigate = useNavigate();
   const services: Service[] = servicesData;
 
-
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -55,7 +53,6 @@ const ServicesPage: React.FC = () => {
 
   return (
     <>
-      {/* SEO Meta Tags */}
       <Helmet>
         <title>💡 Servizi di sviluppo web full-stack — Alina Galben</title>
         <meta 
@@ -70,9 +67,8 @@ const ServicesPage: React.FC = () => {
         <link rel="canonical" href="/servizi" />
       </Helmet>
 
-      <section className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50 pt-8">
+      <section className="min-h-screen bg-linear-to-b from-blue-50 to-indigo-50 pt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Page Header */}
           <SectionTitle
             emoji="💡"
             title="I Miei Servizi"
@@ -80,7 +76,6 @@ const ServicesPage: React.FC = () => {
             className="pt-8"
           />
 
-          {/* Services Stats */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -94,9 +89,7 @@ const ServicesPage: React.FC = () => {
             <ElegantStatCard value="Sempre" label="Disponibile per nuovi progetti" color="violet" icon={<Zap className="w-6 h-6" />} />
             <ElegantStatCard value="On Demand" label="Supporto su richiesta" color="red" icon={<Headphones className="w-6 h-6" />} />
           </motion.div>
-          </motion.div>
 
-          {/* Services Grid */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -113,7 +106,6 @@ const ServicesPage: React.FC = () => {
             ))}
           </motion.div>
 
-          {/* Call-to-Action Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -136,7 +128,6 @@ const ServicesPage: React.FC = () => {
             </motion.button>
           </motion.div>
 
-          {/* Technology Stack */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

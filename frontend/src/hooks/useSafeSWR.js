@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import useDeviceOptimization from './useDeviceOptimization';
 
-/**
- * Hook SWR sicuro per mobile con gestione errori migliorata
- */
 export function useSafeSWR(key, fetcher, options = {}) {
   const { isMobile } = useDeviceOptimization();
   const [fallbackActive, setFallbackActive] = useState(false);
@@ -15,7 +12,6 @@ export function useSafeSWR(key, fetcher, options = {}) {
     retryOnMobile = false
   } = options;
 
-  // Disabilita fetch se mobile e non abilitato
   const shouldFetch = !isMobile || enableOnMobile;
   const shouldRetry = !isMobile || retryOnMobile;
 
@@ -24,13 +20,13 @@ export function useSafeSWR(key, fetcher, options = {}) {
     fetcher,
     {
       fallbackData,
-      refreshInterval: isMobile ? 0 : 60000, // Nessun refresh automatico su mobile
+      refreshInterval: isMobile ? 0 : 60000,
       revalidateOnFocus: !isMobile,
       revalidateOnReconnect: shouldRetry,
-      dedupingInterval: isMobile ? 10000 : 5000, // Dedupe più lungo su mobile
+      dedupingInterval: isMobile ? 10000 : 5000,
       errorRetryCount: shouldRetry ? 3 : 1,
       errorRetryInterval: isMobile ? 2000 : 1000,
-      suspense: false, // Importante: disabilita suspense per evitare blocchi
+      suspense: false,
       onError: (error) => {
         console.warn(`SWR Error for ${key}:`, error);
         if (fallbackData && !fallbackActive) {
@@ -45,7 +41,6 @@ export function useSafeSWR(key, fetcher, options = {}) {
     }
   );
 
-  // Gestione fallback attivato
   useEffect(() => {
     if (fallbackActive && fallbackData) {
       console.info(`Using fallback data for ${key}`);

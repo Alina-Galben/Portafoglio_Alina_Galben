@@ -1,80 +1,45 @@
 import rateLimit from 'express-rate-limit';
 import { logWarn } from '../utils/logger.js';
 
-/**
- * General API rate limiting
- */
-export const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  message: {
-    error: 'Too many requests from this IP, please try again later.',
-    retryAfter: '15 minutes'
-  },
+const createLimiter = ({ windowMinutes, maxRequests, message, logContext = 'API' }) => rateLimit({
+  windowMs: windowMinutes * 60 * 1000,
+  max: maxRequests,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req, res) => {
-    logWarn('Rate limit exceeded', {
+  message: { 
+    error: 'Rate limit exceeded', 
+    message, 
+    retryAfter: `${windowMinutes} minutes` 
+  },
+  handler: (req, res, next, options) => {
+    logWarn(`${logContext} rate limit hit`, {
       ip: req.ip,
       userAgent: req.get('User-Agent'),
-      path: req.path
+      endpoint: req.originalUrl
     });
-    
-    res.status(429).json({
-      error: 'Too many requests from this IP, please try again later.',
-      retryAfter: '15 minutes'
-    });
+    res.status(options.statusCode).send(options.message);
   }
 });
 
-/**
- * Strict rate limiting for contact form
- */
-export const contactLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 minutes
-  max: process.env.NODE_ENV === 'development' ? 50 : 3, // 50 in dev, 3 in prod
-  message: {
-    error: 'Too many contact form submissions. Please wait before sending another message.',
-    retryAfter: '10 minutes'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-  handler: (req, res) => {
-    logWarn('Contact form rate limit exceeded', {
-      ip: req.ip,
-      email: req.body?.email,
-      userAgent: req.get('User-Agent')
-    });
-    
-    res.status(429).json({
-      error: 'Too many contact form submissions. Please wait before sending another message.',
-      retryAfter: '10 minutes'
-    });
-  }
+const isDev = process.env.NODE_ENV === 'development';
+
+export const generalLimiter = createLimiter({
+  windowMinutes: 15,
+  maxRequests: 100,
+  message: 'System load limit reached. Please pause requests.',
+  logContext: 'General'
 });
 
-/**
- * Webhook rate limiting (more permissive for legitimate webhook calls)
- */
-export const webhookLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 20, // Allow up to 20 webhook calls per minute
-  message: {
-    error: 'Webhook rate limit exceeded',
-    retryAfter: '1 minute'
-  },
-  standardHeaders: true,
-  legacyHeaders: false,
-  handler: (req, res) => {
-    logWarn('Webhook rate limit exceeded', {
-      ip: req.ip,
-      userAgent: req.get('User-Agent'),
-      contentType: req.get('Content-Type')
-    });
-    
-    res.status(429).json({
-      error: 'Webhook rate limit exceeded',
-      retryAfter: '1 minute'
-    });
-  }
+export const contactLimiter = createLimiter({
+  windowMinutes: 10,
+  maxRequests: isDev ? 50 : 3,
+  message: 'Message quota exceeded. Please wait before sending more.',
+  logContext: 'ContactForm'
+});
+
+export const webhookLimiter = createLimiter({
+  windowMinutes: 1,
+  maxRequests: 20,
+  message: 'Webhook throughput limit exceeded.',
+  logContext: 'Webhook'
 });

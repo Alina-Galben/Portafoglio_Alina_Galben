@@ -2,40 +2,23 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import { 
-  ArrowRight, 
-  MessageCircle, 
-  HandHeart, 
-  FolderOpen, 
-  Github, 
-  Linkedin, 
-  Mail, 
-  Download,
-  ChevronDown,
-  Code,
-  Sparkles,
-  Heart
-} from 'lucide-react';
+import { ArrowRight, MessageCircle, HandHeart, FolderOpen, Github, Linkedin, Phone, Mail, Download, ChevronDown, Code, Sparkles, Heart } from 'lucide-react';
 import CollaborationModal from './CollaborationModal';
 import QuickQuoteModal from './QuickQuoteModal';
 
 const Hero = () => {
   const navigate = useNavigate();
-  
   const [isCollaborationModalOpen, setIsCollaborationModalOpen] = useState(false);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [typewriterText, setTypewriterText] = useState('');
   const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
 
-  // Handle email click
   const handleEmailClick = (e) => {
     e.preventDefault();
     const email = 'ciao@alinagalben.com';
     
-    // Try to open email client
     window.location.href = `mailto:${email}`;
     
-    // Also copy email to clipboard if possible
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(email).then(() => {
         console.log('Email copied to clipboard');
@@ -45,7 +28,6 @@ const Hero = () => {
     }
   };
 
-  // Typewriter effect
   useEffect(() => {
     const roles = ['Full-Stack Developer', 'Creator', 'Innovator', 'Problem Solver'];
     const currentRole = roles[currentRoleIndex];
@@ -67,8 +49,7 @@ const Hero = () => {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
+    visible: { opacity: 1,
       transition: {
         delayChildren: 0.3,
         staggerChildren: 0.2
@@ -78,9 +59,7 @@ const Hero = () => {
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
+    visible: { y: 0, opacity: 1,
       transition: {
         type: "spring",
         stiffness: 100
@@ -92,7 +71,6 @@ const Hero = () => {
 
   return (
     <section className="min-h-screen bg-linear-to-br from-violet-50 via-yellow-50 to-rose-50 relative overflow-hidden">
-      {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           className="absolute top-1/4 left-1/4 w-64 h-64 bg-violet-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"
@@ -132,25 +110,14 @@ const Hero = () => {
         />
       </div>
 
-      {/* Floating Code Lines */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(5)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute text-violet-300 text-sm font-mono opacity-20"
-            style={{
-              top: `${20 + i * 15}%`,
-              left: `${10 + i * 20}%`,
-            }}
-            animate={{
-              x: [0, 100, 0],
-              opacity: [0.2, 0.5, 0.2],
-            }}
-            transition={{
-              duration: 10 + i * 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+            style={{ top: `${20 + i * 15}%`, left: `${10 + i * 20}%`, }}
+            animate={{ x: [0, 100, 0], opacity: [0.2, 0.5, 0.2], }}
+            transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "easeInOut" }}
           >
             {`<${['div', 'span', 'h1', 'section', 'article'][i]}>`}
           </motion.div>
@@ -164,7 +131,6 @@ const Hero = () => {
           initial="hidden"
           animate="visible"
         >
-          {/* Left Content */}
           <div className="text-center lg:text-left order-2 lg:order-1">
             <motion.div variants={itemVariants} className="mb-6">
               <motion.h1 
@@ -223,7 +189,6 @@ const Hero = () => {
               funzionali che connettono persone e tecnologia.
             </motion.p>
 
-            {/* Skills Tags */}
             <motion.div 
               variants={itemVariants}
               className="flex flex-wrap gap-3 justify-center lg:justify-start mb-8"
@@ -243,7 +208,6 @@ const Hero = () => {
               ))}
             </motion.div>
 
-            {/* CTA Buttons */}
             <motion.div 
               variants={itemVariants}
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8"
@@ -279,8 +243,7 @@ const Hero = () => {
                 Guarda i miei progetti
               </motion.button>
             </motion.div>
-
-            {/* Social Links */}
+            
             <motion.div 
               variants={itemVariants}
               className="flex items-center gap-6 justify-center lg:justify-start"
@@ -289,6 +252,7 @@ const Hero = () => {
                 { icon: Github, href: 'https://github.com/Alina-Galben', label: 'GitHub' },
                 { icon: Linkedin, href: 'https://www.linkedin.com/in/alina-galben/', label: 'LinkedIn' },
                 { icon: Mail, href: 'mailto:ciao@alinagalben.com', label: 'Email' },
+                { icon: Phone, href: 'https://wa.me/393793250179', label: 'WhatsApp' },
                 { icon: Download, href: './pdf/CV - Alina Galben.pdf', label: 'CV Download' }
               // eslint-disable-next-line no-unused-vars
               ].map(({ icon: Icon, href, label }) => (
@@ -296,7 +260,7 @@ const Hero = () => {
                   key={label}
                   href={href}
                   onClick={label === 'Email' ? handleEmailClick : undefined}
-                  target={href.startsWith('http') || label === 'CV Download' ? '_blank' : '_self'} // Apri CV in new tab
+                  target={href.startsWith('http') || label === 'CV Download' ? '_blank' : '_self'}
                   rel={href.startsWith('http') ? 'noopener noreferrer' : ''}
                   className="p-3 bg-white/80 backdrop-blur-sm rounded-full shadow-md hover:shadow-lg transition-all duration-300 text-gray-600 hover:text-violet-600"
                   whileHover={{ scale: 1.1, rotate: 5 }}
@@ -310,24 +274,20 @@ const Hero = () => {
             </motion.div>
           </div>
 
-          {/* Right Content - Avatar */}
           <motion.div 
             variants={itemVariants}
             className="relative order-1 lg:order-2 flex justify-center"
           >
             <div className="relative">
-              {/* Avatar */}
               <motion.div
                 className="relative w-72 h-72 md:w-96 md:h-96 lg:w-[420px] lg:h-[420px]"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 1, ease: "easeOut" }}
               >
-                {/* Static Border - No Animation */}
                 <div className="absolute inset-0 rounded-full bg-linear-to-r from-violet-500 via-rose-500 to-violet-500 p-1">
                   <div className="w-full h-full rounded-full bg-white p-3">
                     <div className="w-full h-full rounded-full bg-linear-to-br from-violet-100 to-rose-100 flex items-center justify-center overflow-hidden">
-                      {/* Avatar di Alina */}
                       <img 
                         src="/alina-avatar.png" 
                         alt="Alina Galben" 
@@ -337,7 +297,6 @@ const Hero = () => {
                   </div>
                 </div>
 
-                {/* Floating Elements */}
                 <motion.div
                   className="absolute -top-4 -right-4 bg-yellow-400 p-3 rounded-full shadow-lg"
                   animate={{ 
@@ -389,7 +348,6 @@ const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* Scroll Indicator */}
         <motion.div 
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
           initial={{ opacity: 0, y: 20 }}
@@ -417,7 +375,6 @@ const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Modals */}
       <CollaborationModal 
         isOpen={isCollaborationModalOpen}
         onClose={() => setIsCollaborationModalOpen(false)}

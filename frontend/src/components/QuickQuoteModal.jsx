@@ -59,23 +59,22 @@ const QuickQuoteModal = ({ isOpen, onClose }) => {
         email: quoteData.email,
         subject: `Richiesta Preventivo: ${quoteData.projectType} - ${quoteData.name}`,
         message: `
-RICHIESTA PREVENTIVO
+        RICHIESTA PREVENTIVO
 
-Nome: ${quoteData.name}
-Email: ${quoteData.email}
-Tipo Progetto: ${quoteData.projectType}
+        Nome: ${quoteData.name}
+        Email: ${quoteData.email}
+        Tipo Progetto: ${quoteData.projectType}
 
-Descrizione:
-${quoteData.description}
+        Descrizione:
+        ${quoteData.description}
 
-Timeline: ${quoteData.timeline}
-Budget Stimato: ${quoteData.budget}
+        Timeline: ${quoteData.timeline}
+        Budget Stimato: ${quoteData.budget}
 
-Funzionalità Richieste:
-${quoteData.features.length > 0 ? quoteData.features.join(', ') : 'Nessuna specifica'}
+        Funzionalità Richieste:
+        ${quoteData.features.length > 0 ? quoteData.features.join(', ') : 'Nessuna specifica'}
 
----
-Inviato tramite form preventivo rapido del portfolio
+        Inviato tramite form preventivo rapido del portfolio
         `.trim()
       });
 
@@ -125,7 +124,6 @@ Inviato tramite form preventivo rapido del portfolio
             exit={{ scale: 0.9, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center">
                 <div className="p-2 bg-violet-100 rounded-full mr-3">
@@ -170,7 +168,6 @@ Inviato tramite form preventivo rapido del portfolio
               )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Basic Info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -200,7 +197,6 @@ Inviato tramite form preventivo rapido del portfolio
                   </div>
                 </div>
 
-                {/* Project Type */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Tipo di Progetto *
@@ -221,7 +217,6 @@ Inviato tramite form preventivo rapido del portfolio
                   </select>
                 </div>
 
-                {/* Description */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Descrizione del Progetto *
@@ -237,7 +232,6 @@ Inviato tramite form preventivo rapido del portfolio
                   />
                 </div>
 
-                {/* Features */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     Funzionalità Desiderate
@@ -261,7 +255,6 @@ Inviato tramite form preventivo rapido del portfolio
                   </div>
                 </div>
 
-                {/* Timeline and Budget */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -302,7 +295,6 @@ Inviato tramite form preventivo rapido del portfolio
                   </div>
                 </div>
 
-                {/* Submit Button */}
                 <div className="flex flex-col sm:flex-row gap-3 pt-4">
                   <button
                     type="submit"

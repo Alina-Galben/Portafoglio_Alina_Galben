@@ -41,7 +41,7 @@ const ContactPage: React.FC = () => {
     {
       name: 'WhatsApp',
       icon: Phone,
-      url: 'https://wa.me/393347600899',
+      url: 'https://wa.me/393793250179',
       color: 'hover:text-green-500',
       description: 'Contattami su WhatsApp'
     }
@@ -84,7 +84,6 @@ const ContactPage: React.FC = () => {
         block: 'start'
       });
       
-      // Precompila il subject e focalizza il messaggio
       setTimeout(() => {
         const subjectSelect = document.getElementById('subject') as HTMLSelectElement;
         const messageTextarea = document.getElementById('message') as HTMLTextAreaElement;
@@ -150,9 +149,7 @@ const ContactPage: React.FC = () => {
             <motion.div
               className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16"
             >
-            {/* Left Column - Info & CTAs */}
             <div className="space-y-8">
-              {/* Header */}
               <motion.div variants={itemVariants} className="text-center lg:text-left">
                 <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
                   📩 Contattami
@@ -165,7 +162,6 @@ const ContactPage: React.FC = () => {
                 </p>
               </motion.div>
 
-              {/* Social Links */}
               <motion.div variants={itemVariants}>
                 <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center lg:text-left">
                   🌐 Seguimi sui social
@@ -199,7 +195,6 @@ const ContactPage: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* CTA Buttons */}
               <motion.div variants={itemVariants}>
                 <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center lg:text-left">
                   🚀 Come posso aiutarti?
@@ -249,7 +244,6 @@ const ContactPage: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Additional Info */}
               <motion.div 
                 variants={itemVariants}
                 className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200 shadow-sm"
@@ -271,7 +265,6 @@ const ContactPage: React.FC = () => {
               </motion.div>
             </div>
 
-            {/* Right Column - Contact Form */}
             <motion.section
               ref={formRef}
               variants={itemVariants}

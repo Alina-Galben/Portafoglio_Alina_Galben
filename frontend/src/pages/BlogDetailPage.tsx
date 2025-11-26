@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
@@ -57,23 +59,20 @@ const BlogDetailPage: React.FC = () => {
   const [isSharing, setIsSharing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   
-  // Ottimizzazioni per dispositivi mobile
   const { isMobile, shouldReduceAnimations, animationConfig, imageConfig } = useDeviceOptimization();
 
-  // Fetch specific blog post
   const { data, error, isLoading, mutate } = useSWR(
     slug ? `blog-post-${slug}` : null,
     () => slug ? getBlogPostBySlug(slug) : null,
     {
       refreshInterval: 60000,
-      revalidateOnFocus: !isMobile, // Disabilita su mobile per performance
+      revalidateOnFocus: !isMobile,
       revalidateOnReconnect: true,
       dedupingInterval: 5000,
       errorRetryCount: isMobile ? 2 : 3
     }
   );
 
-  // Fetch related posts (lazy loading per mobile)
   const { data: relatedData } = useSWR(
     slug && data?.items?.[0] && !isMobile ? 
     `related-posts-${data.items[0].sys.id}` :
@@ -85,7 +84,6 @@ const BlogDetailPage: React.FC = () => {
     }
   );
 
-  // SSE for real-time updates
   useSSE(`${API_BASE_URL}/api/events`, {
     onMessage: (event: any) => { 
       if (event.type === 'blog-updated') {
@@ -107,11 +105,10 @@ const BlogDetailPage: React.FC = () => {
   const handleShare = async () => {
     setIsSharing(true);
     
-    // Determine the base URL based on environment
     const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
     const baseUrl = isProduction 
-      ? window.location.origin  // Uses the actual production URL
-      : (import.meta as any).env.VITE_SITE_URL || 'https://alinagalben.vercel.app'; // Fallback URL
+      ? window.location.origin
+      : (import.meta as any).env.VITE_SITE_URL || 'https://alinagalben.vercel.app';
     
     const currentPath = window.location.pathname;
     const shareUrl = isProduction ? window.location.href : `${baseUrl}${currentPath}`;
@@ -125,16 +122,13 @@ const BlogDetailPage: React.FC = () => {
         });
         toast.success('✅ Articolo condiviso!');
       } catch (error) {
-        // User cancelled share or error occurred
         console.log('Share cancelled or error:', error);
       }
     } else {
-      // Fallback to clipboard
       try {
         await navigator.clipboard.writeText(shareUrl);
         toast.success('🔗 Link copiato negli appunti!');
         
-        // Show additional info in development
         if (!isProduction) {
           toast('📝 Nota: URL di produzione copiato per condivisione futura', { 
             duration: 5000,
@@ -201,7 +195,6 @@ const BlogDetailPage: React.FC = () => {
 
   return (
     <>
-      {/* Dynamic SEO Meta Tags */}
       <Helmet>
         <title>{post.fields.title} — Blog Alina Galben</title>
         <meta name="description" content={post.fields.description || `Leggi ${post.fields.title} sul blog di Alina Galben`} />
@@ -209,7 +202,6 @@ const BlogDetailPage: React.FC = () => {
         <meta name="author" content={post.fields.author || 'Alina Galben'} />
         <meta name="robots" content="index, follow" />
         
-        {/* Open Graph */}
         <meta property="og:title" content={post.fields.title} />
         <meta property="og:description" content={post.fields.description || `Leggi ${post.fields.title} sul blog di Alina Galben`} />
         <meta property="og:type" content="article" />
@@ -223,7 +215,6 @@ const BlogDetailPage: React.FC = () => {
           <meta key={tag} property="article:tag" content={tag} />
         ))}
         
-        {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={post.fields.title} />
         <meta name="twitter:description" content={post.fields.description || `Leggi ${post.fields.title} sul blog di Alina Galben`} />
@@ -236,7 +227,6 @@ const BlogDetailPage: React.FC = () => {
 
       <div className="min-h-screen bg-gray-50 pt-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Breadcrumb & Back Button */}
           <div className="flex items-center space-x-2 text-sm text-gray-500 mb-8 pt-8 sm:pt-0">
             <button
               onClick={() => navigate('/blog')}
@@ -249,10 +239,7 @@ const BlogDetailPage: React.FC = () => {
             <span className="text-gray-900 font-medium truncate">{post.fields.title}</span>
           </div>
 
-          
-          {/* Article Header */}
           <header className="mb-8">
-            {/* Cover Image */}
             {post.fields.coverImage && (
               <OptimizedImage
                 src={post.fields.coverImage.fields.file.url}
@@ -263,34 +250,28 @@ const BlogDetailPage: React.FC = () => {
               />
             )}
 
-            {/* --- NUOVO LAYOUT: Titolo e Bottone Condividi affiancati --- */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
-              {/* Title */}
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight flex-1">
                 {post.fields.title}
               </h1>
-              {/* Share Button */}
               <button
                 onClick={handleShare}
                 disabled={isSharing}
-                className="flex-shrink-0 flex items-center space-x-2 px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors disabled:opacity-50 w-full sm:w-auto justify-center"
+                className="shrink-0 flex items-center space-x-2 px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors disabled:opacity-50 w-full sm:w-auto justify-center"
               >
                 <Share2 className="w-4 h-4" />
                 <span>{isSharing ? 'Condivisione...' : 'Condividi'}</span>
               </button>
             </div>
 
-            {/* Description */}
             {post.fields.description && (
               <p className="text-xl text-gray-600 mb-6 leading-relaxed">
                 {post.fields.description}
               </p>
             )}
 
-            {/* --- NUOVO BOX: Metadati e Tag raggruppati --- */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-8">
               <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
-                {/* Meta Information */}
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500">
                   <div className="flex items-center space-x-2">
                     <Calendar className="w-4 h-4" />
@@ -318,7 +299,6 @@ const BlogDetailPage: React.FC = () => {
                   )}
                 </div>
                 
-                {/* Tags */}
                 {post.fields.tags && post.fields.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {post.fields.tags.slice(0, 3).map((tag) => (
@@ -337,8 +317,6 @@ const BlogDetailPage: React.FC = () => {
 
           </header>
 
-
-          {/* Article Content */}
           <article className={`bg-white rounded-xl shadow-sm border border-gray-100 mb-12 ${isMobile ? 'p-4' : 'p-8'}`}>
             <ArticleContent content={post.fields.content} isMobile={isMobile} />
 
@@ -359,7 +337,6 @@ const BlogDetailPage: React.FC = () => {
             
           </article>
 
-          {/* Related Articles */}
           {relatedPosts.length > 0 && !isMobile && (
             <section className="mb-16">
               <h2 className="text-2xl font-bold text-gray-900 mb-8">Articoli correlati</h2>
@@ -399,7 +376,6 @@ const BlogDetailPage: React.FC = () => {
             </section>
           )}
 
-          {/* Back to Blog Button */}
           <div className="text-center pb-16">
             <button
               onClick={() => navigate('/blog')}

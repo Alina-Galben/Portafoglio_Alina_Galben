@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import * as LucideIcons from 'lucide-react';
 
@@ -30,77 +29,64 @@ const StatCard: React.FC<StatCardProps> = ({
 }) => {
   const [displayValue, setDisplayValue] = useState(0);
   
-  // Dynamic icon loading with fallback
-  const IconComponent = (LucideIcons as any)[icon] || LucideIcons.BarChart3;
+  const Icon = (LucideIcons as any)[icon] ?? LucideIcons.BarChart3;
+  const TrendIcon = trend?.isPositive ? LucideIcons.TrendingUp : LucideIcons.TrendingDown;
 
-  // CountUp animation effect
   useEffect(() => {
-    let startTime: number;
-    const duration = 2000; // 2 seconds
-    
-    const animateCount = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
+    let start = 0;
+    const duration = 2000;
+
+    const animate = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      // EaseOutQuart
+      const val = Math.floor((1 - Math.pow(1 - progress, 4)) * value);
       
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      
-      setDisplayValue(Math.floor(easeOutQuart * value));
-      
-      if (progress < 1) {
-        requestAnimationFrame(animateCount);
-      }
+      setDisplayValue(val);
+      if (progress < 1) requestAnimationFrame(animate);
     };
 
-    requestAnimationFrame(animateCount);
+    requestAnimationFrame(animate);
   }, [value]);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      whileHover={{ 
-        y: -4,
-        scale: 1.02,
-        transition: { duration: 0.2 }
-      }}
+      whileHover={{ y: -4, scale: 1.02 }}
       onClick={onClick}
-      className={`bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-xl hover:border-violet-200 transition-all duration-300 overflow-hidden group h-full flex flex-col ${onClick ? 'cursor-pointer' : ''}`}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      className={`group flex h-full flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-all hover:border-violet-200 hover:shadow-xl ${onClick ? 'cursor-pointer' : ''}`}
     >
-      {/* Header with Gradient */}
-      <div className={`bg-gradient-to-r ${gradient} p-6 text-white`}>
+      <div className={`bg-linear-to-r ${gradient} p-6 text-white`}>
         <div className="flex items-center justify-between">
           <motion.div
             whileHover={{ scale: 1.1, rotate: 5 }}
-            className="p-3 bg-white/20 rounded-xl backdrop-blur-sm"
+            className="rounded-xl bg-white/20 p-3 backdrop-blur-sm"
           >
-            <IconComponent className="w-6 h-6" />
+            <Icon className="h-6 w-6" />
           </motion.div>
           
           {trend && (
-            <div className={`flex items-center space-x-1 text-sm ${trend.isPositive ? 'text-green-100' : 'text-red-100'}`}>
-              {trend.isPositive ? (
-                <LucideIcons.TrendingUp className="w-4 h-4" />
-              ) : (
-                <LucideIcons.TrendingDown className="w-4 h-4" />
-              )}
-              <span>{trend.isPositive ? '+' : ''}{trend.value}%</span>
+            <div className={`flex items-center gap-1 text-sm ${trend.isPositive ? 'text-green-100' : 'text-red-100'}`}>
+              <TrendIcon className="h-4 w-4" />
+              <span>{trend.isPositive && '+'}{trend.value}%</span>
             </div>
           )}
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-6 flex-1 flex flex-col justify-between">
+      <div className="flex flex-1 flex-col justify-between p-6">
         <div className="mb-4">
-          <div className="text-3xl font-bold text-gray-900 mb-1">
+          <div className="mb-1 text-3xl font-bold text-gray-900">
             {displayValue.toLocaleString()}{suffix}
           </div>
           <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
         </div>
 
         {description && (
-          <p className="text-gray-600 text-sm leading-relaxed mb-4">
+          <p className="mb-4 text-sm leading-relaxed text-gray-600">
             {description}
           </p>
         )}
@@ -109,21 +95,20 @@ const StatCard: React.FC<StatCardProps> = ({
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-500">{trend.period}</span>
             <span className={`font-medium ${trend.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-              {trend.isPositive ? '+' : ''}{trend.value}% vs periodo precedente
+              {trend.isPositive && '+'}{trend.value}% vs prev
             </span>
           </div>
         )}
 
         {onClick && (
-          <div className="flex items-center text-violet-600 text-sm font-medium mt-4 group-hover:text-violet-700">
+          <div className="mt-4 flex items-center text-sm font-medium text-violet-600 group-hover:text-violet-700">
             <span>Visualizza dettagli</span>
-            <LucideIcons.ArrowRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
+            <LucideIcons.ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </div>
         )}
       </div>
 
-      {/* Hover Effect Overlay */}
-      <div className={`absolute inset-0 bg-gradient-to-r ${gradient}/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
+      <div className={`pointer-events-none absolute inset-0 bg-linear-to-r ${gradient}/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100`} />
     </motion.div>
   );
 };

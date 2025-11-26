@@ -1,18 +1,13 @@
-import EventEmitter from 'events';
+import EventEmitter from 'node:events';
 import { logInfo, logDebug } from '../utils/logger.js';
 
 class SSEBus extends EventEmitter {
   constructor() {
     super();
     this.clients = new Set();
-    this.setMaxListeners(0); // Remove limit for SSE connections
+    this.setMaxListeners(0);
   }
 
-  /**
-   * Add a new SSE client connection
-   * @param {Response} res - Express response object
-   * @param {string} clientId - Unique client identifier
-   */
   addClient(res, clientId) {
     const client = {
       id: clientId,
@@ -22,78 +17,46 @@ class SSEBus extends EventEmitter {
 
     this.clients.add(client);
     
-    logInfo('SSE client connected', {
-      clientId,
-      totalClients: this.clients.size
-    });
+    logInfo('SSE Connection', { clientId, totalClients: this.clients.size });
 
-    // Send initial connection message
     this.sendToClient(client, {
       type: 'connected',
       timestamp: new Date().toISOString(),
       clientId
     });
 
-    // Handle client disconnect
-    res.on('close', () => {
-      this.removeClient(clientId);
-    });
-
-    res.on('error', (error) => {
-      logDebug('SSE client error', { clientId, error: error.message });
-      this.removeClient(clientId);
+    const cleanup = () => this.removeClient(clientId);
+    res.on('close', cleanup);
+    res.on('error', (err) => {
+      logDebug('SSE Error', { clientId, error: err.message });
+      cleanup();
     });
 
     return client;
   }
 
-  /**
-   * Remove a client connection
-   * @param {string} clientId - Client identifier to remove
-   */
   removeClient(clientId) {
-    const clientToRemove = Array.from(this.clients).find(client => client.id === clientId);
+    const client = [...this.clients].find(c => c.id === clientId);
+    if (!client) return;
+
+    this.clients.delete(client);
     
-    if (clientToRemove) {
-      this.clients.delete(clientToRemove);
-      
-      logInfo('SSE client disconnected', {
-        clientId,
-        totalClients: this.clients.size,
-        connectionDuration: Date.now() - new Date(clientToRemove.connectedAt).getTime()
-      });
-    }
+    logInfo('SSE Disconnection', { 
+      clientId, 
+      durationMs: Date.now() - new Date(client.connectedAt).getTime() 
+    });
   }
 
-  /**
-   * Send data to a specific client
-   * @param {Object} client - Client object
-   * @param {Object} data - Data to send
-   */
-  sendToClient(client, data) {
+  sendToClient(client, payload) {
     try {
-      const message = `data: ${JSON.stringify(data)}\n\n`;
-      client.response.write(message);
-      
-      logDebug('Message sent to client', {
-        clientId: client.id,
-        messageType: data.type
-      });
+      client.response.write(`data: ${JSON.stringify(payload)}\n\n`);
+      logDebug('SSE Push', { clientId: client.id, type: payload.type });
     } catch (error) {
-      logDebug('Failed to send message to client', {
-        clientId: client.id,
-        error: error.message
-      });
-      
+      logDebug('SSE Push Failed', { clientId: client.id, error: error.message });
       this.removeClient(client.id);
     }
   }
 
-  /**
-   * Broadcast a message to all connected clients
-   * @param {string} topic - Event topic (blog-updated, project-updated, stats-updated)
-   * @param {Object} payload - Optional payload data
-   */
   broadcast(topic, payload = {}) {
     const message = {
       type: topic,
@@ -101,96 +64,51 @@ class SSEBus extends EventEmitter {
       data: payload
     };
 
-    logInfo('Broadcasting SSE message', {
-      topic,
-      clientCount: this.clients.size,
-      hasPayload: Object.keys(payload).length > 0
-    });
+    logInfo('SSE Broadcast', { topic, recipients: this.clients.size });
 
-    // Send to all connected clients
-    for (const client of this.clients) {
-      this.sendToClient(client, message);
-    }
-
-    // Emit event for potential logging or other listeners
+    this.clients.forEach(client => this.sendToClient(client, message));
     this.emit('broadcast', { topic, payload, clientCount: this.clients.size });
   }
 
-  /**
-   * Send heartbeat to all clients to keep connections alive
-   */
   sendHeartbeat() {
-    const heartbeatMessage = {
-      type: 'heartbeat',
-      timestamp: new Date().toISOString()
-    };
-
-    for (const client of this.clients) {
-      this.sendToClient(client, heartbeatMessage);
-    }
-
-    logDebug('Heartbeat sent to all clients', {
-      clientCount: this.clients.size
-    });
+    if (this.clients.size === 0) return;
+    
+    const beat = { type: 'heartbeat', timestamp: new Date().toISOString() };
+    this.clients.forEach(client => this.sendToClient(client, beat));
   }
 
-  /**
-   * Get current connection statistics
-   * @returns {Object} - Connection stats
-   */
   getStats() {
     return {
       totalClients: this.clients.size,
-      clients: Array.from(this.clients).map(client => ({
-        id: client.id,
-        connectedAt: client.connectedAt,
-        connectionDuration: Date.now() - new Date(client.connectedAt).getTime()
+      clients: [...this.clients].map(({ id, connectedAt }) => ({
+        id,
+        connectedAt,
+        uptime: Date.now() - new Date(connectedAt).getTime()
       }))
     };
   }
 
-  /**
-   * Close all connections (useful for graceful shutdown)
-   */
   closeAllConnections() {
-    logInfo('Closing all SSE connections', {
-      clientCount: this.clients.size
+    logInfo('SSE Shutdown', { count: this.clients.size });
+    
+    this.clients.forEach(client => {
+      try { client.response.end(); } 
+      catch (err) { logDebug('Close Error', { clientId: client.id, error: err.message }); }
     });
-
-    for (const client of this.clients) {
-      try {
-        client.response.end();
-      } catch (error) {
-        logDebug('Error closing client connection', {
-          clientId: client.id,
-          error: error.message
-        });
-      }
-    }
-
+    
     this.clients.clear();
   }
 }
 
-// Create singleton instance
 const sseBus = new SSEBus();
 
-// Start heartbeat interval (every 30 seconds)
-const heartbeatInterval = setInterval(() => {
-  if (sseBus.clients.size > 0) {
-    sseBus.sendHeartbeat();
-  }
-}, 30000);
+const heartbeatInterval = setInterval(() => sseBus.sendHeartbeat(), 30_000);
 
-// Cleanup on process termination
-process.on('SIGTERM', () => {
+const shutdown = () => {
   clearInterval(heartbeatInterval);
   sseBus.closeAllConnections();
-});
+};
 
-process.on('SIGINT', () => {
-  clearInterval(heartbeatInterval);
-  sseBus.closeAllConnections();
-});
+['SIGTERM', 'SIGINT'].forEach(signal => process.on(signal, shutdown));
 
 export default sseBus;

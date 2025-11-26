@@ -1,9 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 
-/**
- * Custom hook per gestire le connessioni Server-Sent Events (SSE)
- * Connette al backend per ricevere aggiornamenti in tempo reale
- */
 export const useSSE = (url, options = {}) => {
   const [isConnected, setIsConnected] = useState(false);
   const [lastEvent, setLastEvent] = useState(null);

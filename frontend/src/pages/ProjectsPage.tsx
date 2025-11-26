@@ -9,7 +9,6 @@ import ProjectCard from '../components/ProjectCard';
 import SectionTitle from '../components/SectionTitle';
 import ElegantStatCard from '../components/ElegantStatCard';
 
-// Tipo per i progetti direttamente da Contentful
 interface ContentfulProject {
   sys: {
     id: string;
@@ -18,7 +17,7 @@ interface ContentfulProject {
   };
   fields: {
     title: string;
-    description: any; // Rich text object
+    description: any;
     technologies: string[];
     gitHubUrl?: string;
     liveDemoUr?: string;
@@ -44,13 +43,12 @@ const ProjectsPage: React.FC = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [updateNotification, setUpdateNotification] = useState<string | null>(null);
 
-  // Configurazione SSE per aggiornamenti in tempo reale
   const apiBaseUrl = (import.meta as any).env.VITE_API_BASE_URL || 'http://localhost:3001';
   const { isConnected, lastEvent } = useSSE(`${apiBaseUrl}/api/events`, {
     onMessage: (data: any) => {
       if (data.topic === 'project-updated') {
         console.log('🔄 Projects updated via SSE, refreshing...');
-        handleRefresh(true); // Auto-refresh silenzioso
+        handleRefresh(true);
         setUpdateNotification('Progetti aggiornati ✅');
         setTimeout(() => setUpdateNotification(null), 3000);
       }
@@ -60,7 +58,6 @@ const ProjectsPage: React.FC = () => {
     }
   });
 
-  // Fetch dei progetti da Contentful
   const loadProjects = async (silent = false) => {
     try {
       if (!silent) {
@@ -83,7 +80,6 @@ const ProjectsPage: React.FC = () => {
     }
   };
 
-  // Refresh manuale
   const handleRefresh = async (silent = false) => {
     if (!silent) {
       setIsRefreshing(true);
@@ -96,19 +92,17 @@ const ProjectsPage: React.FC = () => {
     }
   };
 
-  // Auto-fetch ogni 60 secondi e fetch iniziale
   useEffect(() => {
     loadProjects();
     
     const interval = setInterval(() => {
       console.log('🔄 Auto-refreshing projects...');
-      loadProjects(true); // Refresh silenzioso
-    }, 60000); // 60 secondi
+      loadProjects(true);
+    }, 60000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Animazioni
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -234,7 +228,6 @@ const ProjectsPage: React.FC = () => {
 
   return (
     <>
-      {/* SEO Meta Tags */}
       <Helmet>
         <title>💼 Portfolio Progetti — Alina Galben</title>
         <meta name="description" content="Scopri i progetti realizzati da Alina Galben: applicazioni web moderne, dashboard interattive e soluzioni full-stack con React, Node.js e tecnologie all'avanguardia." />
@@ -248,7 +241,6 @@ const ProjectsPage: React.FC = () => {
 
       <div className="min-h-screen bg-gray-50 pt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
           <SectionTitle
             emoji="💼"
             title="I Miei Progetti"
@@ -256,7 +248,6 @@ const ProjectsPage: React.FC = () => {
             className="pt-8"
           />
 
-          {/* Projects Stats */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -283,7 +274,6 @@ const ProjectsPage: React.FC = () => {
             />
           </motion.div>
 
-          {/* Notification */}
           <AnimatePresence>
             {updateNotification && (
               <motion.div
@@ -298,7 +288,6 @@ const ProjectsPage: React.FC = () => {
             )}
           </AnimatePresence>
 
-          {/* Projects Grid */}
           {projects.length === 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -321,7 +310,6 @@ const ProjectsPage: React.FC = () => {
             </motion.div>
           ) : (
             <>
-              {/* Featured Projects First */}
               {projects.filter(p => p.fields.featured).length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -358,7 +346,6 @@ const ProjectsPage: React.FC = () => {
                 </motion.div>
               )}
 
-              {/* All Projects */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -385,7 +372,6 @@ const ProjectsPage: React.FC = () => {
                 </motion.div>
               </motion.div>
 
-              {/* Status Bar - Moved after all projects */}
               <motion.div 
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -422,7 +408,6 @@ const ProjectsPage: React.FC = () => {
                 </button>
               </motion.div>
 
-              {/* Call-to-Action Section */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}

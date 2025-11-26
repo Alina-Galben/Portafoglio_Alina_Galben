@@ -4,18 +4,7 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { format, parseISO, startOfMonth, eachMonthOfInterval, subMonths } from 'date-fns';
 import { it } from 'date-fns/locale';
-import { 
-  BookOpen, 
-  FolderOpen, 
-  Award, 
-  Target, 
-  TrendingUp, 
-  Calendar,
-  Tag,
-  Clock,
-  ArrowRight,
-  RefreshCw
-} from 'lucide-react';
+import { Tag, ArrowRight, RefreshCw } from 'lucide-react';
 import useSWR from 'swr';
 import { toast } from 'react-hot-toast';
 
@@ -24,8 +13,6 @@ import StatChart from '../components/StatChart';
 import LegendPill from '../components/LegendPill';
 import SectionTitle from '../components/SectionTitle';
 import { useSSE } from '../hooks/useSSE';
-
-// Import local data
 import certificationsData from '../data/certifications.json';
 import coursesData from '../data/courses.json';
 import personalGoalsData from '../data/personalGoals.json';
@@ -64,10 +51,8 @@ const StatisticsPage: React.FC = () => {
   const [timeFilter, setTimeFilter] = useState<'7d' | '1m' | '6m' | 'all'>('all');
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
-  // Fetcher functions for SWR
   const fetcher = (url: string) => fetch(`${API_BASE_URL}${url}`).then(res => res.json());
 
-  // Fetch blog posts
   const { data: blogPostsData, mutate: mutateBlogPosts } = useSWR(
     '/api/blog',
     fetcher,
@@ -77,7 +62,6 @@ const StatisticsPage: React.FC = () => {
     }
   );
 
-  // Fetch projects
   const { data: projectsData, mutate: mutateProjects } = useSWR(
     '/api/projects',
     fetcher,
@@ -87,7 +71,6 @@ const StatisticsPage: React.FC = () => {
     }
   );
 
-  // SSE for real-time updates
   useSSE(`${API_BASE_URL}/api/events`, {
     onMessage: (event: any) => {
       if (event.type === 'stats-updated') {
@@ -102,11 +85,9 @@ const StatisticsPage: React.FC = () => {
     }
   });
 
-  // Process blog posts data
   const blogPosts: BlogPost[] = blogPostsData?.items || [];
   const projects: Project[] = projectsData?.items || [];
 
-  // Calculate statistics
   const stats = {
     articles: blogPosts.length,
     projects: projects.length,
@@ -118,10 +99,8 @@ const StatisticsPage: React.FC = () => {
     skills: technicalSkillsData.length
   };
 
-  // Calculate training hours (estimated)
   const trainingHours = certificationsData.length * 40 + coursesData.length * 20;
 
-  // Process tags from blog posts
   const tagFrequency = blogPosts.reduce((acc, post) => {
     if (post.fields.tags) {
       post.fields.tags.forEach(tag => {
@@ -136,7 +115,6 @@ const StatisticsPage: React.FC = () => {
     .slice(0, 8)
     .map(([name, value]) => ({ name, value }));
 
-  // Process publication timeline
   const getTimelineData = () => {
     const now = new Date();
     let startDate: Date;
@@ -173,7 +151,6 @@ const StatisticsPage: React.FC = () => {
 
   const timelineData = getTimelineData();
 
-  // Process technology usage from projects
   const techUsage = projects.reduce((acc, project) => {
     if (project.fields.technologies) {
       project.fields.technologies.forEach(tech => {
@@ -215,7 +192,6 @@ const StatisticsPage: React.FC = () => {
 
   return (
     <>
-      {/* SEO Meta Tags */}
       <Helmet>
         <title>📈 Statistiche Personali & Crescita Professionale — Alina Galben Web Developer</title>
         <meta 
@@ -232,7 +208,6 @@ const StatisticsPage: React.FC = () => {
 
       <div className="min-h-screen bg-gray-50 pt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Page Header */}
           <SectionTitle
             emoji="📈"
             title="Statistiche & Crescita Professionale"
@@ -240,9 +215,6 @@ const StatisticsPage: React.FC = () => {
             className="pt-8"
           />
 
-          {/* Last Update Info - Moved to bottom */}
-
-          {/* Main Stats Cards */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -294,7 +266,6 @@ const StatisticsPage: React.FC = () => {
             </motion.div>
           </motion.div>
 
-          {/* Secondary Stats */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -335,9 +306,7 @@ const StatisticsPage: React.FC = () => {
             </motion.div>
           </motion.div>
 
-          {/* Charts Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-            {/* Publication Timeline */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -356,7 +325,6 @@ const StatisticsPage: React.FC = () => {
               />
             </motion.div>
 
-            {/* Top Technologies */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -376,7 +344,6 @@ const StatisticsPage: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Tags Section */}
           {topTags.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -403,7 +370,6 @@ const StatisticsPage: React.FC = () => {
             </motion.div>
           )}
 
-          {/* Last Update Info - Above CTA */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -416,8 +382,7 @@ const StatisticsPage: React.FC = () => {
                 Ultimo aggiornamento: {format(lastUpdate, 'dd/MM/yyyy HH:mm', { locale: it })}
               </span>
             </div>
-            
-            {/* Time Filter */}
+
             <div className="flex items-center space-x-1 sm:space-x-2">
               <span className="text-xs sm:text-sm text-gray-600">Periodo:</span>
               {(['7d', '1m', '6m', 'all'] as const).map((filter) => (
@@ -439,7 +404,6 @@ const StatisticsPage: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Call to Action */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

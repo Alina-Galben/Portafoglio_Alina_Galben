@@ -1,4 +1,4 @@
-// Contentful Types
+
 export interface ContentfulProject {
   sys: {
     id: string;
@@ -32,7 +32,6 @@ export interface ContentfulBlogPost {
   };
 }
 
-// Local Data Types
 export interface Service {
   id: string;
   title: string;
@@ -48,7 +47,7 @@ export interface Service {
 export interface TechnicalSkill {
   id: string;
   name: string;
-  level: number; // 1-5
+  level: number;
   icon: string;
   category: 'frontend' | 'backend' | 'database' | 'tools' | 'cloud';
 }
@@ -81,7 +80,6 @@ export interface Course {
   skills: string[];
 }
 
-// API Response Types
 export interface ApiResponse<T> {
   data: T;
   success: boolean;
@@ -93,10 +91,9 @@ export interface ContactFormData {
   email: string;
   subject: string;
   message: string;
-  honeypot?: string; // for spam protection
+  honeypot?: string;
 }
 
-// SSE Event Types
 export interface SSEEvent {
   type: 'blog-updated' | 'project-updated' | 'stats-updated' | 'connected' | 'heartbeat';
   data?: any;

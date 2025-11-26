@@ -1,78 +1,53 @@
 import winston from 'winston';
 
+const { 
+  LOG_LEVEL = 'info', 
+  NODE_ENV = 'development', 
+  npm_package_version = '1.0.0' 
+} = process.env;
+
+const SENSITIVE_KEYS = new Set(['password', 'token', 'secret', 'key', 'authorization']);
+
+const redact = (payload) => {
+  if (!payload || typeof payload !== 'object') return payload;
+  
+  return Object.entries(payload).reduce((acc, [key, val]) => ({
+    ...acc,
+    [key]: SENSITIVE_KEYS.has(key.toLowerCase()) ? '[REDACTED]' : val
+  }), {});
+};
+
 const logger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
+  level: LOG_LEVEL,
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.errors({ stack: true }),
     winston.format.json()
   ),
-  defaultMeta: {
-    service: 'portfolio-backend',
-    version: process.env.npm_package_version || '1.0.0'
-  },
+  defaultMeta: { service: 'portfolio-backend', version: npm_package_version },
   transports: [
-    new winston.transports.File({ 
-      filename: 'logs/error.log', 
-      level: 'error',
-      maxsize: 5242880, // 5MB
-      maxFiles: 5
-    }),
-    new winston.transports.File({ 
-      filename: 'logs/combined.log',
-      maxsize: 5242880,
-      maxFiles: 5
-    })
-  ],
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error', maxsize: 5_242_880, maxFiles: 5 }),
+    new winston.transports.File({ filename: 'logs/combined.log', maxsize: 5_242_880, maxFiles: 5 }),
+    ...(NODE_ENV !== 'production' ? [
+      new winston.transports.Console({
+        format: winston.format.combine(winston.format.colorize(), winston.format.simple())
+      })
+    ] : [])
+  ]
 });
 
-// Add console transport in development
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
-    )
-  }));
-}
+export const logInfo = (msg, meta = {}) => logger.info(msg, redact(meta));
 
-// Sanitize sensitive data from logs
-const sanitize = (obj) => {
-  if (!obj || typeof obj !== 'object') return obj;
-  
-  const sanitized = { ...obj };
-  const sensitiveFields = ['password', 'token', 'secret', 'key', 'authorization'];
-  
-  for (const field of sensitiveFields) {
-    if (sanitized[field]) {
-      sanitized[field] = '[REDACTED]';
-    }
-  }
-  
-  return sanitized;
-};
+export const logWarn = (msg, meta = {}) => logger.warn(msg, redact(meta));
 
-// Enhanced logging methods
-export const logInfo = (message, meta = {}) => {
-  logger.info(message, sanitize(meta));
-};
+export const logDebug = (msg, meta = {}) => logger.debug(msg, redact(meta));
 
-export const logError = (message, error = null, meta = {}) => {
-  const errorMeta = error ? { 
-    error: error.message, 
-    stack: error.stack,
-    ...meta 
-  } : meta;
-  
-  logger.error(message, sanitize(errorMeta));
-};
-
-export const logWarn = (message, meta = {}) => {
-  logger.warn(message, sanitize(meta));
-};
-
-export const logDebug = (message, meta = {}) => {
-  logger.debug(message, sanitize(meta));
+export const logError = (msg, err, meta = {}) => {
+  const context = err instanceof Error 
+    ? { ...meta, error: err.message, stack: err.stack }
+    : { ...meta, ...err };
+    
+  logger.error(msg, redact(context));
 };
 
 export default logger;

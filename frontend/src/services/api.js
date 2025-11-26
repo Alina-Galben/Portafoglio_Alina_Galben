@@ -1,9 +1,6 @@
-// API Configuration
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3020';
 
-/**
- * Generic fetch wrapper with error handling
- */
 const fetchJSON = async (endpoint, options = {}) => {
   const config = {
     headers: {
@@ -32,9 +29,6 @@ const fetchJSON = async (endpoint, options = {}) => {
   }
 };
 
-/**
- * Contact form submission
- */
 export const submitContactForm = async (formData) => {
   return fetchJSON('/api/contact', {
     method: 'POST',
@@ -42,40 +36,25 @@ export const submitContactForm = async (formData) => {
   });
 };
 
-/**
- * Health check
- */
 export const checkHealth = async () => {
   return fetchJSON('/health');
 };
 
-/**
- * Get all blog posts
- */
 export const getAllBlogPosts = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
   const endpoint = query ? `/api/blog?${query}` : '/api/blog';
   return fetchJSON(endpoint);
 };
 
-/**
- * Get single blog post by slug
- */
 export const getBlogPostBySlug = async (slug) => {
   return fetchJSON(`/api/blog/${slug}`);
 };
 
-/**
- * Search blog posts
- */
 export const searchBlogPosts = async (params) => {
   const query = new URLSearchParams(params).toString();
   return fetchJSON(`/api/blog/search?${query}`);
 };
 
-/**
- * Get blog tags
- */
 export const getBlogTags = async () => {
   return fetchJSON('/api/blog/tags');
 };

@@ -1,270 +1,90 @@
 import { Resend } from 'resend';
 import { logInfo, logError } from '../utils/logger.js';
 
-// Initialize Resend instance
-let resend = null;
+const generateHtml = (title, content) => `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: system-ui, sans-serif; color: #333; padding: 20px; max-width: 600px; margin: 0 auto; }
+    .header { background: #3b82f6; color: #fff; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+    .content { background: #f8fafc; padding: 20px; border-radius: 0 0 8px 8px; }
+    .field { margin-bottom: 15px; padding: 10px; background: #fff; border-left: 4px solid #3b82f6; }
+    .label { font-weight: 600; color: #1e40af; font-size: 12px; text-transform: uppercase; margin-bottom: 4px; }
+    .footer { margin-top: 30px; font-size: 12px; color: #6b7280; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="header"><h1>${title}</h1></div>
+  <div class="content">${content}</div>
+  <div class="footer">Timestamp: ${new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' })}</div>
+</body>
+</html>`;
 
-const getResendClient = () => {
-  if (!resend) {
-    const RESEND_API_KEY = process.env.RESEND_API_KEY;
-    if (!RESEND_API_KEY) {
-      throw new Error('RESEND_API_KEY environment variable is required');
-    }
-    resend = new Resend(RESEND_API_KEY);
-  }
-  return resend;
+const getMailer = () => {
+  const { RESEND_API_KEY, EMAIL_FROM, EMAIL_TO } = process.env;
+  if (!RESEND_API_KEY) throw new Error('Missing RESEND_API_KEY');
+  
+  return {
+    client: new Resend(RESEND_API_KEY),
+    from: EMAIL_FROM || 'portfolio@alinadev.com',
+    to: EMAIL_TO || 'alina@alinadev.com'
+  };
 };
 
-/**
- * Send contact form email using Resend
- * @param {Object} contactData - Contact form data
- * @returns {Promise<Object>} - Success/error response
- */
 export const sendContactEmail = async ({ name, email, subject, message }) => {
+  if (!name || !email || !subject || !message) throw new Error('Invalid contact payload');
+
   try {
-    // Validate required fields
-    if (!name || !email || !subject || !message) {
-      throw new Error('Missing required contact form fields');
-    }
+    const { client, from, to } = getMailer();
 
-    // Create HTML email template
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Nuovo messaggio dal portfolio</title>
-          <style>
-            body {
-              font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-              line-height: 1.6;
-              color: #333;
-              max-width: 600px;
-              margin: 0 auto;
-              padding: 20px;
-            }
-            .header {
-              background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-              color: white;
-              padding: 30px 20px;
-              border-radius: 8px 8px 0 0;
-              text-align: center;
-            }
-            .content {
-              background: #f8fafc;
-              padding: 30px 20px;
-              border-radius: 0 0 8px 8px;
-            }
-            .field {
-              margin-bottom: 20px;
-              padding: 15px;
-              background: white;
-              border-radius: 6px;
-              border-left: 4px solid #3b82f6;
-            }
-            .field-label {
-              font-weight: 600;
-              color: #1e40af;
-              margin-bottom: 5px;
-              text-transform: uppercase;
-              font-size: 12px;
-              letter-spacing: 0.5px;
-            }
-            .field-value {
-              color: #374151;
-              font-size: 14px;
-            }
-            .message-content {
-              background: white;
-              padding: 20px;
-              border-radius: 6px;
-              border: 1px solid #e5e7eb;
-              white-space: pre-wrap;
-              font-size: 14px;
-              line-height: 1.6;
-            }
-            .footer {
-              margin-top: 30px;
-              padding-top: 20px;
-              border-top: 1px solid #e5e7eb;
-              font-size: 12px;
-              color: #6b7280;
-              text-align: center;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1 style="margin: 0; font-size: 24px;">Nuovo Messaggio</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9;">Portfolio Alina Galben</p>
-          </div>
-          
-          <div class="content">
-            <div class="field">
-              <div class="field-label">Nome</div>
-              <div class="field-value">${name}</div>
-            </div>
-            
-            <div class="field">
-              <div class="field-label">Email</div>
-              <div class="field-value">${email}</div>
-            </div>
-            
-            <div class="field">
-              <div class="field-label">Oggetto</div>
-              <div class="field-value">${subject}</div>
-            </div>
-            
-            <div class="field">
-              <div class="field-label">Messaggio</div>
-              <div class="message-content">${message}</div>
-            </div>
-          </div>
-          
-          <div class="footer">
-            <p>Messaggio ricevuto tramite il form contatti del portfolio</p>
-            <p>Timestamp: ${new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' })}</p>
-          </div>
-        </body>
-      </html>
-    `;
-
-    // Send email
-    const resendClient = getResendClient();
-    const result = await resendClient.emails.send({
-      from: process.env.EMAIL_FROM || 'portfolio@alinadev.com',
-      to: process.env.EMAIL_TO || 'alina@example.com',
+    const { data, error } = await client.emails.send({
+      from,
+      to,
       replyTo: email,
-      subject: `Portfolio: ${subject}`,
-      html: htmlContent,
-      text: `
-Nuovo messaggio dal portfolio
-
-Nome: ${name}
-Email: ${email}
-Oggetto: ${subject}
-
-Messaggio:
-${message}
-
----
-Ricevuto il ${new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' })}
-      `.trim()
+      subject: `[Portfolio] ${subject}`,
+      html: generateHtml('Nuovo Messaggio', `
+        <div class="field"><div class="label">Nome</div><div>${name}</div></div>
+        <div class="field"><div class="label">Email</div><div>${email}</div></div>
+        <div class="field"><div class="label">Oggetto</div><div>${subject}</div></div>
+        <div class="field"><div class="label">Messaggio</div><div style="white-space: pre-wrap">${message}</div></div>
+      `)
     });
 
-    logInfo('Contact email sent successfully', {
-      messageId: result.data?.id,
-      recipient: process.env.EMAIL_TO,
-      sender: email,
-      subject: subject
-    });
+    if (error) throw new Error(error.message);
 
-    return {
-      success: true,
-      messageId: result.data?.id
-    };
+    logInfo('Email dispatched', { id: data?.id, recipient: to });
+    return { success: true, messageId: data?.id };
 
-  } catch (error) {
-    logError('Failed to send contact email', error, {
-      sender: email,
-      subject: subject
-    });
-
-    return {
-      success: false,
-      error: error.message
-    };
+  } catch (err) {
+    logError('Email delivery failed', err, { sender: email });
+    return { success: false, error: err.message };
   }
 };
 
-/**
- * Send auto-reply email to the contact form sender
- * @param {Object} contactData - Contact form data
- * @returns {Promise<Object>} - Success/error response
- */
 export const sendAutoReply = async ({ name, email, subject }) => {
   try {
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>Grazie per il tuo messaggio</title>
-          <style>
-            body {
-              font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-              line-height: 1.6;
-              color: #333;
-              max-width: 600px;
-              margin: 0 auto;
-              padding: 20px;
-            }
-            .header {
-              background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-              color: white;
-              padding: 30px 20px;
-              border-radius: 8px;
-              text-align: center;
-            }
-            .content {
-              padding: 30px 0;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1 style="margin: 0;">Grazie ${name}!</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.9;">Il tuo messaggio è stato ricevuto</p>
-          </div>
-          
-          <div class="content">
-            <p>Ciao ${name},</p>
-            <p>Grazie per avermi contattato tramite il mio portfolio. Ho ricevuto il tuo messaggio riguardo "<strong>${subject}</strong>" e ti risponderò al più presto.</p>
-            <p>Ti ricontatterò entro 24-48 ore all'indirizzo ${email}.</p>
-            <p>A presto!</p>
-            <p><strong>Alina Galben</strong><br>Full-Stack Web Developer</p>
-          </div>
-        </body>
-      </html>
-    `;
+    const { client, from } = getMailer();
 
-    const resendClient = getResendClient();
-    const result = await resendClient.emails.send({
-      from: process.env.EMAIL_FROM || 'portfolio@alinadev.com',
+    const { data, error } = await client.emails.send({
+      from,
       to: email,
-      subject: 'Grazie per il tuo messaggio - Alina Galben',
-      html: htmlContent,
-      text: `
-Ciao ${name},
-
-Grazie per avermi contattato tramite il mio portfolio. Ho ricevuto il tuo messaggio riguardo "${subject}" e ti risponderò al più presto.
-
-Ti ricontatterò entro 24-48 ore all'indirizzo ${email}.
-
-A presto!
-
-Alina Galben
-Full-Stack Web Developer
-      `.trim()
+      subject: 'Messaggio Ricevuto - Alina Galben',
+      html: generateHtml(`Grazie ${name}!`, `
+        <p>Ho ricevuto il tuo messaggio: <strong>${subject}</strong>.</p>
+        <p>Ti risponderò entro 24-48 ore.</p>
+        <p><em>Alina Galben</em></p>
+      `)
     });
 
-    logInfo('Auto-reply sent successfully', {
-      messageId: result.data?.id,
-      recipient: email
-    });
+    if (error) throw new Error(error.message);
 
-    return {
-      success: true,
-      messageId: result.data?.id
-    };
+    logInfo('Auto-reply sent', { id: data?.id, recipient: email });
+    return { success: true, messageId: data?.id };
 
-  } catch (error) {
-    logError('Failed to send auto-reply', error, { recipient: email });
-    
-    return {
-      success: false,
-      error: error.message
-    };
+  } catch (err) {
+    logError('Auto-reply failed', err, { recipient: email });
+    return { success: false, error: err.message };
   }
 };

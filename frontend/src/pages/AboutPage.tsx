@@ -6,7 +6,6 @@ import { MapPin, Briefcase, Globe, Heart, Lightbulb, Settings, Monitor, Mail, Ar
 const AboutPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -29,13 +28,11 @@ const AboutPage: React.FC = () => {
   };
 
   const handleContactClick = () => {
-    // Naviga direttamente alla pagina contatti (più veloce e pulito)
     navigate('/contact');
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-violet-50 via-yellow-50 to-rose-50 relative overflow-hidden">
-      {/* Background decorative elements */}
+    <section className="min-h-screen bg-linear-to-br from-violet-50 via-yellow-50 to-rose-50 relative overflow-hidden">
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-32 h-32 bg-violet-200/30 rounded-full blur-3xl"></div>
         <div className="absolute top-60 right-20 w-40 h-40 bg-yellow-200/30 rounded-full blur-3xl"></div>
@@ -49,28 +46,25 @@ const AboutPage: React.FC = () => {
           animate="visible"
           className="max-w-7xl mx-auto"
         >
-          {/* Page Title */}
           <motion.div variants={itemVariants} className="text-center mb-16">
-            <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-violet-600 via-rose-500 to-yellow-500 bg-clip-text text-transparent mb-4">
+            <h1 className="text-4xl lg:text-5xl font-bold bg-linear-to-r from-violet-600 via-rose-500 to-yellow-500 bg-clip-text text-transparent mb-4">
               Chi Sono
             </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-violet-600 to-rose-500 mx-auto rounded-full"></div>
+            <div className="w-24 h-1 bg-linear-to-r from-violet-600 to-rose-500 mx-auto rounded-full"></div>
           </motion.div>
 
           {/* Main Content */}
-          <div className="lg:grid lg:grid-cols-2 lg:gap-12 lg:gap-16 lg:items-start space-y-8 lg:space-y-0">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-start space-y-8 lg:space-y-0">
             
-            {/* Mobile Layout: Photo first, then Biography, then Info Cards */}
+            {/* Mobile Layout */}
             <div className="lg:hidden space-y-8">
-              {/* Mobile: Photo */}
               <motion.div 
                 variants={imageVariants}
                 className="relative"
               >
-                <div className="bg-gradient-to-br from-violet-600 via-rose-500 to-yellow-500 p-1 rounded-2xl shadow-2xl">
+                <div className="bg-linear-to-br from-violet-600 via-rose-500 to-yellow-500 p-1 rounded-2xl shadow-2xl">
                   <div className="bg-white rounded-2xl p-8 text-center">
-                    {/* Avatar di Alina */}
-                    <div className="w-60 h-60 mx-auto mb-6 bg-gradient-to-br from-violet-100 via-rose-100 to-yellow-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg overflow-hidden">
+                    <div className="w-60 h-60 mx-auto mb-6 bg-linear-to-br from-violet-100 via-rose-100 to-yellow-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg overflow-hidden">
                       <img 
                         src="/alina-avatar.png" 
                         alt="Alina Galben" 
@@ -83,9 +77,7 @@ const AboutPage: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Mobile: Biography */}
               <motion.div variants={itemVariants} className="space-y-6">
-              {/* Intro */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 lg:p-10 shadow-xl border border-white/20">
                 <div className="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
                   <span className="text-2xl md:text-3xl">👋</span>
@@ -103,7 +95,6 @@ const AboutPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Education & Skills */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 lg:p-10 shadow-xl border border-white/20">
                 <div className="flex items-center gap-4 mb-8">
                   <Lightbulb className="w-8 h-8 text-yellow-500" />
@@ -125,7 +116,6 @@ const AboutPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Philosophy & Approach */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-10 shadow-xl border border-white/20">
                 <div className="flex items-center gap-4 mb-8">
                   <Heart className="w-8 h-8 text-rose-500" />
@@ -147,7 +137,6 @@ const AboutPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Goals & Collaboration */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-10 shadow-xl border border-white/20">
                 <div className="flex items-center gap-4 mb-8">
                   <Settings className="w-8 h-8 text-violet-500" />
@@ -169,41 +158,33 @@ const AboutPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Mobile: Info Cards */}
               <div className="space-y-6">
                 
-                {/* Location */}
                 <motion.div 
                   variants={itemVariants}
                   className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition-shadow duration-300"
                 >
                   <div className="flex flex-col gap-6">
-                    {/* Header Card (Icona + Titolo) */}
                     <div className="flex items-center gap-4">
-                      <div className="p-3 bg-violet-100 rounded-lg flex-shrink-0">
+                      <div className="p-3 bg-violet-100 rounded-lg flex-shrink: 0">
                         <MapPin className="w-6 h-6 text-violet-600" />
                       </div>
                       <h4 className="text-lg font-semibold text-gray-800">Modalità di Lavoro</h4>
                     </div>
                     
-                    {/* Contenuto card (full width) */}
                     <div className="w-full">
-                      {/* Lista unificata */}
                       <div className="grid grid-cols-1 gap-3">
                         
-                        {/* 1. Remoto (Primaria) */}
                         <div className="flex items-center justify-between py-3 px-4 bg-green-100 rounded-xl border border-green-200">
                           <span className="text-green-800 text-base font-semibold">🌍 Collaborazioni Remote</span>
                           <span className="text-green-700 text-sm bg-white px-3 py-1 rounded-full font-medium">Primaria</span>
                         </div>
 
-                        {/* 2. Titolo Basi Locali */}
                         <div className="flex items-center gap-2 pt-3">
                           <MapPin className="w-4 h-4 text-gray-500" />
                           <span className="text-sm font-medium text-gray-600">Basi operative locali:</span>
                         </div>
 
-                        {/* 3. Basi Locali */}
                         <div className="flex items-center justify-between py-3 px-4 bg-violet-50 rounded-xl border border-violet-100">
                           <span className="text-violet-700 text-base font-medium">🏖️ Catania</span>
                           <span className="text-violet-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Sicilia</span>
@@ -222,14 +203,12 @@ const AboutPage: React.FC = () => {
                   </div>
                 </motion.div>
 
-
-                {/* Role */}
                 <motion.div 
                   variants={itemVariants}
                   className="bg-white/80 backdrop-blur-sm rounded-xl p-10 shadow-lg border border-white/20 hover:shadow-xl transition-shadow duration-300"
                 >
                   <div className="flex items-center gap-8">
-                    <div className="p-5 bg-rose-100 rounded-lg flex-shrink-0">
+                    <div className="p-5 bg-rose-100 rounded-lg flex-shrink: 0">
                       <Briefcase className="w-8 h-8 text-rose-600" />
                     </div>
                     <div>
@@ -239,7 +218,6 @@ const AboutPage: React.FC = () => {
                   </div>
                 </motion.div>
 
-                {/* Tech Stack Icons */}
                 <motion.div 
                   variants={itemVariants}
                   className="bg-white/80 backdrop-blur-sm rounded-xl p-10 shadow-lg border border-white/20"
@@ -252,7 +230,7 @@ const AboutPage: React.FC = () => {
                     {['React', 'Node.js', 'TypeScript', 'MongoDB', 'TailwindCSS', 'Express'].map((tech) => (
                       <span 
                         key={tech}
-                        className="px-5 py-3 bg-gradient-to-r from-violet-100 to-rose-100 text-violet-700 rounded-full font-semibold text-base"
+                        className="px-5 py-3 bg-linear-to-r from-violet-100 to-rose-100 text-violet-700 rounded-full font-semibold text-base"
                       >
                         {tech}
                       </span>
@@ -261,14 +239,13 @@ const AboutPage: React.FC = () => {
                 </motion.div>
               </div>
 
-              {/* Mobile: Contact CTA Button */}
               <motion.div 
                 variants={itemVariants}
                 className="pt-8"
               >
                 <button
                   onClick={handleContactClick}
-                  className="w-full group bg-gradient-to-r from-violet-600 to-rose-500 text-white font-bold py-5 px-10 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-4 text-lg"
+                  className="w-full group bg-linear-to-r from-violet-600 to-rose-500 text-white font-bold py-5 px-10 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-4 text-lg"
                 >
                   <Mail className="w-6 h-6" />
                   📩 Contattami
@@ -278,10 +255,7 @@ const AboutPage: React.FC = () => {
               </motion.div>
             </div>
 
-            {/* Desktop Layout: Side by side - Original Structure */}
-            {/* Biography Text - Desktop (Left Column) */}
             <motion.div variants={itemVariants} className="hidden lg:block space-y-6">
-              {/* Intro */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-10 shadow-xl border border-white/20">
                 <div className="flex items-center gap-4 mb-8">
                   <span className="text-3xl">👋</span>
@@ -299,7 +273,6 @@ const AboutPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Education & Skills */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-10 shadow-xl border border-white/20">
                 <div className="flex items-center gap-4 mb-8">
                   <Lightbulb className="w-8 h-8 text-yellow-500" />
@@ -321,7 +294,6 @@ const AboutPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Philosophy & Approach */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-10 shadow-xl border border-white/20">
                 <div className="flex items-center gap-4 mb-8">
                   <Heart className="w-8 h-8 text-rose-500" />
@@ -343,7 +315,6 @@ const AboutPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Goals & Collaboration */}
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-10 shadow-xl border border-white/20">
                 <div className="flex items-center gap-4 mb-8">
                   <Settings className="w-8 h-8 text-violet-500" />
@@ -366,17 +337,16 @@ const AboutPage: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Right Side - Desktop Photo + Info Cards */}
             <motion.div variants={itemVariants} className="hidden lg:block space-y-8">
               
               <motion.div 
                 variants={imageVariants}
                 className="relative"
               >
-                <div className="bg-gradient-to-br from-violet-600 via-rose-500 to-yellow-500 p-1 rounded-2xl shadow-2xl">
+                <div className="bg-linear-to-br from-violet-600 via-rose-500 to-yellow-500 p-1 rounded-2xl shadow-2xl">
                   <div className="bg-white rounded-2xl p-8 text-center">
                     {/* Avatar di Alina */}
-                    <div className="w-60 h-60 mx-auto mb-6 bg-gradient-to-br from-violet-100 via-rose-100 to-yellow-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg overflow-hidden">
+                    <div className="w-60 h-60 mx-auto mb-6 bg-linear-to-br from-violet-100 via-rose-100 to-yellow-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg overflow-hidden">
                       <img 
                         src="/alina-avatar.png" 
                         alt="Alina Galben" 
@@ -389,42 +359,35 @@ const AboutPage: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Info Cards */}
               <div className="space-y-6">
                 
-                {/* Location */}
                 <motion.div 
                   variants={itemVariants}
                   className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/20 hover:shadow-xl transition-shadow duration-300"
                 >
                   <div className="flex items-start gap-6">
-                    <div className="p-4 bg-violet-100 rounded-lg flex-shrink-0">
+                    <div className="p-4 bg-violet-100 rounded-lg shrink-0">
                       <MapPin className="w-7 h-7 text-violet-600" />
                     </div>
                     
-                    {/* Contenuto card destra */}
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-6">
                         <Globe className="w-5 h-5 text-violet-600" />
                         <h4 className="text-lg font-semibold text-gray-800">Modalità di Lavoro</h4>
                       </div>
                       
-                      {/* Lista unificata */}
                       <div className="grid grid-cols-1 gap-3">
                         
-                        {/* 1. Remoto (Primaria) */}
                         <div className="flex items-center justify-between py-3 px-4 bg-green-100 rounded-xl border border-green-200">
                           <span className="text-green-800 text-base font-semibold">🌍 Collaborazioni Remote</span>
                           <span className="text-green-700 text-sm bg-white px-3 py-1 rounded-full font-medium">Primaria</span>
                         </div>
 
-                        {/* 2. Titolo Basi Locali */}
                         <div className="flex items-center gap-2 pt-3">
                           <MapPin className="w-4 h-4 text-gray-500" />
                           <span className="text-sm font-medium text-gray-600">Basi operative locali:</span>
                         </div>
 
-                        {/* 3. Basi Locali */}
                         <div className="flex items-center justify-between py-3 px-4 bg-violet-50 rounded-xl border border-violet-100">
                           <span className="text-violet-700 text-base font-medium">🏖️ Catania</span>
                           <span className="text-violet-600 text-sm bg-white px-3 py-1 rounded-full font-medium">Sicilia</span>
@@ -440,13 +403,12 @@ const AboutPage: React.FC = () => {
                 </motion.div>
 
 
-                {/* Role */}
                 <motion.div 
                   variants={itemVariants}
                   className="bg-white/80 backdrop-blur-sm rounded-xl p-10 shadow-lg border border-white/20 hover:shadow-xl transition-shadow duration-300"
                 >
                   <div className="flex items-center gap-8">
-                    <div className="p-5 bg-rose-100 rounded-lg flex-shrink-0">
+                    <div className="p-5 bg-rose-100 rounded-lg flex-shrink: 0">
                       <Briefcase className="w-8 h-8 text-rose-600" />
                     </div>
                     <div>
@@ -456,7 +418,6 @@ const AboutPage: React.FC = () => {
                   </div>
                 </motion.div>
 
-                {/* Tech Stack Icons */}
                 <motion.div 
                   variants={itemVariants}
                   className="bg-white/80 backdrop-blur-sm rounded-xl p-10 shadow-lg border border-white/20"
@@ -469,7 +430,7 @@ const AboutPage: React.FC = () => {
                     {['React', 'Node.js', 'TypeScript', 'MongoDB', 'TailwindCSS', 'Express'].map((tech) => (
                       <span 
                         key={tech}
-                        className="px-5 py-3 bg-gradient-to-r from-violet-100 to-rose-100 text-violet-700 rounded-full font-semibold text-base"
+                        className="px-5 py-3 bg-linear-to-r from-violet-100 to-rose-100 text-violet-700 rounded-full font-semibold text-base"
                       >
                         {tech}
                       </span>
@@ -478,14 +439,13 @@ const AboutPage: React.FC = () => {
                 </motion.div>
               </div>
 
-              {/* Contact CTA Button */}
               <motion.div 
                 variants={itemVariants}
                 className="pt-8"
               >
                 <button
                   onClick={handleContactClick}
-                  className="w-full group bg-gradient-to-r from-violet-600 to-rose-500 text-white font-bold py-5 px-10 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-4 text-lg"
+                  className="w-full group bg-linear-to-r from-violet-600 to-rose-500 text-white font-bold py-5 px-10 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-4 text-lg"
                 >
                   <Mail className="w-6 h-6" />
                   📩 Contattami

@@ -9,8 +9,7 @@ interface ArticleContentProps {
 }
 
 const ArticleContent: React.FC<ArticleContentProps> = ({ content, isMobile = false }) => {
-  // Rich Text rendering options ottimizzate
-  const richTextOptions = useMemo(() => ({
+  const options = useMemo(() => ({
     renderMark: {
       [MARKS.BOLD]: (text: React.ReactNode) => <strong className="font-semibold">{text}</strong>,
       [MARKS.ITALIC]: (text: React.ReactNode) => <em className="italic">{text}</em>,
@@ -20,31 +19,29 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ content, isMobile = fal
       ),
     },
     renderNode: {
-      [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
+      [BLOCKS.PARAGRAPH]: (_: any, children: React.ReactNode) => (
         <p className={`mb-6 text-gray-700 leading-relaxed ${isMobile ? 'text-base' : 'text-lg'}`}>{children}</p>
       ),
-      [BLOCKS.HEADING_1]: (node: any, children: React.ReactNode) => (
+      [BLOCKS.HEADING_1]: (_: any, children: React.ReactNode) => (
         <h1 className={`font-bold text-gray-900 mb-6 mt-8 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>{children}</h1>
       ),
-      [BLOCKS.HEADING_2]: (node: any, children: React.ReactNode) => (
+      [BLOCKS.HEADING_2]: (_: any, children: React.ReactNode) => (
         <h2 className={`font-bold text-gray-900 mb-4 mt-8 ${isMobile ? 'text-xl' : 'text-2xl'}`}>{children}</h2>
       ),
-      [BLOCKS.HEADING_3]: (node: any, children: React.ReactNode) => (
+      [BLOCKS.HEADING_3]: (_: any, children: React.ReactNode) => (
         <h3 className={`font-semibold text-gray-900 mb-4 mt-6 ${isMobile ? 'text-lg' : 'text-xl'}`}>{children}</h3>
       ),
-      [BLOCKS.HEADING_4]: (node: any, children: React.ReactNode) => (
+      [BLOCKS.HEADING_4]: (_: any, children: React.ReactNode) => (
         <h4 className={`font-semibold text-gray-900 mb-3 mt-6 ${isMobile ? 'text-base' : 'text-lg'}`}>{children}</h4>
       ),
-      [BLOCKS.UL_LIST]: (node: any, children: React.ReactNode) => (
+      [BLOCKS.UL_LIST]: (_: any, children: React.ReactNode) => (
         <ul className="list-disc list-inside mb-6 space-y-2 text-gray-700">{children}</ul>
       ),
-      [BLOCKS.OL_LIST]: (node: any, children: React.ReactNode) => (
+      [BLOCKS.OL_LIST]: (_: any, children: React.ReactNode) => (
         <ol className="list-decimal list-inside mb-6 space-y-2 text-gray-700">{children}</ol>
       ),
-      [BLOCKS.LIST_ITEM]: (node: any, children: React.ReactNode) => (
-        <li className="ml-4">{children}</li>
-      ),
-      [BLOCKS.QUOTE]: (node: any, children: React.ReactNode) => (
+      [BLOCKS.LIST_ITEM]: (_: any, children: React.ReactNode) => <li className="ml-4">{children}</li>,
+      [BLOCKS.QUOTE]: (_: any, children: React.ReactNode) => (
         <blockquote className="border-l-4 border-violet-500 pl-6 py-4 mb-6 bg-gray-50 italic text-gray-700">
           {children}
         </blockquote>
@@ -62,42 +59,36 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ content, isMobile = fal
         </a>
       ),
       [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
-        const asset = node.data.target;
-        if (asset?.fields?.file?.contentType?.startsWith('image/')) {
-          return (
-            <div className="my-8">
-              <img
-                src={asset.fields.file.url}
-                alt={asset.fields.title || 'Image'}
-                className="w-full rounded-lg shadow-sm"
-                loading="lazy"
-                decoding="async"
-                onError={(e) => {
-                  const img = e.target as HTMLImageElement;
-                  img.style.display = 'none';
-                }}
-                style={{
-                  maxHeight: isMobile ? '40vh' : '60vh',
-                  objectFit: 'contain',
-                  backgroundColor: '#f9fafb'
-                }}
-              />
-              {asset.fields.description && (
-                <p className="text-sm text-gray-500 text-center mt-2 italic">
-                  {asset.fields.description}
-                </p>
-              )}
-            </div>
-          );
-        }
-        return null;
+        const { file, title, description } = node.data.target?.fields || {};
+        if (!file?.contentType?.startsWith('image/')) return null;
+
+        return (
+          <div className="my-8">
+            <img
+              src={file.url}
+              alt={title || 'Image'}
+              className="w-full rounded-lg shadow-sm"
+              loading="lazy"
+              decoding="async"
+              style={{
+                maxHeight: isMobile ? '40vh' : '60vh',
+                objectFit: 'contain',
+                backgroundColor: '#f9fafb'
+              }}
+              onError={(e) => (e.currentTarget.style.display = 'none')}
+            />
+            {description && (
+              <p className="text-sm text-gray-500 text-center mt-2 italic">{description}</p>
+            )}
+          </div>
+        );
       },
     },
   }), [isMobile]);
 
   return (
     <div className={`prose max-w-none ${isMobile ? 'prose-sm' : 'prose-lg'}`}>
-      {documentToReactComponents(content, richTextOptions)}
+      {documentToReactComponents(content, options)}
     </div>
   );
 };

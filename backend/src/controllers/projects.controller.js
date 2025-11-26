@@ -1,185 +1,99 @@
 import { createClient } from 'contentful';
 
-// Funzione per creare il client Contentful (lazy initialization)
-const getContentfulClient = () => {
+const getClient = () => {
+  const { CONTENTFUL_SPACE_ID, CONTENTFUL_ACCESS_TOKEN } = process.env;
+  // Return null instead of throwing to handle cases where config is missing gracefully in getAllProjects
+  if (!CONTENTFUL_SPACE_ID || !CONTENTFUL_ACCESS_TOKEN) return null;
+  
   return createClient({
-    space: process.env.CONTENTFUL_SPACE_ID,
-    accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+    space: CONTENTFUL_SPACE_ID,
+    accessToken: CONTENTFUL_ACCESS_TOKEN,
   });
 };
 
-// Opzioni per la cache (5 minuti)
-const CACHE_DURATION = 0;
-let cache = {
-  projects: { data: null, timestamp: 0 },
-  singleProject: new Map()
-};
+const cache = { projects: { data: null, ts: 0 }, slugs: new Map() };
+const CACHE_TTL = 0;
 
-/**
- * Ottieni tutti i progetti pubblicati
- */
-const getAllProjects = async (req, res) => {
+const transformProject = ({ sys, fields }) => ({
+  sys: { id: sys.id, createdAt: sys.createdAt, updatedAt: sys.updatedAt },
+  fields: {
+    ...fields,
+    title: fields.title ?? 'Untitled',
+    description: fields.description ?? '',
+    technologies: fields.technologies ?? [],
+    gitHubURL: fields.gitHubURL ?? '',
+    liveDemoURL: fields.liveDemoURL ?? '',
+    featured: fields.featured ?? false,
+    order: fields.order ?? 0,
+    coverImage: fields.coverImage ?? null
+  }
+});
+
+export const getAllProjects = async (req, res) => {
   try {
-    const now = Date.now();
-    
-    // Controlla cache
-    if (cache.projects.data && (now - cache.projects.timestamp) < CACHE_DURATION) {
+    if (cache.projects.data && (Date.now() - cache.projects.ts < CACHE_TTL)) {
       return res.json(cache.projects.data);
     }
 
     const { limit = 10, skip = 0, order = 'fields.order' } = req.query;
+    const client = getClient();
 
-    const client = getContentfulClient();
-    
-    // Verifica che il client sia configurato
-    if (!process.env.CONTENTFUL_SPACE_ID || !process.env.CONTENTFUL_ACCESS_TOKEN) {
-      console.warn('⚠️ Credenziali Contentful non configurate');
-      // Ritorna array vuoto se credenziali non presenti
-      const emptyData = {
-        total: 0,
-        limit: parseInt(limit),
-        skip: parseInt(skip),
-        items: []
-      };
-      cache.projects = { data: emptyData, timestamp: now };
-      return res.json(emptyData);
+    if (!client) {
+      return res.json({ total: 0, limit: +limit, skip: +skip, items: [] });
     }
 
     const response = await client.getEntries({
       content_type: 'project',
-      limit: parseInt(limit),
-      skip: parseInt(skip),
-      order: order,
+      limit: +limit,
+      skip: +skip,
+      order,
       include: 2
     });
 
-    // Processa i risultati
-    const processedItems = response.items.map(item => ({
-      sys: {
-        id: item.sys.id,
-        createdAt: item.sys.createdAt,
-        updatedAt: item.sys.updatedAt
-      },
-      fields: {
-        title: item.fields.title || 'Senza titolo',
-        description: item.fields.description || '',
-        coverImage: item.fields.coverImage || null,
-        technologies: item.fields.technologies || [],
-        gitHubURL: item.fields.gitHubURL || '',
-        liveDemoURL: item.fields.liveDemoURL || '',
-        featured: item.fields.featured || false,
-        order: item.fields.order || 0
-      }
-    }));
-
-    // Salva in cache
-    const processedData = {
+    const payload = {
       total: response.total,
       limit: response.limit,
       skip: response.skip,
-      items: processedItems
+      items: response.items.map(transformProject)
     };
 
-    cache.projects = { data: processedData, timestamp: now };
-
-    res.json(processedData);
+    cache.projects = { data: payload, ts: Date.now() };
+    res.json(payload);
   } catch (error) {
-    // Ritorna errore con dettagli
-    res.status(500).json({
-      error: 'Errore nel recupero dei progetti',
-      message: error.message,
-      code: error.code,
-      status: error.status,
-      details: error.response?.data || null
-    });
+    res.status(500).json({ error: 'Fetch Failed', message: error.message });
   }
 };
 
-/**
- * Ottieni un singolo progetto per ID
- */
-const getProjectBySlug = async (req, res) => {
+export const getProjectBySlug = async (req, res) => {
+  const { slug } = req.params;
+  
   try {
-    const { slug } = req.params;
-    
-    // Controlla cache per questo ID
-    if (cache.singleProject.has(slug)) {
-      const cached = cache.singleProject.get(slug);
-      if (Date.now() - cached.timestamp < CACHE_DURATION) {
-        return res.json(cached.data);
-      }
-    }
+    const cached = cache.slugs.get(slug);
+    if (cached && (Date.now() - cached.ts < CACHE_TTL)) return res.json(cached.data);
 
-    const client = getContentfulClient();
-    const response = await client.getEntry(slug);
+    const client = getClient();
+    if (!client) throw new Error('Contentful not configured');
 
-    const item = response;
-    const processedItem = {
-      sys: {
-        id: item.sys.id,
-        createdAt: item.sys.createdAt,
-        updatedAt: item.sys.updatedAt
-      },
-      fields: {
-        title: item.fields.title || 'Senza titolo',
-        description: item.fields.description || '',
-        coverImage: item.fields.coverImage || null,
-        technologies: item.fields.technologies || [],
-        gitHubURL: item.fields.gitHubURL || '',
-        liveDemoURL: item.fields.liveDemoURL || '',
-        featured: item.fields.featured || false,
-        order: item.fields.order || 0
-      }
-    };
+    const entry = await client.getEntry(slug);
+    const project = transformProject(entry);
 
-    // Salva in cache
-    cache.singleProject.set(slug, { 
-      data: processedItem, 
-      timestamp: Date.now() 
-    });
-
-    res.json(processedItem);
+    cache.slugs.set(slug, { data: project, ts: Date.now() });
+    res.json(project);
   } catch (error) {
-    console.error('❌ Errore nel recupero del progetto:', error.message);
-    res.status(500).json({
-      error: 'Errore nel recupero del progetto',
-      message: error.message
-    });
+    res.status(500).json({ error: 'Fetch Failed', message: error.message });
   }
 };
 
-/**
- * Ottieni le tecnologie utilizzate nei progetti
- */
-const getProjectTechnologies = async (req, res) => {
+export const getProjectTechnologies = async (_, res) => {
   try {
-    const client = getContentfulClient();
-    const response = await client.getEntries({
-      content_type: 'project',
-      include: 2
-    });
+    const client = getClient();
+    if (!client) return res.json({ technologies: [] });
 
-    const technologies = new Set();
-    response.items.forEach(item => {
-      if (item.fields.technologies && Array.isArray(item.fields.technologies)) {
-        item.fields.technologies.forEach(tech => technologies.add(tech));
-      }
-    });
+    const { items } = await client.getEntries({ content_type: 'project', include: 2 });
+    const uniqueTechs = new Set(items.flatMap(i => i.fields.technologies || []));
 
-    res.json({
-      technologies: Array.from(technologies).sort()
-    });
+    res.json({ technologies: Array.from(uniqueTechs).sort() });
   } catch (error) {
-    console.error('❌ Errore nel recupero delle tecnologie:', error.message);
-    res.status(500).json({
-      error: 'Errore nel recupero delle tecnologie',
-      message: error.message
-    });
+    res.status(500).json({ error: 'Fetch Failed', message: error.message });
   }
-};
-
-export {
-  getAllProjects,
-  getProjectBySlug,
-  getProjectTechnologies
 };

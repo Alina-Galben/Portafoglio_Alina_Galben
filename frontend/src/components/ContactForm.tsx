@@ -1,15 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Send, 
-  Loader2, 
-  CheckCircle, 
-  AlertCircle, 
-  User, 
-  Mail, 
-  MessageSquare,
-  Tag
-} from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence, HTMLMotionProps } from 'framer-motion';
+import { Send, Loader2, CheckCircle, AlertCircle, User, Mail, MessageSquare, Tag } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { submitContactForm } from '../services/api';
 
@@ -18,486 +9,294 @@ interface FormData {
   email: string;
   subject: string;
   message: string;
-  _hp: string; // honeypot
+  _hp: string;
 }
 
-interface FormErrors {
-  name?: string;
-  email?: string;
-  subject?: string;
-  message?: string;
-}
+const INITIAL_DATA: FormData = { name: '', email: '', subject: '', message: '', _hp: '' };
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type FormState = 'idle' | 'sending' | 'success' | 'error';
+const SUBJECT_OPTS = [
+  { value: '', label: 'Seleziona un argomento...' },
+  { value: 'Preventivo', label: '💰 Preventivo' },
+  { value: 'Collaborazione', label: '🤝 Collaborazione' },
+  { value: 'Informazioni', label: '💡 Informazioni' }
+];
 
 const ContactForm: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-    _hp: ''
-  });
+  const [formData, setFormData] = useState<FormData>(INITIAL_DATA);
+  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [isTouched, setIsTouched] = useState(false);
 
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [formState, setFormState] = useState<FormState>('idle');
-  const [submitAttempted, setSubmitAttempted] = useState(false);
-
-  const subjectOptions = [
-    { value: '', label: 'Seleziona un argomento...' },
-    { value: 'Preventivo', label: '💰 Preventivo' },
-    { value: 'Collaborazione', label: '🤝 Collaborazione' },
-    { value: 'Informazioni', label: '💡 Informazioni' }
-  ];
-
-  // Email validation regex
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  // Validation function
-  const validateField = (name: keyof FormData, value: string): string | undefined => {
-    switch (name) {
-      case 'name':
-        if (!value.trim()) return 'Il nome è obbligatorio';
-        if (value.trim().length < 2) return 'Il nome deve essere di almeno 2 caratteri';
-        return undefined;
-      
-      case 'email':
-        if (!value.trim()) return 'L\'email è obbligatoria';
-        if (!emailRegex.test(value)) return 'Inserisci un\'email valida';
-        return undefined;
-      
-      case 'subject':
-        if (!value) return 'Seleziona un argomento';
-        return undefined;
-      
-      case 'message':
-        if (!value.trim()) return 'Il messaggio è obbligatorio';
-        if (value.trim().length < 20) return 'Il messaggio deve essere di almeno 20 caratteri';
-        return undefined;
-      
-      default:
-        return undefined;
-    }
-  };
-
-  // Real-time validation
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+  const validate = useCallback(() => {
+    const newErrors: typeof errors = {};
     
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    if (!formData.name.trim()) newErrors.name = 'Nome obbligatorio';
+    else if (formData.name.trim().length < 2) newErrors.name = 'Minimo 2 caratteri';
 
-    // Validate field if form was already submitted
-    if (submitAttempted) {
-      const error = validateField(name as keyof FormData, value);
-      setErrors(prev => ({
-        ...prev,
-        [name]: error
-      }));
-    }
-  };
+    if (!formData.email.trim()) newErrors.email = 'Email obbligatoria';
+    else if (!EMAIL_REGEX.test(formData.email)) newErrors.email = 'Email non valida';
 
-  // Validate entire form
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-    let isValid = true;
+    if (!formData.subject) newErrors.subject = 'Argomento richiesto';
 
-    // Check honeypot
-    if (formData._hp) {
-      toast.error('⚠️ Rilevato comportamento spam');
-      return false;
-    }
-
-    // Validate each field
-    (Object.keys(formData) as Array<keyof FormData>).forEach(field => {
-      if (field !== '_hp') {
-        const error = validateField(field, formData[field]);
-        if (error) {
-          newErrors[field] = error;
-          isValid = false;
-        }
-      }
-    });
+    if (!formData.message.trim()) newErrors.message = 'Messaggio obbligatorio';
+    else if (formData.message.trim().length < 20) newErrors.message = 'Minimo 20 caratteri';
 
     setErrors(newErrors);
-    return isValid;
+    return Object.keys(newErrors).length === 0;
+  }, [formData]);
+
+  useEffect(() => {
+    if (isTouched) validate();
+  }, [formData, isTouched, validate]);
+
+  // Sync external select (e.g. from Hero section)
+  useEffect(() => {
+    const handleExternalChange = (e: Event) => {
+      const target = e.target as HTMLSelectElement;
+      if (target.id === 'subject') {
+        setFormData(prev => ({ ...prev, subject: target.value }));
+      }
+    };
+    
+    const el = document.getElementById('subject');
+    el?.addEventListener('change', handleExternalChange);
+    return () => el?.removeEventListener('change', handleExternalChange);
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitAttempted(true);
+    setIsTouched(true);
 
-    if (!validateForm()) {
-      toast.error('⚠️ Correggi gli errori nel form');
-      return;
-    }
+    if (formData._hp) return toast.error('Spam rilevato');
+    if (!validate()) return toast.error('Correggi gli errori nel modulo');
 
-    setFormState('sending');
+    setStatus('sending');
 
     try {
-      const data = await submitContactForm({
+      await submitContactForm({
         name: formData.name,
         email: formData.email,
         subject: formData.subject,
         message: formData.message,
         honeypot: formData._hp
       });
+
+      setStatus('success');
+      toast.success('Messaggio inviato con successo!');
       
-      setFormState('success');
-      toast.success('✅ Messaggio inviato con successo!');
-      
-      // Reset form after success
       setTimeout(() => {
-        setFormData({
-          name: '',
-          email: '',
-          subject: '',
-          message: '',
-          _hp: ''
-        });
-        setErrors({});
-        setSubmitAttempted(false);
-        setFormState('idle');
+        setFormData(INITIAL_DATA);
+        setIsTouched(false);
+        setStatus('idle');
       }, 3000);
 
     } catch (error) {
-      console.error('Contact form error:', error);
-      setFormState('error');
-      
-      // Check if it's a network error (backend not available)
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        toast.error(
-          '🚫 Server non disponibile. Contattami direttamente: galben.alina@gmail.com'
-        );
-      } else {
-        toast.error('⚠️ Errore durante l\'invio — riprova.');
-      }
+      console.error(error);
+      setStatus('error');
+      toast.error('Si è verificato un errore. Riprova.');
     }
   };
 
-  // Retry function
-  const handleRetry = () => {
-    setFormState('idle');
-  };
-
-  const inputVariants = {
-    focus: { scale: 1.02 },
-    tap: { scale: 0.98 }
-  };
-
-  const buttonVariants = {
-    hover: { scale: 1.05 },
-    tap: { scale: 0.95 }
-  };
-
-  // Listen for subject changes from parent component
-  useEffect(() => {
-    const handleSubjectChange = () => {
-      const subjectSelect = document.getElementById('subject') as HTMLSelectElement;
-      if (subjectSelect && subjectSelect.value && subjectSelect.value !== formData.subject) {
-        setFormData(prev => ({ ...prev, subject: subjectSelect.value }));
-      }
-    };
-
-    const subjectSelect = document.getElementById('subject');
-    if (subjectSelect) {
-      subjectSelect.addEventListener('change', handleSubjectChange);
-      return () => subjectSelect.removeEventListener('change', handleSubjectChange);
-    }
-  }, [formData.subject]);
+  const getInputClass = (hasError: boolean) => `
+    w-full px-4 py-3 border rounded-lg bg-gray-50 focus:bg-white 
+    focus:ring-2 focus:ring-purple-500 focus:border-transparent 
+    transition-all placeholder-gray-400 outline-none
+    ${hasError ? 'border-red-500 bg-red-50' : 'border-gray-300'}
+  `;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-      {/* Honeypot field */}
-      <input
-        type="text"
-        name="_hp"
-        value={formData._hp}
-        onChange={handleInputChange}
-        style={{ display: 'none' }}
-        tabIndex={-1}
-        autoComplete="off"
-        aria-hidden="true"
+      {/* Honeypot invisibile */}
+      <input 
+        type="text" 
+        name="_hp" 
+        value={formData._hp} 
+        onChange={handleChange} 
+        className="hidden" 
+        tabIndex={-1} 
+        autoComplete="off" 
       />
 
-      {/* Name Field */}
-      <div>
-        <label 
-          htmlFor="name" 
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          <User className="w-4 h-4 inline mr-2" />
-          Nome completo *
-        </label>
-        <motion.input
-          variants={inputVariants}
-          whileFocus="focus"
-          whileTap="tap"
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-          className={`
-            w-full px-4 py-3 border rounded-lg bg-gray-50 focus:bg-white 
-            focus:ring-2 focus:ring-purple-500 focus:border-transparent 
-            transition-all duration-200 placeholder-gray-400
-            ${errors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'}
-          `}
-          placeholder="Il tuo nome e cognome"
-          aria-invalid={!!errors.name}
-          aria-describedby={errors.name ? 'name-error' : undefined}
-          disabled={formState === 'sending'}
-        />
-        <AnimatePresence>
-          {errors.name && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              id="name-error"
-              className="mt-2 text-sm text-red-600 flex items-center gap-1"
-              role="alert"
-              aria-live="polite"
-            >
-              <AlertCircle className="w-4 h-4" />
-              {errors.name}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      <div className="grid md:grid-cols-2 gap-6">
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <User className="w-4 h-4 inline mr-2" /> Nome completo *
+          </label>
+          <motion.input
+            whileFocus={{ scale: 1.01 }}
+            id="name"
+            name="name"
+            type="text"
+            value={formData.name}
+            onChange={handleChange}
+            className={getInputClass(!!errors.name)}
+            placeholder="Il tuo nome"
+            disabled={status === 'sending'}
+          />
+          <ErrorMessage message={errors.name} />
+        </div>
 
-      {/* Email Field */}
-      <div>
-        <label 
-          htmlFor="email" 
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          <Mail className="w-4 h-4 inline mr-2" />
-          Email *
-        </label>
-        <motion.input
-          variants={inputVariants}
-          whileFocus="focus"
-          whileTap="tap"
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          className={`
-            w-full px-4 py-3 border rounded-lg bg-gray-50 focus:bg-white 
-            focus:ring-2 focus:ring-purple-500 focus:border-transparent 
-            transition-all duration-200 placeholder-gray-400
-            ${errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'}
-          `}
-          placeholder="la-tua-email@esempio.com"
-          aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? 'email-error' : undefined}
-          disabled={formState === 'sending'}
-        />
-        <AnimatePresence>
-          {errors.email && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              id="email-error"
-              className="mt-2 text-sm text-red-600 flex items-center gap-1"
-              role="alert"
-              aria-live="polite"
-            >
-              <AlertCircle className="w-4 h-4" />
-              {errors.email}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Subject Field */}
-      <div>
-        <label 
-          htmlFor="subject" 
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          <Tag className="w-4 h-4 inline mr-2" />
-          Argomento *
-        </label>
-        <motion.select
-          variants={inputVariants}
-          whileFocus="focus"
-          whileTap="tap"
-          id="subject"
-          name="subject"
-          value={formData.subject}
-          onChange={handleInputChange}
-          className={`
-            w-full px-4 py-3 border rounded-lg bg-gray-50 focus:bg-white 
-            focus:ring-2 focus:ring-purple-500 focus:border-transparent 
-            transition-all duration-200
-            ${errors.subject ? 'border-red-500 bg-red-50' : 'border-gray-300'}
-          `}
-          aria-invalid={!!errors.subject}
-          aria-describedby={errors.subject ? 'subject-error' : undefined}
-          disabled={formState === 'sending'}
-        >
-          {subjectOptions.map(option => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </motion.select>
-        <AnimatePresence>
-          {errors.subject && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              id="subject-error"
-              className="mt-2 text-sm text-red-600 flex items-center gap-1"
-              role="alert"
-              aria-live="polite"
-            >
-              <AlertCircle className="w-4 h-4" />
-              {errors.subject}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Message Field */}
-      <div>
-        <label 
-          htmlFor="message" 
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          <MessageSquare className="w-4 h-4 inline mr-2" />
-          Messaggio *
-        </label>
-        <motion.textarea
-          variants={inputVariants}
-          whileFocus="focus"
-          whileTap="tap"
-          id="message"
-          name="message"
-          value={formData.message}
-          onChange={handleInputChange}
-          rows={6}
-          className={`
-            w-full px-4 py-3 border rounded-lg bg-gray-50 focus:bg-white 
-            focus:ring-2 focus:ring-purple-500 focus:border-transparent 
-            transition-all duration-200 placeholder-gray-400 resize-vertical
-            ${errors.message ? 'border-red-500 bg-red-50' : 'border-gray-300'}
-          `}
-          placeholder="Scrivi qui il tuo messaggio... (minimo 20 caratteri)"
-          aria-invalid={!!errors.message}
-          aria-describedby={errors.message ? 'message-error' : undefined}
-          disabled={formState === 'sending'}
-        />
-        <div className="mt-2 flex justify-between items-center">
-          <AnimatePresence>
-            {errors.message && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                id="message-error"
-                className="text-sm text-red-600 flex items-center gap-1"
-                role="alert"
-                aria-live="polite"
-              >
-                <AlertCircle className="w-4 h-4" />
-                {errors.message}
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <div className="text-sm text-gray-500">
-            {formData.message.length}/20 min
-          </div>
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <Mail className="w-4 h-4 inline mr-2" /> Email *
+          </label>
+          <motion.input
+            whileFocus={{ scale: 1.01 }}
+            id="email"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            className={getInputClass(!!errors.email)}
+            placeholder="tuo@email.com"
+            disabled={status === 'sending'}
+          />
+          <ErrorMessage message={errors.email} />
         </div>
       </div>
 
-      {/* Submit Button */}
+      <div>
+        <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+          <Tag className="w-4 h-4 inline mr-2" /> Argomento *
+        </label>
+        <div className="relative">
+          <motion.select
+            whileFocus={{ scale: 1.01 }}
+            id="subject"
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            className={`${getInputClass(!!errors.subject)} appearance-none`}
+            disabled={status === 'sending'}
+          >
+            {SUBJECT_OPTS.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </motion.select>
+        </div>
+        <ErrorMessage message={errors.subject} />
+      </div>
+
+      <div>
+        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+          <MessageSquare className="w-4 h-4 inline mr-2" /> Messaggio *
+        </label>
+        <motion.textarea
+          whileFocus={{ scale: 1.01 }}
+          id="message"
+          name="message"
+          rows={6}
+          value={formData.message}
+          onChange={handleChange}
+          className={getInputClass(!!errors.message)}
+          placeholder="Scrivi qui il tuo messaggio... (min 20 caratteri)"
+          disabled={status === 'sending'}
+        />
+        <div className="flex justify-between mt-2">
+          <ErrorMessage message={errors.message} />
+          <span className={`text-xs ${formData.message.length < 20 ? 'text-gray-400' : 'text-green-600'}`}>
+            {formData.message.length} / 20 min
+          </span>
+        </div>
+      </div>
+
       <div className="pt-4">
         <AnimatePresence mode="wait">
-          {formState === 'error' ? (
-            <motion.div
-              key="error-state"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="space-y-4"
+          {status === 'error' && (
+            <motion.div 
+              key="error" 
+              initial={{ opacity: 0, height: 0 }} 
+              animate={{ opacity: 1, height: 'auto' }} 
+              exit={{ opacity: 0, height: 0 }}
+              className="space-y-3 overflow-hidden"
             >
-              <div className="text-red-600 text-sm flex items-center gap-2 justify-center">
-                <AlertCircle className="w-4 h-4" />
-                Si è verificato un errore durante l'invio
+              <div className="text-red-600 text-sm flex items-center justify-center gap-2 bg-red-50 p-3 rounded-lg">
+                <AlertCircle className="w-4 h-4" /> Si è verificato un errore durante l'invio.
               </div>
-              <motion.button
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-                type="button"
-                onClick={handleRetry}
-                className="w-full py-3 px-6 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:outline-none transition-colors"
-              >
+              <SubmitButton onClick={() => setStatus('idle')} variant="error">
                 🔄 Riprova
-              </motion.button>
+              </SubmitButton>
             </motion.div>
-          ) : formState === 'success' ? (
-            <motion.div
-              key="success-state"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+          )}
+
+          {status === 'success' && (
+            <motion.div 
+              key="success" 
+              initial={{ opacity: 0, scale: 0.9 }} 
+              animate={{ opacity: 1, scale: 1 }} 
               exit={{ opacity: 0, scale: 0.9 }}
-              className="text-center py-8"
+              className="text-center py-6 bg-green-50 rounded-xl border border-green-100"
             >
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                ✅ Messaggio inviato!
-              </h3>
-              <p className="text-gray-600">
-                Ti risponderò entro 24 ore lavorative
-              </p>
+              <h3 className="text-lg font-bold text-gray-900">Messaggio Inviato!</h3>
+              <p className="text-gray-600 text-sm">Ti risponderò entro 24 ore lavorative.</p>
             </motion.div>
-          ) : (
-            <motion.button
-              key="submit-button"
-              variants={buttonVariants}
-              whileHover="hover"
-              whileTap="tap"
-              type="submit"
-              disabled={formState === 'sending'}
-              className="w-full py-3 px-6 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-              aria-live="polite"
+          )}
+
+          {(status === 'idle' || status === 'sending') && (
+            <SubmitButton 
+              key="submit" 
+              type="submit" 
+              disabled={status === 'sending'}
+              variant="primary"
             >
-              {formState === 'sending' ? (
-                <span className="flex items-center justify-center gap-2">
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Invio in corso...
-                </span>
+              {status === 'sending' ? (
+                <><Loader2 className="w-5 h-5 animate-spin" /> Invio in corso...</>
               ) : (
-                <span className="flex items-center justify-center gap-2">
-                  <Send className="w-5 h-5" />
-                  📧 Invia messaggio
-                </span>
+                <><Send className="w-5 h-5" /> Invia Messaggio</>
               )}
-            </motion.button>
+            </SubmitButton>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Privacy Note */}
-      <div className="text-xs text-gray-500 text-center pt-4 border-t border-gray-100">
-        🔒 I tuoi dati sono protetti e utilizzati solo per rispondere al tuo messaggio.
-        <br />
-        Non condividiamo le tue informazioni con terze parti.
-      </div>
+      <p className="text-xs text-gray-400 text-center pt-6 border-t border-gray-100">
+        🔒 I tuoi dati sono al sicuro. Non verranno mai condivisi con terze parti.
+      </p>
     </form>
+  );
+};
+
+const ErrorMessage = ({ message }: { message?: string }) => (
+  <AnimatePresence>
+    {message && (
+      <motion.div 
+        initial={{ opacity: 0, y: -5 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        exit={{ opacity: 0, y: -5 }} 
+        className="text-sm text-red-600 flex items-center gap-1 mt-1.5 font-medium"
+      >
+        <AlertCircle className="w-3.5 h-3.5" /> {message}
+      </motion.div>
+    )}
+  </AnimatePresence>
+);
+
+interface ButtonProps extends HTMLMotionProps<"button"> {
+  variant: 'primary' | 'error';
+}
+
+const SubmitButton = ({ children, className, variant, ...props }: ButtonProps) => {
+  const baseClass = "w-full py-3.5 px-6 text-white rounded-lg font-bold flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all shadow-lg";
+  const variantClass = variant === 'primary' 
+    ? "bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 shadow-violet-200" 
+    : "bg-red-600 hover:bg-red-700 shadow-red-200";
+
+  return (
+    <motion.button
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.98 }}
+      className={`${baseClass} ${variantClass} ${className || ''}`}
+      {...props}
+    >
+      {children}
+    </motion.button>
   );
 };
 

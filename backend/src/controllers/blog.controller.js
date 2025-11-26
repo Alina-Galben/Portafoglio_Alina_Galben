@@ -1,108 +1,89 @@
 import { createClient } from 'contentful';
 
-// Funzione per creare il client Contentful (lazy initialization)
-const getContentfulClient = () => {
+const getClient = () => {
+  const { CONTENTFUL_SPACE_ID, CONTENTFUL_ACCESS_TOKEN } = process.env;
+  if (!CONTENTFUL_SPACE_ID || !CONTENTFUL_ACCESS_TOKEN) throw new Error('Contentful config missing');
+  
   return createClient({
-    space: process.env.CONTENTFUL_SPACE_ID,
-    accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+    space: CONTENTFUL_SPACE_ID,
+    accessToken: CONTENTFUL_ACCESS_TOKEN,
   });
 };
 
-// Opzioni per la cache (5 minuti)
-const CACHE_DURATION = 0;
-let cache = {
-  blogPosts: { data: null, timestamp: 0 },
-  singlePost: new Map()
+const cache = { list: { data: null, ts: 0 }, slugs: new Map() };
+const CACHE_TTL = 0; // Increase for prod
+
+const extractText = (node) => {
+  if (!node) return '';
+  if (typeof node === 'string') return node;
+  if (Array.isArray(node)) return node.map(extractText).join(' ');
+  return extractText(node.content || node.value);
 };
 
-/**
- * Ottieni tutti i blog posts pubblicati
- */
-const getAllBlogPosts = async (req, res) => {
+const calculateReadingTime = (content) => {
+  if (!content) return 1;
+  const words = extractText(content).split(/\s+/).length;
+  return Math.max(1, Math.ceil(words / 200));
+};
+
+const transformEntry = ({ sys, fields }) => ({
+  sys: { id: sys.id, createdAt: sys.createdAt, updatedAt: sys.updatedAt },
+  fields: {
+    ...fields,
+    author: fields.author ?? 'Alina Galben',
+    tags: fields.tags ?? [],
+    views: fields.views ?? 0,
+    readingTime: fields.readingTime ?? calculateReadingTime(fields.content),
+    coverImage: fields.coverImage?.fields?.file ? {
+      fields: {
+        file: { url: `https:${fields.coverImage.fields.file.url}` },
+        title: fields.coverImage.fields.title
+      }
+    } : null
+  }
+});
+
+export const getAllBlogPosts = async (req, res) => {
   try {
-    const now = Date.now();
-    
-    // Controlla cache
-    if (cache.blogPosts.data && (now - cache.blogPosts.timestamp) < CACHE_DURATION) {
-      return res.json(cache.blogPosts.data);
+    if (cache.list.data && (Date.now() - cache.list.ts < CACHE_TTL)) {
+      return res.json(cache.list.data);
     }
 
     const { limit = 10, skip = 0, order = '-fields.date' } = req.query;
+    const client = getClient();
 
-    const client = getContentfulClient();
     const response = await client.getEntries({
       content_type: 'blogPost',
       'fields.status': 'Published',
-      limit: parseInt(limit),
-      skip: parseInt(skip),
-      order: order,
+      limit: +limit,
+      skip: +skip,
+      order,
       include: 2
     });
 
-    // Processa i risultati
-    const processedItems = response.items.map(item => ({
-      sys: {
-        id: item.sys.id,
-        createdAt: item.sys.createdAt,
-        updatedAt: item.sys.updatedAt
-      },
-      fields: {
-        title: item.fields.title,
-        slug: item.fields.slug,
-        date: item.fields.date,
-        tags: item.fields.tags || [],
-        author: item.fields.author || 'Alina Galben',
-        coverImage: item.fields.coverImage ? {
-          fields: {
-            file: {
-              url: `https:${item.fields.coverImage.fields.file.url}`
-            },
-            title: item.fields.coverImage.fields.title
-          }
-        } : null,
-        description: item.fields.description,
-        status: item.fields.status,
-        readingTime: item.fields.readingTime || calculateReadingTime(item.fields.content),
-        views: item.fields.views || 0
-      }
-    }));
-
-    const result = {
-      items: processedItems,
+    const payload = {
+      items: response.items.map(transformEntry),
       total: response.total,
       limit: response.limit,
       skip: response.skip
     };
 
-    // Aggiorna cache
-    cache.blogPosts = { data: result, timestamp: now };
-
-    res.json(result);
+    cache.list = { data: payload, ts: Date.now() };
+    res.json(payload);
   } catch (error) {
-    console.error('Errore nel recupero dei blog posts:', error);
-    res.status(500).json({
-      error: 'Errore interno del server',
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Impossibile recuperare i blog posts'
-    });
+    res.status(500).json({ error: 'Provider Error', message: error.message });
   }
 };
 
-/**
- * Ottieni un singolo blog post per slug
- */
-const getBlogPostBySlug = async (req, res) => {
+export const getBlogPostBySlug = async (req, res) => {
+  const { slug } = req.params;
+  
   try {
-    const { slug } = req.params;
-    const now = Date.now();
+    const cached = cache.slugs.get(slug);
+    if (cached && (Date.now() - cached.ts < CACHE_TTL)) return res.json(cached.data);
 
-    // Controlla cache per il singolo post
-    const cachedPost = cache.singlePost.get(slug);
-    if (cachedPost && (now - cachedPost.timestamp) < CACHE_DURATION) {
-      return res.json(cachedPost.data);
-    }
-
-    const client = getContentfulClient();
-    const response = await client.getEntries({
+    const client = getClient();
+    const { items } = await client.getEntries({
       content_type: 'blogPost',
       'fields.slug': slug,
       'fields.status': 'Published',
@@ -110,215 +91,72 @@ const getBlogPostBySlug = async (req, res) => {
       include: 3
     });
 
-    if (response.items.length === 0) {
-      return res.status(404).json({
-        error: 'Post non trovato',
-        message: 'Il blog post richiesto non esiste o non è pubblicato'
-      });
-    }
+    if (!items.length) return res.status(404).json({ error: 'Not Found' });
 
-    const item = response.items[0];
+    const post = transformEntry(items[0]);
+    // Simulate view increment
+    post.fields.views += 1;
+
+    const payload = { items: [post], total: 1 };
+    cache.slugs.set(slug, { data: payload, ts: Date.now() });
     
-    const processedItem = {
-      sys: {
-        id: item.sys.id,
-        createdAt: item.sys.createdAt,
-        updatedAt: item.sys.updatedAt
-      },
-      fields: {
-        title: item.fields.title,
-        slug: item.fields.slug,
-        date: item.fields.date,
-        tags: item.fields.tags || [],
-        author: item.fields.author || 'Alina Galben',
-        coverImage: item.fields.coverImage ? {
-          fields: {
-            file: {
-              url: `https:${item.fields.coverImage.fields.file.url}`
-            },
-            title: item.fields.coverImage.fields.title
-          }
-        } : null,
-        description: item.fields.description,
-        content: item.fields.content,
-        status: item.fields.status,
-        readingTime: item.fields.readingTime || calculateReadingTime(item.fields.content),
-        views: (item.fields.views || 0) + 1 // Incrementa visualizzazioni
-      }
-    };
-
-    const result = {
-      items: [processedItem],
-      total: 1
-    };
-
-    // Aggiorna cache
-    cache.singlePost.set(slug, { data: result, timestamp: now });
-
-    // TODO: In un'applicazione reale, incrementare le visualizzazioni nel CMS
-    // await updateViewCount(item.sys.id, processedItem.fields.views);
-
-    res.json(result);
+    res.json(payload);
   } catch (error) {
-    console.error('Errore nel recupero del blog post:', error);
-    res.status(500).json({
-      error: 'Errore interno del server',
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Impossibile recuperare il blog post'
-    });
+    res.status(500).json({ error: 'Provider Error', message: error.message });
   }
 };
 
-/**
- * Cerca blog posts
- */
-const searchBlogPosts = async (req, res) => {
+export const searchBlogPosts = async (req, res) => {
+  const { q, tags, limit = 10, skip = 0 } = req.query;
+  if (!q && !tags) return res.status(400).json({ error: 'Missing params' });
+
   try {
-    const { q, tags, limit = 10, skip = 0 } = req.query;
-
-    if (!q && !tags) {
-      return res.status(400).json({
-        error: 'Parametri di ricerca mancanti',
-        message: 'Fornire almeno un termine di ricerca (q) o tag'
-      });
-    }
-
-    const searchQuery = {
+    const client = getClient();
+    const query = {
       content_type: 'blogPost',
       'fields.status': 'Published',
-      limit: parseInt(limit),
-      skip: parseInt(skip),
+      limit: +limit,
+      skip: +skip,
       order: '-fields.date',
-      include: 2
+      include: 2,
+      ...(q && { query: q }),
+      ...(tags && { 'fields.tags[in]': Array.isArray(tags) ? tags.join(',') : tags })
     };
 
-    // Ricerca per testo
-    if (q) {
-      searchQuery.query = q;
-    }
-
-    // Filtro per tag
-    if (tags) {
-      const tagArray = Array.isArray(tags) ? tags : [tags];
-      searchQuery['fields.tags[in]'] = tagArray.join(',');
-    }
-
-    const client = getContentfulClient();
-    const response = await client.getEntries(searchQuery);
-
-    const processedItems = response.items.map(item => ({
-      sys: {
-        id: item.sys.id,
-        createdAt: item.sys.createdAt,
-        updatedAt: item.sys.updatedAt
-      },
-      fields: {
-        title: item.fields.title,
-        slug: item.fields.slug,
-        date: item.fields.date,
-        tags: item.fields.tags || [],
-        author: item.fields.author || 'Alina Galben',
-        coverImage: item.fields.coverImage ? {
-          fields: {
-            file: {
-              url: `https:${item.fields.coverImage.fields.file.url}`
-            },
-            title: item.fields.coverImage.fields.title
-          }
-        } : null,
-        description: item.fields.description,
-        status: item.fields.status,
-        readingTime: item.fields.readingTime || calculateReadingTime(item.fields.content)
-      }
-    }));
+    const { items, total, limit: resLimit, skip: resSkip } = await client.getEntries(query);
 
     res.json({
-      items: processedItems,
-      total: response.total,
-      limit: response.limit,
-      skip: response.skip,
+      items: items.map(transformEntry),
+      total,
+      limit: resLimit,
+      skip: resSkip,
       query: { q, tags }
     });
   } catch (error) {
-    console.error('Errore nella ricerca dei blog posts:', error);
-    res.status(500).json({
-      error: 'Errore interno del server',
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Errore nella ricerca'
-    });
+    res.status(500).json({ error: 'Search Failed', details: error.message });
   }
 };
 
-/**
- * Ottieni tutti i tag disponibili
- */
-const getBlogTags = async (req, res) => {
+export const getBlogTags = async (_, res) => {
   try {
-    const client = getContentfulClient();
-    const response = await client.getEntries({
+    const client = getClient();
+    const { items } = await client.getEntries({
       content_type: 'blogPost',
       'fields.status': 'Published',
       select: 'fields.tags',
       limit: 1000
     });
 
-    const allTags = new Set();
-    response.items.forEach(item => {
-      if (item.fields.tags) {
-        item.fields.tags.forEach(tag => allTags.add(tag));
-      }
-    });
-
-    const tagsArray = Array.from(allTags).sort();
+    const uniqueTags = new Set(items.flatMap(i => i.fields.tags || []));
+    const tags = Array.from(uniqueTags).sort();
     
-    res.json({
-      tags: tagsArray,
-      total: tagsArray.length
-    });
+    res.json({ tags, total: tags.length });
   } catch (error) {
-    console.error('Errore nel recupero dei tag:', error);
-    res.status(500).json({
-      error: 'Errore interno del server',
-      message: process.env.NODE_ENV === 'development' ? error.message : 'Impossibile recuperare i tag'
-    });
+    res.status(500).json({ error: 'Tags Error', details: error.message });
   }
 };
 
-/**
- * Invalida la cache (per webhook)
- */
-const invalidateCache = () => {
-  cache.blogPosts = { data: null, timestamp: 0 };
-  cache.singlePost.clear();
-  console.log('💾 Cache blog posts invalidata');
-};
-
-/**
- * Calcola il tempo di lettura approssimativo
- */
-const calculateReadingTime = (content) => {
-  if (!content) return 1;
-  
-  // Estrai il testo dal rich text di Contentful
-  const extractText = (node) => {
-    if (!node) return '';
-    if (typeof node === 'string') return node;
-    if (Array.isArray(node)) return node.map(extractText).join(' ');
-    if (node.content) return extractText(node.content);
-    if (node.value) return node.value;
-    return '';
-  };
-
-  const text = extractText(content);
-  const wordsPerMinute = 200;
-  const wordCount = text.split(/\s+/).length;
-  const readingTime = Math.ceil(wordCount / wordsPerMinute);
-  
-  return Math.max(1, readingTime);
-};
-
-export {
-  getAllBlogPosts,
-  getBlogPostBySlug,
-  searchBlogPosts,
-  getBlogTags,
-  invalidateCache
+export const invalidateCache = () => {
+  cache.list = { data: null, ts: 0 };
+  cache.slugs.clear();
 };

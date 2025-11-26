@@ -5,7 +5,7 @@ import { X, Briefcase, User, Send } from 'lucide-react';
 import { submitContactForm } from '../services/api';
 
 const CollaborationModal = ({ isOpen, onClose }) => {
-  const [step, setStep] = useState('choice'); // 'choice', 'project', 'job'
+  const [step, setStep] = useState('choice');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 

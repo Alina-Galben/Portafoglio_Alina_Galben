@@ -1,67 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-const TestContentful: React.FC = () => {
-  const [status, setStatus] = useState<string>('Testing...');
-  const [projects, setProjects] = useState<any[]>([]);
-  const [error, setError] = useState<string | null>(null);
+const CONFIG = {
+  SPACE_ID: 'mavgsj5oj6sw',
+  TOKEN: 'pgWGrl4fYiOq1oUmcNeQQZ_vrngY9zBnO9HBOOq9bOk',
+  ENDPOINT: 'https://cdn.contentful.com'
+};
+
+const TestContentful = () => {
+  const [data, setData] = useState<any[]>([]);
+  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   useEffect(() => {
-    const testConnection = async () => {
+    const controller = new AbortController();
+
+    const fetchData = async () => {
       try {
-        // Test diretto usando fetch invece del SDK
-        const spaceId = 'mavgsj5oj6sw';
-        const accessToken = 'pgWGrl4fYiOq1oUmcNeQQZ_vrngY9zBnO9HBOOq9bOk';
-        
-        const url = `https://cdn.contentful.com/spaces/${spaceId}/entries?content_type=project&access_token=${accessToken}`;
-        
-        console.log('🔍 Testing Contentful with URL:', url);
-        
-        const response = await fetch(url);
-        const data = await response.json();
-        
-        if (response.ok) {
-          setStatus(`✅ Success! Found ${data.items.length} projects`);
-          setProjects(data.items);
-          console.log('✅ Contentful data:', data);
-        } else {
-          setError(`❌ API Error: ${data.message || 'Unknown error'}`);
-          console.error('❌ Contentful error:', data);
-        }
+        const url = `${CONFIG.ENDPOINT}/spaces/${CONFIG.SPACE_ID}/entries?content_type=project&access_token=${CONFIG.TOKEN}`;
+        const res = await fetch(url, { signal: controller.signal });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+
+        const { items } = await res.json();
+        setData(items);
+        setStatus('success');
       } catch (err) {
-        const errorMsg = err instanceof Error ? err.message : 'Unknown error';
-        setError(`❌ Connection failed: ${errorMsg}`);
-        console.error('❌ Fetch error:', err);
+        if (err instanceof Error && err.name === 'AbortError') return;
+        setErrorMessage(err instanceof Error ? err.message : 'Network failure');
+        setStatus('error');
       }
     };
 
-    testConnection();
+    fetchData();
+    return () => controller.abort();
   }, []);
 
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Contentful Connection Test</h1>
-      
-      <div className="mb-4">
-        <p className="text-lg">{status}</p>
-        {error && (
-          <p className="text-red-500 mt-2">{error}</p>
-        )}
-      </div>
+  if (status === 'loading') {
+    return <div className="p-8 text-gray-500 animate-pulse">Establishing connection to Contentful...</div>;
+  }
 
-      {projects.length > 0 && (
+  if (status === 'error') {
+    return (
+      <div className="p-8">
+        <h1 className="text-red-600 font-bold text-xl mb-2">Connection Failed</h1>
+        <pre className="bg-red-50 p-4 rounded text-red-800 font-mono text-sm">{errorMessage}</pre>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-8 max-w-4xl mx-auto">
+      <header className="flex items-center justify-between border-b border-gray-200 pb-6 mb-6">
         <div>
-          <h2 className="text-xl font-semibold mb-2">Projects Found:</h2>
-          <ul className="list-disc pl-6">
-            {projects.map((project) => (
-              <li key={project.sys.id} className="mb-2">
-                <strong>{project.fields.title || 'No title'}</strong>
-                <br />
-                <small>Fields: {Object.keys(project.fields).join(', ')}</small>
-              </li>
-            ))}
-          </ul>
+          <h1 className="text-2xl font-bold text-gray-900">Contentful Diagnostic</h1>
+          <p className="text-gray-500 text-sm mt-1">Space ID: {CONFIG.SPACE_ID}</p>
         </div>
-      )}
+        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+          {data.length} Entries Found
+        </span>
+      </header>
+
+      <div className="grid gap-4">
+        {data.map(({ sys, fields }) => (
+          <div key={sys.id} className="p-5 bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-start mb-3">
+              <h3 className="font-bold text-lg text-gray-800">{fields.title ?? 'Untitled'}</h3>
+              <span className="text-xs font-mono text-gray-400">{sys.id}</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {Object.keys(fields).map(key => (
+                <span key={key} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded border border-gray-200 font-mono">
+                  {key}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

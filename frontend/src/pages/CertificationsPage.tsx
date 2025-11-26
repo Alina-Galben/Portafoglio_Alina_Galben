@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Award, BookOpen, ArrowRight, Mail, Download, CalendarRange } from 'lucide-react';
+import { Award, BookOpen, ArrowRight, Mail, CalendarRange, LucideIcon } from 'lucide-react';
+
 import CertificationCard from '../components/CertificationCard';
 import CourseCard from '../components/CourseCard';
 import SectionTitle from '../components/SectionTitle';
+import ElegantStatCard from '../components/ElegantStatCard';
+
 import certificationsData from '../data/certifications.json';
 import coursesData from '../data/courses.json';
-import ElegantStatCard from '../components/ElegantStatCard';
 
 interface Certification {
   id: number;
@@ -30,79 +32,77 @@ interface Course {
   certificate: string;
 }
 
-const CertificationsPage: React.FC = () => {
-  const navigate = useNavigate();
-  const certifications: Certification[] = certificationsData;
-  const courses: Course[] = coursesData;
+interface StatMetric {
+  id: string;
+  value: string | number;
+  label: string;
+  color: 'violet' | 'blue' | 'green';
+  Icon: LucideIcon;
+}
 
-  // Animation variants
-  const containerVariants = {
+const ANIMATION_VARIANTS: Record<string, Variants> = {
+  container: {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: 30,
-      scale: 0.95
-    },
     visible: { 
       opacity: 1, 
-      y: 0,
-      scale: 1,
-      transition: {
-        type: "spring" as const,
-        stiffness: 100,
-        damping: 12,
-        duration: 0.6
-      }
+      transition: { staggerChildren: 0.1, delayChildren: 0.3 } 
     }
-  };
-
-  const sectionVariants = {
+  },
+  card: {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1, 
+      transition: { type: "spring", stiffness: 100, damping: 12, duration: 0.6 } 
+    }
+  },
+  section: {
     hidden: { opacity: 0, y: 40 },
     visible: { 
       opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }
+      y: 0, 
+      transition: { duration: 0.6, ease: "easeInOut" } 
     }
-  };
+  }
+};
 
-  const handleRequestAllCertificates = () => {
-    // Naviga direttamente alla pagina contatti
-    navigate('/contact');
-  };
+const SEO_METADATA = {
+  title: "📜 Certificazioni & Formazione — Alina Galben Web Developer",
+  description: "Tutti i certificati e i corsi di formazione completati da Alina Galben: HTML, CSS, JavaScript, React, Node.js, API e sviluppo full-stack.",
+  keywords: "certificazioni web developer, corso Epicode, HTML CSS JavaScript, React Node.js, full stack developer, formazione programmazione",
+  ogTitle: "📜 Certificazioni & Formazione — Alina Galben",
+  ogDesc: "Il percorso formativo e le certificazioni professionali di Alina Galben come Full Stack Web Developer."
+};
+
+const CertificationsPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const certifications = certificationsData as Certification[];
+  const courses = coursesData as Course[];
+
+  const statsMetrics: StatMetric[] = useMemo(() => [
+    { id: 'certs', value: certifications.length, label: "Certificazioni Conseguite", color: "violet", Icon: Award },
+    { id: 'courses', value: courses.length, label: "Corsi di Formazione", color: "blue", Icon: BookOpen },
+    { id: 'period', value: "2024-2025", label: "Periodo di Studio", color: "green", Icon: CalendarRange }
+  ], [certifications.length, courses.length]);
 
   return (
     <>
-      {/* SEO Meta Tags */}
       <Helmet>
-        <title>📜 Certificazioni & Formazione — Alina Galben Web Developer</title>
-        <meta 
-          name="description" 
-          content="Tutti i certificati e i corsi di formazione completati da Alina Galben: HTML, CSS, JavaScript, React, Node.js, API e sviluppo full-stack." 
-        />
-        <meta name="keywords" content="certificazioni web developer, corso Epicode, HTML CSS JavaScript, React Node.js, full stack developer, formazione programmazione" />
+        <title>{SEO_METADATA.title}</title>
+        <meta name="description" content={SEO_METADATA.description} />
+        <meta name="keywords" content={SEO_METADATA.keywords} />
         <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="📜 Certificazioni & Formazione — Alina Galben" />
-        <meta property="og:description" content="Il percorso formativo e le certificazioni professionali di Alina Galben come Full Stack Web Developer." />
+        <meta property="og:title" content={SEO_METADATA.ogTitle} />
+        <meta property="og:description" content={SEO_METADATA.ogDesc} />
         <meta property="og:type" content="website" />
         <link rel="canonical" href="/certificazioni" />
       </Helmet>
 
       <div className="min-h-screen bg-gray-50 pt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Page Header */}
+          
           <SectionTitle
             emoji="📜"
             title="Certificazioni & Formazione"
@@ -110,21 +110,25 @@ const CertificationsPage: React.FC = () => {
             className="pt-8"
           />
 
-          {/* Overview Stats */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
           >
-            <ElegantStatCard value={certifications.length} label="Certificazioni Conseguite" color="violet" icon={<Award className="w-6 h-6" />} />
-            <ElegantStatCard value={courses.length} label="Corsi di Formazione" color="blue" icon={<BookOpen className="w-6 h-6" />} />
-            <ElegantStatCard value="2024-2025" label="Periodo di Studio" color="green" icon={<CalendarRange className="w-6 h-6" />} />
+            {statsMetrics.map(({ id, value, label, color, Icon }) => (
+              <ElegantStatCard 
+                key={id}
+                value={value} 
+                label={label} 
+                color={color} 
+                icon={<Icon className="w-6 h-6" />} 
+              />
+            ))}
           </motion.div>
 
-          {/* Certifications Section */}
-          <motion.div
-            variants={sectionVariants}
+          <motion.section
+            variants={ANIMATION_VARIANTS.section}
             initial="hidden"
             animate="visible"
             className="mb-20"
@@ -134,30 +138,29 @@ const CertificationsPage: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5 }}
-                className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-violet-500 to-rose-500 rounded-2xl mb-6"
+                className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-r from-violet-500 to-rose-500 rounded-2xl mb-6 shadow-lg shadow-violet-500/20"
               >
                 <Award className="w-8 h-8 text-white" />
               </motion.div>
               <h2 className="text-3xl font-bold text-gray-900 mb-4">🏆 Certificazioni Professionali</h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Certificati ufficiali che attestano le competenze acquisite durante il percorso di formazione Full Stack Web Developer.
               </p>
             </div>
 
             <motion.div
-              variants={containerVariants}
+              variants={ANIMATION_VARIANTS.container}
               initial="hidden"
               animate="visible"
               className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
             >
-              {certifications.map((certification) => (
-                <motion.div key={certification.id} variants={cardVariants}>
-                  <CertificationCard {...certification} />
+              {certifications.map((cert) => (
+                <motion.div key={cert.id} variants={ANIMATION_VARIANTS.card}>
+                  <CertificationCard {...cert} />
                 </motion.div>
               ))}
             </motion.div>
 
-            {/* Request All Certificates CTA */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -167,19 +170,18 @@ const CertificationsPage: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={handleRequestAllCertificates}
-                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-violet-600 to-rose-500 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-violet-500/30 text-lg"
+                onClick={() => navigate('/contact')}
+                className="inline-flex items-center px-8 py-4 bg-linear-to-r from-violet-600 to-rose-500 text-white font-semibold rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-violet-500/30 text-lg"
               >
                 <Mail className="w-6 h-6 mr-3" />
                 Richiedi tutti i PDF via Email
                 <ArrowRight className="w-6 h-6 ml-3" />
               </motion.button>
             </motion.div>
-          </motion.div>
+          </motion.section>
 
-          {/* Courses Section */}
-          <motion.div
-            variants={sectionVariants}
+          <motion.section
+            variants={ANIMATION_VARIANTS.section}
             initial="hidden"
             animate="visible"
             className="mb-20"
@@ -189,41 +191,38 @@ const CertificationsPage: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl mb-8"
+                className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-r from-blue-500 to-cyan-500 rounded-2xl mb-8 shadow-lg shadow-blue-500/20"
               >
                 <BookOpen className="w-10 h-10 text-white" />
               </motion.div>
               <h2 className="text-4xl font-bold text-gray-900 mb-6">🎓 Formazione & Corsi</h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Percorsi formativi, corsi specialistici e apprendimento continuo per rimanere sempre aggiornata sulle ultime tecnologie.
               </p>
             </div>
 
             <motion.div
-              variants={containerVariants}
+              variants={ANIMATION_VARIANTS.container}
               initial="hidden"
               animate="visible"
               className="grid grid-cols-1 lg:grid-cols-2 gap-8"
             >
               {courses.map((course) => (
-                <motion.div key={course.id} variants={cardVariants}>
+                <motion.div key={course.id} variants={ANIMATION_VARIANTS.card}>
                   <CourseCard {...course} />
                 </motion.div>
               ))}
             </motion.div>
-          </motion.div>
+          </motion.section>
 
-          {/* Call-to-Action Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1 }}
-            className="bg-gradient-to-r from-violet-600 via-purple-600 to-blue-600 rounded-2xl p-10 md:p-12 text-center text-white mb-16"
+            className="bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 rounded-2xl p-10 md:p-12 text-center text-white mb-16 shadow-2xl shadow-violet-900/20"
           >
-            <h2 className="text-4xl md:text-4xl font-bold mb-6">
-              Interessato alle mie competenze?
-            </h2>
-            <p className="text-xl md:text-xl opacity-90 mb-10 max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold mb-6">Interessato alle mie competenze?</h2>
+            <p className="text-xl opacity-90 mb-10 max-w-2xl mx-auto">
               Ogni certificazione rappresenta ore di studio, progetti pratici e competenze concrete. Parliamo di come posso aiutarti!
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
@@ -247,10 +246,11 @@ const CertificationsPage: React.FC = () => {
               </motion.button>
             </div>
           </motion.div>
+
         </div>
       </div>
     </>
   );
 };
 
-export default CertificationsPage;
+export default React.memo(CertificationsPage);

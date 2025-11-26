@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
@@ -45,7 +47,6 @@ const BlogPage: React.FC = () => {
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [isTagsDropdownOpen, setIsTagsDropdownOpen] = useState(false);
 
-  // Fetcher for SWR - uses the API service
   const fetcher = async () => {
     try {
       return await getAllBlogPosts({ limit: 100 });
@@ -55,7 +56,6 @@ const BlogPage: React.FC = () => {
     }
   };
 
-  // Fetch blog posts from backend API
   const { data, error, isLoading, mutate } = useSWR(
     '/api/blog',
     fetcher,
@@ -66,7 +66,6 @@ const BlogPage: React.FC = () => {
     }
   );
 
-  // SSE for real-time updates
   useSSE(`${API_BASE_URL}/api/events`, {
     onMessage: (event: any) => {
       if (event.type === 'blog-updated') {
@@ -82,11 +81,9 @@ const BlogPage: React.FC = () => {
 
   const posts: BlogPost[] = useMemo(() => {
     if (!data) return [];
-    // Handle both direct array response and { items: [...] } response
     return Array.isArray(data) ? data : (data.items || []);
   }, [data]);
 
-  // Extract all unique tags
   const allTags = useMemo(() => {
     const tagSet = new Set<string>();
     posts.forEach(post => {
@@ -97,11 +94,9 @@ const BlogPage: React.FC = () => {
     return Array.from(tagSet).sort();
   }, [posts]);
 
-  // Filter and sort posts
   const filteredAndSortedPosts = useMemo(() => {
     let filtered = posts;
 
-    // Filter by search term
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
       filtered = filtered.filter(post => 
@@ -111,14 +106,12 @@ const BlogPage: React.FC = () => {
       );
     }
 
-    // Filter by selected tags
     if (selectedTags.length > 0) {
       filtered = filtered.filter(post =>
         post.fields.tags?.some(tag => selectedTags.includes(tag))
       );
     }
 
-    // Sort posts
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'newest':
@@ -160,7 +153,6 @@ const BlogPage: React.FC = () => {
     setLastUpdate(new Date());
   };
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -187,7 +179,6 @@ const BlogPage: React.FC = () => {
 
   return (
     <>
-      {/* SEO Meta Tags */}
       <Helmet>
         <title>📝 Blog Tecnico & Insights — Alina Galben Web Developer</title>
         <meta 
@@ -205,22 +196,19 @@ const BlogPage: React.FC = () => {
       <div className="min-h-screen bg-gray-50 pt-8">
         <section className="min-h-screen bg-gray-50 pt-0">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          {/* Page Header */}
           <SectionTitle
             emoji="📝"
             title="Blog Tecnico & Insights"
             subtitle="Articoli, tutorial e riflessioni sul mondo dello sviluppo web moderno. Aggiornamenti in tempo reale da Contentful."
           />
 
-          {/* Search and Filters - Modern Minimal Style */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="max-w-4xl mx-auto mb-12" // Centrato e con larghezza limitata
+            className="max-w-4xl mx-auto mb-12"
           >
             <div className="flex flex-col md:flex-row gap-4 items-center">
-              {/* Search Bar - Espansa */}
               <div className="relative grow w-full">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Search className="h-5 w-5 text-violet-500" />
@@ -230,7 +218,7 @@ const BlogPage: React.FC = () => {
                   placeholder="Cerca un articolo..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="block w-full pl-11 pr-10 py-4 bg-white border-1 rounded-full shadow-lg shadow-violet-100/50 focus:ring-2 focus:ring-violet-500 text-gray-700 placeholder-gray-400 transition-all hover:shadow-xl"
+                  className="block w-full pl-11 pr-10 py-4 bg-white border rounded-full shadow-lg shadow-violet-100/50 focus:ring-2 focus:ring-violet-500 text-gray-700 placeholder-gray-400 transition-all hover:shadow-xl"
                 />
                 {searchTerm && (
                   <button
@@ -242,14 +230,12 @@ const BlogPage: React.FC = () => {
                 )}
               </div>
 
-              {/* Filters Row - Compatta a destra */}
-              <div className="flex flex-shrink-0 gap-3 w-full md:w-auto">
-                {/* Sort Dropdown */}
+              <div className="flex shrink-0 gap-3 w-full md:w-auto">
                 <div className="relative">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as any)}
-                    className="appearance-none w-full md:w-48 bg-white py-4 pl-5 pr-10 rounded-full shadow-lg shadow-violet-100/50 border-1 text-gray-700 font-medium focus:ring-2 focus:ring-violet-500 cursor-pointer hover:bg-gray-50 transition-all"
+                    className="appearance-none w-full md:w-48 bg-white py-4 pl-5 pr-10 rounded-full shadow-lg shadow-violet-100/50 border text-gray-700 font-medium focus:ring-2 focus:ring-violet-500 cursor-pointer hover:bg-gray-50 transition-all"
                   >
                     <option value="newest">Più recenti</option>
                     <option value="oldest">Meno recenti</option>
@@ -259,7 +245,6 @@ const BlogPage: React.FC = () => {
                   <SortAsc className="absolute right-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-violet-500 pointer-events-none" />
                 </div>
 
-                {/* Tags Filter Button */}
                 {allTags.length > 0 && (
                   <div className="relative">
                     <button
@@ -270,7 +255,6 @@ const BlogPage: React.FC = () => {
                       <Filter className="h-5 w-5" />
                     </button>
 
-                    {/* Dropdown Menu dei Tag */}
                     {isTagsDropdownOpen && (
                       <div className="absolute top-full right-0 mt-2 bg-white border border-gray-100 rounded-2xl shadow-xl z-20 w-64 p-4 animate-in fade-in slide-in-from-top-2">
                         <h4 className="text-sm font-bold text-gray-900 mb-3">Filtra per argomenti</h4>
@@ -294,7 +278,6 @@ const BlogPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Selected Tags & Clear Filters - Appaiono sotto se necessario */}
             {(searchTerm || selectedTags.length > 0 || sortBy !== 'newest') && (
               <div className="flex flex-wrap items-center gap-3 mt-4 justify-center md:justify-start px-2">
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Filtri attivi:</span>
@@ -322,9 +305,7 @@ const BlogPage: React.FC = () => {
             )}
           </motion.div>
 
-          {/* Blog Posts Grid */}
           {isLoading ? (
-            // Loading Skeleton
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-pulse">
@@ -339,7 +320,6 @@ const BlogPage: React.FC = () => {
               ))}
             </div>
           ) : error ? (
-            // Error State
             <div className="text-center py-12">
               <div className="text-red-600 text-lg font-semibold mb-2">Errore nel caricamento</div>
               <p className="text-gray-600 mb-4">Non è stato possibile caricare gli articoli.</p>
@@ -351,7 +331,6 @@ const BlogPage: React.FC = () => {
               </button>
             </div>
           ) : filteredAndSortedPosts.length === 0 ? (
-            // No Results State
             <div className="text-center py-12">
               <div className="text-gray-600 text-lg font-semibold mb-2">
                 {posts.length === 0 ? 'Nessun articolo pubblicato' : 'Nessun risultato trovato'}
@@ -372,7 +351,6 @@ const BlogPage: React.FC = () => {
               )}
             </div>
           ) : (
-            // Posts Grid
             <motion.div
               variants={containerVariants}
               initial="hidden"
@@ -395,16 +373,14 @@ const BlogPage: React.FC = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-violet-100 to-purple-200 flex items-center justify-center">
+                      <div className="w-full h-full bg-linear-to-br from-violet-100 to-purple-200 flex items-center justify-center">
                         <Hash className="w-10 h-10 text-violet-400 opacity-50" />
                       </div>
                     )}
                     <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
 
-                  {/* Content */}
                   <div className="p-6">
-                    {/* Meta Info */}
                     <div className="flex items-center space-x-4 text-sm text-gray-500 mb-3">
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4" />
@@ -418,19 +394,16 @@ const BlogPage: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Title */}
                     <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-violet-600 transition-colors line-clamp-2">
                       {post.fields.title}
                     </h2>
 
-                    {/* Description */}
                     {post.fields.description && (
                       <p className="text-gray-600 mb-4 line-clamp-3">
                         {post.fields.description}
                       </p>
                     )}
 
-                    {/* Tags */}
                     {post.fields.tags && post.fields.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-4">
                         {post.fields.tags.slice(0, 3).map((tag) => (
@@ -450,7 +423,6 @@ const BlogPage: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Read More */}
                     <div className="flex items-center text-violet-600 font-medium group-hover:text-violet-700">
                       <span>Leggi di più</span>
                       <ArrowRight className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
@@ -461,7 +433,6 @@ const BlogPage: React.FC = () => {
             </motion.div>
           )}
 
-          {/* Update Info & Controls - Bottom */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

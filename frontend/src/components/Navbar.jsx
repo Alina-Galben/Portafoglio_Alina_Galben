@@ -23,14 +23,6 @@ const Navbar = () => {
   const location = useLocation();
   const { isMobile } = useDeviceOptimization();
 
-  // DEBUG
-  console.log('📱 Navbar render:', {
-    isMobile,
-    clientWidth: document.documentElement.clientWidth,
-    innerWidth: window.innerWidth
-  });
-
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -40,17 +32,14 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menu on route change
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
-  // Ensure menu is closed on component mount
   useEffect(() => {
     setIsMenuOpen(false);
   }, []);
 
-  // Prevent scroll when mobile menu is open
   useEffect(() => {
     if (isMobile && isMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -63,7 +52,6 @@ const Navbar = () => {
     };
   }, [isMobile, isMenuOpen]);
 
-  // Navigation items with icons
   const navigationItems = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/about', label: 'Chi Sono', icon: User },
@@ -76,7 +64,6 @@ const Navbar = () => {
     { path: '/contact', label: 'Contattami', icon: Mail },
   ];
 
-  // Animation variants per desktop
   const navbarVariants = {
     hidden: { y: -100, opacity: 0 },
     visible: { 
@@ -106,7 +93,6 @@ const Navbar = () => {
     }
   };
 
-  // Animation variants per mobile (più leggere)
   const mobileMenuVariants = {
     hidden: { opacity: 0, y: -20 },
     visible: { 
@@ -136,7 +122,6 @@ const Navbar = () => {
   };
 
   if (isMobile) {
-    // Versione MOBILE con animazioni leggere
     return (
       <div data-testid="mobile-navbar">
         <motion.nav
@@ -151,7 +136,6 @@ const Navbar = () => {
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              {/* Logo Mobile con animazione */}
               <motion.div
                 variants={mobileLogoVariants}
                 initial="initial"
@@ -187,7 +171,6 @@ const Navbar = () => {
                 </Link>
               </motion.div>
 
-              {/* Mobile Menu Button con animazione - FIXED per stare sempre sopra */}
               <motion.button
                 data-testid="mobile-menu-button"
                 whileTap={{ scale: 0.95 }}
@@ -210,11 +193,9 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile Menu con AnimatePresence */}
           <AnimatePresence>
             {isMenuOpen && (
               <>
-                {/* Backdrop animato */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -224,7 +205,6 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                 />
                 
-                {/* Menu Panel animato */}
                 <motion.div
                   data-testid="mobile-menu"
                   variants={mobileMenuVariants}
@@ -265,13 +245,11 @@ const Navbar = () => {
           </AnimatePresence>
         </motion.nav>
 
-        {/* Mobile Spacer */}
         <div className="h-16" />
       </div>
     );
   }
 
-  // Versione DESKTOP con animazioni
   return (
     <div data-testid="desktop-navbar">
       <motion.nav
@@ -286,7 +264,6 @@ const Navbar = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-18 gap-8">
-            {/* Logo Desktop */}
             <motion.div
               variants={logoVariants}
               initial="initial"
@@ -325,8 +302,7 @@ const Navbar = () => {
               </Link>
             </motion.div>
 
-            {/* Desktop Navigation */}
-            <nav className="flex items-center gap-1 ml-auto">
+            <nav className="flex items-center gap-3 ml-auto">
               {navigationItems.map(({ path, label, icon }) => (
                 <NavLink
                   key={path}
@@ -342,7 +318,6 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
-      {/* Desktop Spacer */}
       <div className={`transition-all duration-500 ${
         isScrolled ? 'h-20' : 'h-12'
       }`} />

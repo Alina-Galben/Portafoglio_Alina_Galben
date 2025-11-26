@@ -6,7 +6,6 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import ErrorPage from '../pages/ErrorPage';
 import TestContentful from '../components/TestContentful';
 
-// Lazy load delle pagine per ottimizzazione mobile
 const HomePage = lazy(() => import('../pages/HomePage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 const ProjectsPage = lazy(() => import('../pages/ProjectsPage'));
@@ -18,7 +17,6 @@ const CertificationsPage = lazy(() => import('../pages/CertificationsPage'));
 const StatisticsPage = lazy(() => import('../pages/StatisticsPage'));
 const ContactPage = lazy(() => import('../pages/ContactPage'));
 
-// Utility function per wrappare le pagine lazy con Suspense ed ErrorBoundary
 const withSuspense = (Component: React.LazyExoticComponent<React.ComponentType<any>>) => (
   <ErrorBoundary>
     <Suspense fallback={<MobileLoading message="Caricamento pagina..." />}>

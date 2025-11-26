@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import React from 'react';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';
 
@@ -37,7 +39,7 @@ const ErrorFallback: React.FC<{ error?: Error }> = ({ error }) => {
   const { isMobile } = useDeviceOptimization();
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-red-50 to-pink-50 flex items-center justify-center px-4 ${
+    <div className={`min-h-screen bg-linear-to-br from-red-50 to-pink-50 flex items-center justify-center px-4 ${
       isMobile ? 'text-center' : ''
     }`}>
       <div className={`max-w-md ${isMobile ? 'mx-auto' : ''}`}>
@@ -64,7 +66,7 @@ const ErrorFallback: React.FC<{ error?: Error }> = ({ error }) => {
           }
         </p>
         
-        {error && process.env.NODE_ENV === 'development' && (
+        {error && import.meta.env.DEV && (
           <details className="mb-6 text-left">
             <summary className="text-sm text-gray-500 cursor-pointer">Dettagli errore</summary>
             <pre className="text-xs text-red-600 mt-2 bg-red-50 p-2 rounded overflow-auto">
