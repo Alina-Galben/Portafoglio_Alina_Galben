@@ -2,7 +2,7 @@
 
 ## 🎯 Configurazione Completata
 
-La sezione **💼 Progetti** è ora completamente configurata e funzionante con:
+Le sezioni **💼 Progetti e Blog** sono completamente configurate e funzionante con:
 
 ### ✅ Caratteristiche Implementate
 
@@ -43,67 +43,18 @@ La sezione **💼 Progetti** è ora completamente configurata e funzionante con:
 - `frontend/src/pages/ProjectsPage.tsx` - Pagina progetti completa
 - `backend/src/middleware/security.js` - CORS aggiornato
 
-### Variabili d'Ambiente:
-
-```env
-VITE_CONTENTFUL_SPACE_ID=
-VITE_CONTENTFUL_ACCESS_TOKEN=
-VITE_CONTENTFUL_ENVIRONMENT=
-VITE_API_BASE_URL=
-```
-
-## 🚀 Come Testare
-
-1. **Avvia il Backend:**
-   ```bash
-   cd backend
-   node src/server.js
-   ```
-
-2. **Avvia il Frontend:**
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-
-3. **Visita la Pagina Progetti:**
-   - URL: http://localhost:5174/projects
-   - Verifica che i progetti vengano caricati da Contentful
-   - Controlla la connessione SSE (icona verde)
-
-## 🔄 Test Webhook (Opzionale)
-
-Per testare gli aggiornamenti in tempo reale:
-
-1. **Configura Webhook su Contentful:**
-   - Vai in Settings → Webhooks → Add Webhook
-   - URL: `http://localhost:3020/api/contentful-webhook`
-   - Eventi: Entry published, unpublished, deleted
-   - Content type filter: project
-
-2. **Pubblica un Progetto:**
-   -  o pubblica un progetto su Contentful
-   - La pagina dovrebbe aggiornarsi automaticamente
-   - Apparirà la notifica "Progetti aggiornati ✅"
+---
 
 ## 📊 Status Monitoring
 
 La pagina include una barra di stato che mostra:
+
 - 🟢 **Live Updates**: Connessione SSE attiva
 - 🔴 **Disconnected**: Problemi di connessione
 - 📅 **Ultimo aggiornamento**: Timestamp dell'ultimo fetch
 - 🔄 **Pulsante Refresh**: Aggiornamento manuale
 
-## 🎨 Personalizzazione
-
-### Colori Tecnologie:
-Il sistema riconosce automaticamente queste tecnologie con colori dedicati:
-- React (blu), Node.js (verde), MongoDB (emerald)
-- TypeScript (blu scuro), JavaScript (giallo)
-- Vite (viola), TailwindCSS (cyan)
-
-### Aggiungere Nuove Tecnologie:
-Modifica la funzione `getTechColor` in `ProjectsPage.tsx`.
+---
 
 ## 🚦 Stato del Sistema
 
@@ -115,6 +66,8 @@ Modifica la funzione `getTechColor` in `ProjectsPage.tsx`.
 ✅ **Animations** - Framer Motion attivo  
 ✅ **CORS Configuration** - Backend compatibile  
 
+---
+
 ## 📝 Note Tecniche
 
 - **Content Type Contentful**: `project`
@@ -123,4 +76,4 @@ Modifica la funzione `getTechColor` in `ProjectsPage.tsx`.
 - **Auto-refresh Interval**: 60 secondi
 - **SSE Reconnection**: Automatica con retry
 
-La sezione Progetti è ora **Production Ready**! 🎉
+---
