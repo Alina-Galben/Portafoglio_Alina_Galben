@@ -176,7 +176,9 @@ const AboutPage: React.FC = () => {
                       <div className="grid grid-cols-1 gap-3">
                         
                         <div className="flex items-center justify-between py-3 px-4 bg-green-100 rounded-xl border border-green-200">
-                          <span className="text-green-800 text-base font-semibold">🌍 Collaborazioni Remote</span>
+                          <span className="text-green-800 text-base font-semibold">
+                            🌍 Collaborazioni Remote
+                          </span>
                           <span className="text-green-700 text-sm bg-white px-3 py-1 rounded-full font-medium">Primaria</span>
                         </div>
 
@@ -345,7 +347,6 @@ const AboutPage: React.FC = () => {
               >
                 <div className="bg-linear-to-br from-violet-600 via-rose-500 to-yellow-500 p-1 rounded-2xl shadow-2xl">
                   <div className="bg-white rounded-2xl p-8 text-center">
-                    {/* Avatar di Alina */}
                     <div className="w-60 h-60 mx-auto mb-6 bg-linear-to-br from-violet-100 via-rose-100 to-yellow-100 rounded-full flex items-center justify-center border-4 border-white shadow-lg overflow-hidden">
                       <img 
                         src="/alina-avatar.png" 

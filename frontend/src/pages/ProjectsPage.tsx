@@ -66,7 +66,7 @@ const ProjectsPage: React.FC = () => {
       }
       
       const fetchedProjects = await fetchProjects();
-      setProjects(fetchedProjects);
+      setProjects(fetchedProjects as unknown as ContentfulProject[]);
       setLastUpdate(new Date());
       
       if (!silent) {

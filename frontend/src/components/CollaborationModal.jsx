@@ -1,5 +1,4 @@
 import { useState } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Briefcase, User, Send } from 'lucide-react';
 import { submitContactForm } from '../services/api';
@@ -36,19 +35,19 @@ const CollaborationModal = ({ isOpen, onClose }) => {
         email: projectData.email,
         subject: `Proposta Progetto: ${projectData.projectIdea.substring(0, 50)}...`,
         message: `
-PROPOSTA PROGETTO
+        PROPOSTA PROGETTO
 
-Nome: ${projectData.name}
-Email: ${projectData.email}
+        Nome: ${projectData.name}
+        Email: ${projectData.email}
 
-Idea Progetto:
-${projectData.projectIdea}
+        Idea Progetto:
+        ${projectData.projectIdea}
 
-Timeline: ${projectData.timeline}
-Budget: ${projectData.budget}
+        Timeline: ${projectData.timeline}
+        Budget: ${projectData.budget}
 
----
-Inviato tramite form collaborazione del portfolio
+        ---
+        Inviato tramite form collaborazione del portfolio
         `.trim()
       });
 
@@ -77,21 +76,21 @@ Inviato tramite form collaborazione del portfolio
         email: jobData.email,
         subject: `Offerta Lavoro: ${jobData.position} - ${jobData.company}`,
         message: `
-OFFERTA DI LAVORO
+        OFFERTA DI LAVORO
 
-Nome: ${jobData.name}
-Email: ${jobData.email}
-Azienda: ${jobData.company}
-Posizione: ${jobData.position}
+        Nome: ${jobData.name}
+        Email: ${jobData.email}
+        Azienda: ${jobData.company}
+        Posizione: ${jobData.position}
 
-Descrizione Lavoro:
-${jobData.jobDescription}
+        Descrizione Lavoro:
+        ${jobData.jobDescription}
 
-Requisiti:
-${jobData.requirements}
+        Requisiti:
+        ${jobData.requirements}
 
----
-Inviato tramite form collaborazione del portfolio
+        ---
+        Inviato tramite form collaborazione del portfolio
         `.trim()
       });
 
@@ -135,7 +134,6 @@ Inviato tramite form collaborazione del portfolio
             exit={{ scale: 0.9, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-2xl font-bold text-gray-900">
                 Come vuoi collaborare con me?

@@ -151,7 +151,6 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Ambient Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
         <motion.div
           animate={{ x: [0, 100, 0], y: [0, -50, 0] }}

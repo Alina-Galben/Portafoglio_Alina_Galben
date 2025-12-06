@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, HTMLMotionProps } from 'framer-motion';
 import { Send, Loader2, CheckCircle, AlertCircle, User, Mail, MessageSquare, Tag } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -50,7 +50,6 @@ const ContactForm: React.FC = () => {
     if (isTouched) validate();
   }, [formData, isTouched, validate]);
 
-  // Sync external select (e.g. from Hero section)
   useEffect(() => {
     const handleExternalChange = (e: Event) => {
       const target = e.target as HTMLSelectElement;

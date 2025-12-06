@@ -38,7 +38,6 @@ export const useSSE = (url, options = {}) => {
           console.log('📨 SSE Message received:', data);
           setLastEvent({ data, timestamp: new Date() });
           onMessage(data, event);
-          // eslint-disable-next-line no-unused-vars
         } catch (_parseError) {
           console.warn('⚠️ Failed to parse SSE message:', event.data);
           setLastEvent({ data: event.data, timestamp: new Date() });
@@ -96,7 +95,6 @@ export const useSSE = (url, options = {}) => {
     return () => {
       disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
 
   return {

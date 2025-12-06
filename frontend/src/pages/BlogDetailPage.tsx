@@ -1,4 +1,4 @@
-/// <reference types="vite/client" />
+
 
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';

@@ -1,4 +1,3 @@
-import React from 'react';
 
 const Skeleton = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
   <div className={`bg-gray-200 rounded animate-pulse ${className || ''}`} style={style} />

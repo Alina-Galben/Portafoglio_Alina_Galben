@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { ArrowRight, MessageCircle, HandHeart, FolderOpen, Github, Linkedin, Phone, Mail, Download, ChevronDown, Code, Sparkles, Heart } from 'lucide-react';
 import CollaborationModal from './CollaborationModal';
@@ -254,7 +253,6 @@ const Hero = () => {
                 { icon: Mail, href: 'mailto:ciao@alinagalben.com', label: 'Email' },
                 { icon: Phone, href: 'https://wa.me/393793250179', label: 'WhatsApp' },
                 { icon: Download, href: './pdf/CV - Alina Galben.pdf', label: 'CV Download' }
-              // eslint-disable-next-line no-unused-vars
               ].map(({ icon: Icon, href, label }) => (
                 <motion.a
                   key={label}

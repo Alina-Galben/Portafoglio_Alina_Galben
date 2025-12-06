@@ -1,5 +1,3 @@
-/// <reference types="vite/client" />
-
 import React from 'react';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';
 
@@ -43,7 +41,6 @@ const ErrorFallback: React.FC<{ error?: Error }> = ({ error }) => {
       isMobile ? 'text-center' : ''
     }`}>
       <div className={`max-w-md ${isMobile ? 'mx-auto' : ''}`}>
-        {/* Icon di errore */}
         <div className="w-16 h-16 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center">
           <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path 
