@@ -2,13 +2,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     host: 'localhost',
     port: 5174,
-    strictPort: true, // Forza Vite a usare solo questa porta
+    strictPort: true,
     proxy: {
       '/api': {
         target: 'http://localhost:3020',
@@ -16,7 +15,7 @@ export default defineConfig({
       },
     },
     hmr: {
-      overlay: false // Reduce overhead on mobile
+      overlay: false 
     }
   },
   build: {

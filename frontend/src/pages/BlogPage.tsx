@@ -7,9 +7,8 @@ import useSWR from 'swr';
 import { toast } from 'react-hot-toast';
 import { useSSE } from '../hooks/useSSE';
 import SectionTitle from '../components/SectionTitle';
-import { getAllBlogPosts } from '../services/api';
+import { API_BASE_URL, getAllBlogPosts } from '../services/api';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3020';
 
 interface BlogPost {
   sys: {

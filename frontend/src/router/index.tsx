@@ -4,7 +4,6 @@ import Layout from '../components/Layout';
 import MobileLoading from '../components/MobileLoading';
 import ErrorBoundary from '../components/ErrorBoundary';
 import ErrorPage from '../pages/ErrorPage';
-import TestContentful from '../components/TestContentful';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
@@ -87,10 +86,7 @@ const router = createBrowserRouter([
         path: 'contact',
         element: withSuspense(ContactPage),
       },
-      {
-        path: 'test-contentful',
-        element: <TestContentful />,
-      },
+  
     ],
   },
 ]);

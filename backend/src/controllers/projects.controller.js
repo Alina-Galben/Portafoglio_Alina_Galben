@@ -2,7 +2,7 @@ import { createClient } from 'contentful';
 
 const getClient = () => {
   const { CONTENTFUL_SPACE_ID, CONTENTFUL_ACCESS_TOKEN } = process.env;
-  // Return null instead of throwing to handle cases where config is missing gracefully in getAllProjects
+  
   if (!CONTENTFUL_SPACE_ID || !CONTENTFUL_ACCESS_TOKEN) return null;
   
   return createClient({

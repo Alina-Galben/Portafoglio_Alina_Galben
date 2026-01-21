@@ -21,9 +21,7 @@ import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import OptimizedImage from '../components/OptimizedImage';
 import BlogLoadingSkeleton from '../components/BlogLoadingSkeleton';
 import ArticleContent from '../components/ArticleContent';
-import { getBlogPostBySlug, getAllBlogPosts } from '../services/api';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3020';
+import { API_BASE_URL, getBlogPostBySlug, getAllBlogPosts } from '../services/api';
 
 interface BlogPost {
   sys: {

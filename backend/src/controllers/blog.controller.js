@@ -11,7 +11,7 @@ const getClient = () => {
 };
 
 const cache = { list: { data: null, ts: 0 }, slugs: new Map() };
-const CACHE_TTL = 0; // Increase for prod
+const CACHE_TTL = 0;
 
 const extractText = (node) => {
   if (!node) return '';
@@ -94,7 +94,7 @@ export const getBlogPostBySlug = async (req, res) => {
     if (!items.length) return res.status(404).json({ error: 'Not Found' });
 
     const post = transformEntry(items[0]);
-    // Simulate view increment
+    
     post.fields.views += 1;
 
     const payload = { items: [post], total: 1 };
