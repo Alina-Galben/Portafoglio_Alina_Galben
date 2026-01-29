@@ -23,18 +23,17 @@ const SectionTitle = ({ emoji, title, subtitle, className }: Props) => (
           {emoji}
         </motion.span>
       )}
-      <motion.span {...anim.text} className="bg-linear-to-r from-purple-600 via-pink-600 to-red-600 bg-clip-text text-transparent">
+      <motion.span {...anim.text} className="font-bold bg-rose-500 bg-clip-text text-transparent">
         {title}
       </motion.span>
     </motion.h1>
 
     {subtitle && (
-      <motion.p {...anim.sub} className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+      <motion.p {...anim.sub} className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
         {subtitle}
       </motion.p>
     )}
 
-    <motion.div {...anim.line} className="mx-auto mt-6 h-1 w-24 bg-linear-to-r from-purple-500 to-pink-500 rounded-full" />
   </div>
 );
 

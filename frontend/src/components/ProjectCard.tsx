@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Github, ExternalLink, ChevronDown } from 'lucide-react';
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { useMemo } from "react";
+import { motion } from "framer-motion";
+import { Github, ExternalLink } from "lucide-react";
+import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
 
 interface ProjectCardProps {
   project: {
@@ -11,96 +11,123 @@ interface ProjectCardProps {
       technologies: string[];
       gitHubUrl?: string;
       liveDemoUr?: string;
-      coverImage?: {
-        fields: { file: { url: string } };
-      };
+      coverImage?: { fields: { file: { url: string } } };
     };
   };
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
-  const { 
-    title, 
-    description, 
-    technologies, 
-    gitHubUrl, 
-    liveDemoUr: demoLink,
-    coverImage 
-  } = project.fields;
+const safeArray = <T,>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 
-  const [isExpanded, setIsExpanded] = useState(false);
-  const imageUrl = coverImage?.fields?.file?.url;
+export default function ProjectCard({ project }: ProjectCardProps) {
+  const { title, description, technologies, gitHubUrl, liveDemoUr: demoLink, coverImage } = project.fields;
+
+  const imageUrl = coverImage?.fields?.file?.url ? `https:${coverImage.fields.file.url}` : "";
+
+  const plainDescription = useMemo(() => {
+    try {
+      return documentToPlainTextString(description) || "Descrizione non disponibile.";
+    } catch {
+      return "Descrizione non disponibile.";
+    }
+  }, [description]);
+
+  // ✅ più compatto: max 4 tech + “+N”
+  const techAll = useMemo(() => safeArray<string>(technologies), [technologies]);
+  const techTop = useMemo(() => techAll.slice(0, 4), [techAll]);
+  const techRemaining = Math.max(0, techAll.length - techTop.length);
 
   return (
-    <motion.div
-      layout
-      className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full border border-gray-100"
-      whileHover={{ y: -5 }}
-      transition={{ type: "spring", stiffness: 300 }}
+    <motion.article
+      whileHover={{ y: -3 }}
+      transition={{ type: "spring", stiffness: 260, damping: 18 }}
+      className="group relative bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden h-full flex flex-col"
     >
-      {imageUrl ? (
-        <img 
-          src={`https:${imageUrl}`} 
-          alt={`Copertina ${title}`}
-          className="w-full h-48 object-cover" 
-        />
-      ) : (
-        <div className="w-full h-48 bg-linear-to-br from-purple-400 to-pink-400 flex items-center justify-center text-6xl">
-          💻
-        </div>
-      )}
-      
-      <div className="p-6 flex flex-col grow">
-        <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-2" title={title}>
+      {/* accent */}
+      <div className="h-1 w-full bg-linear-to-r from-violet-600 via-fuchsia-500 to-rose-500" />
+
+      {/* image (più bassa = più compatta) */}
+      <div className="relative w-full h-52 bg-gray-100 overflow-hidden">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={`Copertina ${title}`}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full bg-linear-to-br from-violet-500 to-rose-500 flex items-center justify-center text-4xl">
+            💻
+          </div>
+        )}
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/15 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+
+      {/* content */}
+      <div className="p-4 flex flex-col grow">
+        <h3 className="text-base sm:text-lg font-extrabold text-gray-900 line-clamp-2 min-h-12" title={title}>
           {title}
         </h3>
 
-        <div className={`relative overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-none' : 'max-h-40'}`}>
-          <div className="text-gray-600 mb-4 grow">
-            {description ? documentToReactComponents(description) : <p>Nessuna descrizione.</p>}
-          </div>
-          {!isExpanded && <div className="absolute bottom-0 left-0 w-full h-12 bg-linear-to-t from-white to-transparent" />}
-        </div>
-        
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="text-purple-600 font-semibold self-start flex items-center gap-1 mb-4 hover:text-purple-700 transition-colors"
-        >
-          {isExpanded ? 'Meno dettagli' : 'Più dettagli'}
-          <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-        </button>
+        {/* descrizione più corta = meno variazione */}
+        <p className="mt-2 text-gray-600 text-sm leading-relaxed line-clamp-2 min-h-10">
+          {plainDescription}
+        </p>
 
-        <div className="flex flex-wrap gap-2 mb-6 mt-auto">
-          {technologies?.map((tech) => (
-            <span key={tech} className="px-2 py-0.5 bg-purple-100 text-purple-700 text-sm font-semibold rounded-full">
+        {/* ✅ TECH AREA A ALTEZZA FISSA -> niente buchi */}
+        <div className="mt-3 h-10 overflow-hidden flex flex-wrap gap-2">
+          {techTop.map((tech) => (
+            <span
+              key={tech}
+              className="inline-flex items-center h-6 px-2.5 rounded-lg text-[11px] font-bold
+    bg-violet-50 text-violet-900 border border-violet-100"
+            >
               {tech}
             </span>
           ))}
+          {techRemaining > 0 && (
+            <span
+              className="inline-flex items-center h-6 px-2.5 rounded-lg text-[11px] font-bold
+    bg-gray-50 text-gray-700 border border-gray-200"
+              title={techAll.slice(techTop.length).join(", ")}
+            >
+              +{techRemaining}
+            </span>
+          )}
         </div>
-        
-        <div className="flex gap-4">
-          {gitHubUrl && (
-            <a 
-              href={gitHubUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex-1 inline-flex items-center justify-center gap-2 bg-gray-800 text-white font-semibold px-4 py-2 rounded-md hover:bg-gray-900 transition-colors"
-            >
-              <Github className="w-4 h-4" /> GitHub
-            </a>
-          )}
-          {demoLink && (
-            <a 
-              href={demoLink} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex-1 inline-flex items-center justify-center gap-2 bg-purple-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-purple-700 transition-colors"
-            >
-              <ExternalLink className="w-4 h-4" /> Visita
-            </a>
-          )}
+
+        {/* footer */}
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <a
+            href={gitHubUrl || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-disabled={!gitHubUrl}
+            className={[
+              "inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl font-semibold text-sm transition-all",
+              gitHubUrl ? "bg-gray-900 text-white hover:bg-gray-950" : "bg-gray-100 text-gray-400 pointer-events-none",
+            ].join(" ")}
+          >
+            <Github className="w-4 h-4" />
+            GitHub
+          </a>
+
+          <a
+            href={demoLink || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-disabled={!demoLink}
+            className={[
+              "inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl font-semibold text-sm transition-all",
+              demoLink
+                ? "bg-white border-2 border-violet-600 text-violet-700 hover:bg-violet-50"
+                : "bg-gray-100 text-gray-400 pointer-events-none border border-gray-200",
+            ].join(" ")}
+          >
+            <ExternalLink className="w-4 h-4" />
+            Live
+          </a>
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Heart, ArrowUp, Phone } from 'lucide-react';
+import PolicyLinks from "./legal/PolicyLinks";
 
 const SOCIAL_LINKS = [
   { icon: Github, href: 'https://github.com/Alina-Galben', label: 'GitHub' },
@@ -126,7 +127,7 @@ const Footer = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
-            className="text-gray-400 text-sm flex items-center"
+            className="text-gray-300 text-sm flex items-center"
           >
             © {new Date().getFullYear()} Alina Galben. Realizzato con
             <motion.span
@@ -138,10 +139,15 @@ const Footer = () => {
             </motion.span>
             e React + TypeScript
           </motion.p>
-
+          <div className=" opacity-80">
+            <PolicyLinks
+            className="justify-center md:justify-end"
+            linkClassName="underline hover:opacity-90 text-gray-300 hover:text-white"
+            />
+          </div>
           <motion.button
             onClick={scrollToTop}
-            className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors px-4 py-2 rounded-full hover:bg-white/5"
+            className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors px-4 py-2 rounded-full hover:bg-white/5"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -163,6 +169,8 @@ const Footer = () => {
           className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-3xl"
         />
       </div>
+
+
     </footer>
   );
 };

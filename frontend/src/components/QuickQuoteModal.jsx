@@ -2,10 +2,15 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Calculator } from 'lucide-react';
 import { submitContactForm } from '../services/api';
+import PrivacyConsent from './forms/PrivacyConsent';
+
 
 const QuickQuoteModal = ({ isOpen, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [privacyError, setPrivacyError] = useState(null);
+
 
   const [quoteData, setQuoteData] = useState({
     name: '',
@@ -50,6 +55,13 @@ const QuickQuoteModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!privacyAccepted) {
+      setPrivacyError("Devi accettare Privacy e Cookie Policy per continuare.");
+      return;
+    }
+    setPrivacyError(null);
+
     setIsSubmitting(true);
     
     try {
@@ -90,6 +102,9 @@ const QuickQuoteModal = ({ isOpen, onClose }) => {
           features: []
         });
         setSubmitStatus(null);
+        setPrivacyAccepted(false);
+        setPrivacyError(null);
+
       }, 2000);
     } catch (error) {
       console.error('Quote submission error:', error);
@@ -103,6 +118,9 @@ const QuickQuoteModal = ({ isOpen, onClose }) => {
     if (!isSubmitting) {
       onClose();
       setSubmitStatus(null);
+      setPrivacyAccepted(false);
+      setPrivacyError(null);
+
     }
   };
 
@@ -293,6 +311,18 @@ const QuickQuoteModal = ({ isOpen, onClose }) => {
                     </select>
                   </div>
                 </div>
+
+                <PrivacyConsent
+                  checked={privacyAccepted}
+                  onChange={(v) => {
+                    setPrivacyAccepted(v);
+                    if (v) setPrivacyError(null);
+                  }}
+                  error={privacyError}
+                  textClassName="text-gray-700"
+                  disabled={status === 'sending'}
+                />
+
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-4">
                   <button

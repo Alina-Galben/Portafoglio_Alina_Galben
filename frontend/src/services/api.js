@@ -2,6 +2,16 @@
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3020';
 
 
+class ApiError extends Error {
+  constructor(message, { status, data, endpoint } = {}) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.data = data;
+    this.endpoint = endpoint;
+  }
+}
+
 const fetchJSON = async (endpoint, options = {}) => {
   const config = {
     headers: {
@@ -15,15 +25,19 @@ const fetchJSON = async (endpoint, options = {}) => {
     config.body = JSON.stringify(config.body);
   }
 
+  const url = `${API_BASE_URL}${endpoint}`;
+
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-    
+    const response = await fetch(url, config);
+
+    const data = await response.json().catch(() => ({}));
+
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP Error: ${response.status}`);
+      const message = data?.message || `HTTP Error: ${response.status}`;
+      throw new ApiError(message, { status: response.status, data, endpoint });
     }
 
-    return await response.json();
+    return data;
   } catch (error) {
     console.error('API Error:', error);
     throw error;

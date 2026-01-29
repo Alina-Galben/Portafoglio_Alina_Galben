@@ -69,67 +69,14 @@ const Hero = () => {
   const skills = ['React', 'Node.js', 'MongoDB', 'TailwindCSS', 'Express', 'JavaScript'];
 
   return (
-    <section className="min-h-screen bg-linear-to-br from-violet-50 via-yellow-50 to-rose-50 relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute top-1/4 left-1/4 w-64 h-64 bg-violet-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 180, 360],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-        <motion.div
-          className="absolute top-1/3 right-1/4 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            rotate: [360, 180, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-rose-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"
-          animate={{
-            scale: [1, 1.3, 1],
-            rotate: [0, -180, -360],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-      </div>
-
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute text-violet-300 text-sm font-mono opacity-20"
-            style={{ top: `${20 + i * 15}%`, left: `${10 + i * 20}%`, }}
-            animate={{ x: [0, 100, 0], opacity: [0.2, 0.5, 0.2], }}
-            transition={{ duration: 10 + i * 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            {`<${['div', 'span', 'h1', 'section', 'article'][i]}>`}
-          </motion.div>
-        ))}
-      </div>
+    <section className="min-h-screen bg-[#f6f3ee] relative overflow-hidden">
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[80vh]"
           variants={containerVariants}
           initial="hidden"
-          animate="visible"
-        >
+          animate="visible">
           <div className="text-center lg:text-left order-2 lg:order-1">
             <motion.div variants={itemVariants} className="mb-6">
               <motion.h1 
@@ -139,7 +86,7 @@ const Hero = () => {
                 transition={{ duration: 0.8, ease: "easeOut" }}
               >
                 Ciao, sono{' '}
-                <span className="bg-linear-to-r from-violet-600 via-rose-500 to-yellow-500 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-red-500 to-yellow-500 bg-clip-text text-transparent">
                   Alina Galben
                 </span>{' '}
                 <motion.span
@@ -157,7 +104,7 @@ const Hero = () => {
               
               <div className="h-16 flex items-center justify-center lg:justify-start">
                 <motion.p 
-                  className="text-2xl md:text-3xl font-semibold text-violet-600"
+                  className="text-2xl md:text-3xl font-semibold text-violet-800"
                   key={currentRoleIndex}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -165,7 +112,7 @@ const Hero = () => {
                 >
                   {typewriterText}
                   <motion.span
-                    className="inline-block ml-1 w-1 h-8 bg-violet-600"
+                    className="inline-block ml-1 w-1 h-8 bg-violet-800"
                     animate={{ opacity: [1, 0] }}
                     transition={{ 
                       duration: 0.8,
@@ -181,7 +128,7 @@ const Hero = () => {
 
             <motion.p 
               variants={itemVariants}
-              className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0"
+              className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0"
             >
               Costruisco esperienze digitali moderne, scalabili e intuitive. 
               Appassionata di tecnologia e innovazione, trasformo idee in soluzioni 
@@ -195,7 +142,7 @@ const Hero = () => {
               {skills.map((skill, index) => (
                 <motion.span
                   key={skill}
-                  className="px-4 py-2 bg-white/80 backdrop-blur-sm border border-violet-200 rounded-full text-sm font-medium text-violet-700 shadow-sm"
+                  className="px-4 py-2 bg-white/80 backdrop-blur-sm border border-violet-300 rounded-full text-sm font-medium text-violet-700 shadow-sm"
                   whileHover={{ scale: 1.05, y: -2 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -209,37 +156,36 @@ const Hero = () => {
 
             <motion.div 
               variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8"
-            >
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
               <motion.button
                 onClick={() => setIsQuoteModalOpen(true)}
-                className="inline-flex items-center px-8 py-4 bg-linear-to-r from-violet-600 to-rose-500 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                className="inline-flex items-center px-6 py-4 bg-linear-to-r from-violet-600 to-violet-700 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
-                Chiedi Preventivo
+                Preventivo
                 <ArrowRight className="w-5 h-5 ml-2" />
               </motion.button>
 
               <motion.button
                 onClick={() => setIsCollaborationModalOpen(true)}
-                className="inline-flex items-center px-8 py-4 bg-white text-violet-600 font-semibold rounded-full border-2 border-violet-600 hover:bg-violet-50 transition-all duration-300"
+                className="inline-flex items-center px-6 py-4 bg-white text-violet-600 font-bold rounded-full border-2 border-violet-600 hover:bg-violet-50 transition-all duration-300"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <HandHeart className="w-5 h-5 mr-2" />
-                Collabora con me
+                Collabora
               </motion.button>
 
               <motion.button
                 onClick={() => navigate('/projects')}
-                className="inline-flex items-center px-8 py-4 bg-linear-to-r from-yellow-500 to-orange-500 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                className="inline-flex items-center px-6 py-4 bg-orange-500 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <FolderOpen className="w-5 h-5 mr-2" />
-                Guarda i miei progetti
+                Progetti
               </motion.button>
             </motion.div>
             
@@ -274,8 +220,7 @@ const Hero = () => {
 
           <motion.div 
             variants={itemVariants}
-            className="relative order-1 lg:order-2 flex justify-center"
-          >
+            className="relative order-1 lg:order-2 flex justify-center">
             <div className="relative">
               <motion.div
                 className="relative w-72 h-72 md:w-96 md:h-96 lg:w-[420px] lg:h-[420px]"
@@ -287,7 +232,7 @@ const Hero = () => {
                   <div className="w-full h-full rounded-full bg-white p-3">
                     <div className="w-full h-full rounded-full bg-linear-to-br from-violet-100 to-rose-100 flex items-center justify-center overflow-hidden">
                       <img 
-                        src="/alina-avatar.png" 
+                        src="/alina-avatar.webp" 
                         alt="Alina Galben" 
                         className="w-full h-full object-cover rounded-full"
                       />

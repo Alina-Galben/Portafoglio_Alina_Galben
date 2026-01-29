@@ -156,7 +156,7 @@ const BlogDetailPage: React.FC = () => {
 
   if (error || !post) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-8">
+      <div className="min-h-screen bg-[#f6f3ee] pt-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-16">
             <div className="text-6xl mb-4">🔍</div>
@@ -223,7 +223,7 @@ const BlogDetailPage: React.FC = () => {
         <link rel="canonical" href={window.location.href} />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 pt-10">
+      <div className="min-h-screen bg-[#f6f3ee] pt-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-2 text-sm text-gray-500 mb-8 pt-8 sm:pt-0">
             <button

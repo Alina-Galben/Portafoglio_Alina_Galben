@@ -139,7 +139,7 @@ const ProjectsPage: React.FC = () => {
           <meta name="description" content="Scopri i progetti realizzati da Alina Galben: applicazioni web moderne, dashboard interattive e soluzioni full-stack con React, Node.js e tecnologie all'avanguardia." />
         </Helmet>
         
-        <div className="min-h-screen bg-gray-50 pt-8">
+        <div className="min-h-screen bg-[#f6f3ee] pt-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionTitle
               emoji="💼"
@@ -179,7 +179,7 @@ const ProjectsPage: React.FC = () => {
           <meta name="description" content="Scopri i progetti realizzati da Alina Galben: applicazioni web moderne, dashboard interattive e soluzioni full-stack." />
         </Helmet>
         
-        <div className="min-h-screen bg-gray-50 pt-8">
+        <div className="min-h-screen bg-[#f6f3ee] pt-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionTitle
               emoji="💼"
@@ -239,7 +239,7 @@ const ProjectsPage: React.FC = () => {
         <link rel="canonical" href="/progetti" />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 pt-8">
+      <div className="min-h-screen bg-[#f6f3ee] pt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionTitle
             emoji="💼"
@@ -412,7 +412,7 @@ const ProjectsPage: React.FC = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
-                className="bg-linear-to-r from-purple-600 via-pink-600 to-red-600 rounded-2xl p-10 md:p-16 text-center text-white mb-16"
+                className="bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 rounded-2xl p-10 md:p-16 text-center text-white mb-16"
               >
                 <h2 className="text-4xl md:text-5xl font-bold mb-6">
                   Ti piace quello che vedi?

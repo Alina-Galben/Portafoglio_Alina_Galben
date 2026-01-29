@@ -67,7 +67,7 @@ const ServicesPage: React.FC = () => {
         <link rel="canonical" href="/servizi" />
       </Helmet>
 
-      <section className="min-h-screen bg-linear-to-b from-blue-50 to-indigo-50 pt-8">
+      <section className="min-h-screen bg-[#f6f3ee] pt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionTitle
             emoji="💡"
@@ -110,7 +110,7 @@ const ServicesPage: React.FC = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="bg-linear-to-r from-purple-600 via-pink-600 to-red-600 rounded-2xl p-8 md:p-12 text-center text-white mb-16"
+            className="bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 rounded-2xl p-8 md:p-12 text-center text-white mb-16"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Pronto a trasformare la tua idea in realtà?

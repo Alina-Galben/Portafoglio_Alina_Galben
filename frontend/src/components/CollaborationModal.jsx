@@ -2,11 +2,16 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Briefcase, User, Send } from 'lucide-react';
 import { submitContactForm } from '../services/api';
+import PrivacyConsent from './forms/PrivacyConsent';
+
 
 const CollaborationModal = ({ isOpen, onClose }) => {
   const [step, setStep] = useState('choice');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [privacyError, setPrivacyError] = useState(null);
+
 
   const [projectData, setProjectData] = useState({
     name: '',
@@ -27,6 +32,12 @@ const CollaborationModal = ({ isOpen, onClose }) => {
 
   const handleProjectSubmit = async (e) => {
     e.preventDefault();
+    if (!privacyAccepted) {
+      setPrivacyError("Devi accettare Privacy e Cookie Policy per continuare.");
+      return;
+    }
+    setPrivacyError(null);
+
     setIsSubmitting(true);
     
     try {
@@ -57,6 +68,9 @@ const CollaborationModal = ({ isOpen, onClose }) => {
         setStep('choice');
         setProjectData({ name: '', email: '', projectIdea: '', timeline: '', budget: '' });
         setSubmitStatus(null);
+        setPrivacyAccepted(false);
+        setPrivacyError(null);
+
       }, 2000);
     } catch (error) {
       console.error('Project submission error:', error);
@@ -68,6 +82,12 @@ const CollaborationModal = ({ isOpen, onClose }) => {
 
   const handleJobSubmit = async (e) => {
     e.preventDefault();
+    if (!privacyAccepted) {
+      setPrivacyError("Devi accettare Privacy e Cookie Policy per continuare.");
+      return;
+    }
+    setPrivacyError(null);
+
     setIsSubmitting(true);
     
     try {
@@ -100,6 +120,9 @@ const CollaborationModal = ({ isOpen, onClose }) => {
         setStep('choice');
         setJobData({ name: '', email: '', company: '', position: '', jobDescription: '', requirements: '' });
         setSubmitStatus(null);
+        setPrivacyAccepted(false);
+        setPrivacyError(null);
+
       }, 2000);
     } catch (error) {
       console.error('Job submission error:', error);
@@ -114,6 +137,9 @@ const CollaborationModal = ({ isOpen, onClose }) => {
       onClose();
       setStep('choice');
       setSubmitStatus(null);
+      setPrivacyAccepted(false);
+      setPrivacyError(null);
+
     }
   };
 
@@ -320,6 +346,18 @@ const CollaborationModal = ({ isOpen, onClose }) => {
                       </div>
                     </div>
 
+                    <PrivacyConsent
+                      checked={privacyAccepted}
+                      onChange={(v) => {
+                        setPrivacyAccepted(v);
+                        if (v) setPrivacyError(null);
+                      }}
+                      error={privacyError}
+                      textClassName="text-gray-700"
+                      disabled={status === 'sending'}
+                    />
+
+
                     <button
                       type="submit"
                       disabled={isSubmitting}
@@ -461,6 +499,18 @@ const CollaborationModal = ({ isOpen, onClose }) => {
                         disabled={isSubmitting}
                       />
                     </div>
+
+                    <PrivacyConsent
+                      checked={privacyAccepted}
+                      onChange={(v) => {
+                        setPrivacyAccepted(v);
+                        if (v) setPrivacyError(null);
+                      }}
+                      error={privacyError}
+                      textClassName="text-gray-700"
+                      disabled={status === 'sending'}
+                    />
+
 
                     <button
                       type="submit"

@@ -16,7 +16,7 @@ const SimpleMobilePage = ({ title, children, className = "" }) => {
   if (!isMobile) return children;
 
   return (
-    <div className={`min-h-screen bg-gray-50 ${className}`}>
+    <div className={`min-h-screen bg-[#f6f3ee] ${className}`}>
       <div className="bg-linear-to-r from-violet-600 to-purple-700 text-white p-6 text-center shadow-md">
         <h1 className="text-xl font-bold">{title}</h1>
       </div>

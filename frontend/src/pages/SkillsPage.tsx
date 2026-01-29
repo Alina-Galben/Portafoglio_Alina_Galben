@@ -143,7 +143,7 @@ const SkillsPage: React.FC = () => {
         <link rel="canonical" href="/skills" />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 pt-8">
+      <div className="min-h-screen bg-[#f6f3ee] pt-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <SectionTitle
@@ -186,7 +186,7 @@ const SkillsPage: React.FC = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1 }}
-            className="bg-linear-to-r from-purple-600 via-pink-600 to-red-600 rounded-2xl p-10 md:p-12 text-center text-white mb-16 shadow-2xl shadow-purple-900/20"
+            className="bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 rounded-2xl p-10 md:p-12 text-center text-white mb-16 shadow-2xl shadow-purple-900/20"
           >
             <h2 className="text-4xl md:text-4xl font-bold mb-6">Vuoi vedere queste competenze in azione?</h2>
             <p className="text-xl md:text-xl opacity-90 mb-10 max-w-2xl mx-auto">

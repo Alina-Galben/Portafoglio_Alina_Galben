@@ -3,6 +3,8 @@ import { motion, AnimatePresence, HTMLMotionProps } from 'framer-motion';
 import { Send, Loader2, CheckCircle, AlertCircle, User, Mail, MessageSquare, Tag } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { submitContactForm } from '../services/api';
+import PrivacyConsent from './forms/PrivacyConsent';
+
 
 interface FormData {
   name: string;
@@ -27,6 +29,9 @@ const ContactForm: React.FC = () => {
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [isTouched, setIsTouched] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
+  const [privacyError, setPrivacyError] = useState<string | null>(null);
+
 
   const validate = useCallback(() => {
     const newErrors: typeof errors = {};
@@ -70,6 +75,12 @@ const ContactForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!privacyAccepted) {
+      setPrivacyError("Devi accettare Privacy e Cookie Policy per continuare.");
+      return toast.error("Accetta Privacy e Cookie Policy per inviare.");
+    }
+    setPrivacyError(null);
+
     setIsTouched(true);
 
     if (formData._hp) return toast.error('Spam rilevato');
@@ -93,11 +104,21 @@ const ContactForm: React.FC = () => {
         setFormData(INITIAL_DATA);
         setIsTouched(false);
         setStatus('idle');
+        setPrivacyAccepted(false);
+        setPrivacyError(null);
+
       }, 3000);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       setStatus('error');
+      const statusCode = error?.status;
+      const apiMessage = error?.message;
+
+      if (statusCode === 429) {
+        toast.error(apiMessage || 'Hai inviato troppi messaggi. Riprova tra 1-2 minuti.');
+        return;
+      }
       toast.error('Si è verificato un errore. Riprova.');
     }
   };
@@ -205,6 +226,18 @@ const ContactForm: React.FC = () => {
         </div>
       </div>
 
+      <PrivacyConsent
+        checked={privacyAccepted}
+        onChange={(v) => {
+          setPrivacyAccepted(v);
+          if (v) setPrivacyError(null);
+        }}
+        error={privacyError}
+        textClassName="text-gray-700"
+        disabled={status === 'sending'}
+      />
+
+
       <div className="pt-4">
         <AnimatePresence mode="wait">
           {status === 'error' && (
@@ -258,6 +291,7 @@ const ContactForm: React.FC = () => {
       <p className="text-xs text-gray-400 text-center pt-6 border-t border-gray-100">
         🔒 I tuoi dati sono al sicuro. Non verranno mai condivisi con terze parti.
       </p>
+
     </form>
   );
 };

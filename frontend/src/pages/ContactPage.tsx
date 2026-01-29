@@ -138,7 +138,7 @@ const ContactPage: React.FC = () => {
         <link rel="canonical" href="https://alinagalben.com/contact" />
       </Helmet>
 
-      <div className="min-h-screen bg-linear-to-br from-violet-50 via-yellow-50 to-rose-50 pt-8">
+      <div className="min-h-screen bg-[#f6f3ee] pt-8">
         <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
           <motion.div
             variants={containerVariants}
@@ -147,17 +147,17 @@ const ContactPage: React.FC = () => {
             className="max-w-7xl mx-auto"
           >
             <motion.div
-              className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16"
+              className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start"
             >
             <div className="space-y-8">
               <motion.div variants={itemVariants} className="text-center lg:text-left">
-                <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
                   📩 Contattami
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed">
                   Hai un progetto in mente? Vuoi collaborare o semplicemente fare una chiacchierata? 
                   <span className="block mt-2 text-purple-600 font-medium">
-                    Scrivimi e ti risponderò velocemente!
+                    Scrivimi e ti risponderò entro 24 ore lavorative!
                   </span>
                 </p>
               </motion.div>
@@ -176,7 +176,7 @@ const ContactPage: React.FC = () => {
                         target={social.name === 'Email' ? undefined : '_blank'}
                         rel={social.name === 'Email' ? undefined : 'noopener noreferrer'}
                         className={`
-                          flex items-center gap-3 px-6 py-3 bg-white rounded-xl border border-gray-200
+                          flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-gray-200
                           shadow-sm hover:shadow-lg transition-all duration-300 group
                           ${social.color} hover:scale-105 focus:ring-2 focus:ring-purple-500 focus:outline-none
                         `}
@@ -207,7 +207,7 @@ const ContactPage: React.FC = () => {
                         key={cta.id}
                         onClick={() => scrollToForm(cta.subject)}
                         className={`
-                          w-full p-8 bg-linear-to-r ${cta.gradient} text-white rounded-xl
+                          w-full p-6 bg-linear-to-r ${cta.gradient} text-white rounded-xl
                           shadow-lg hover:shadow-xl transition-all duration-300 group
                           focus:ring-2 focus:ring-purple-500 focus:outline-none
                         `}
@@ -244,31 +244,13 @@ const ContactPage: React.FC = () => {
                 </div>
               </motion.div>
 
-              <motion.div 
-                variants={itemVariants}
-                className="bg-white/80 backdrop-blur-sm rounded-xl p-6 border border-gray-200 shadow-sm"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center shrink-0">
-                    <MessageCircle className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
-                      ⚡ Risposta veloce garantita
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      Ti rispondo entro 24 ore lavorative. Per progetti urgenti, 
-                      contattami direttamente via email per una risposta ancora più rapida.
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
+             
             </div>
 
             <motion.section
               ref={formRef}
               variants={itemVariants}
-              className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden"
+              className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden self-start h-fit"
             >
               <div className="bg-linear-to-r from-purple-600 to-pink-600 p-6">
                 <h2 className="text-2xl font-bold text-white mb-2">
@@ -282,6 +264,7 @@ const ContactPage: React.FC = () => {
               <div className="p-6">
                 <ContactForm />
               </div>
+
             </motion.section>
             </motion.div>
           </motion.div>

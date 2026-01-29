@@ -17,7 +17,7 @@ export default function MobileLoading({ message = "Caricamento..." }: { message?
 
   if (!isMobile) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f6f3ee] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4" />
           <p className="text-gray-600">{message}</p>
@@ -27,7 +27,7 @@ export default function MobileLoading({ message = "Caricamento..." }: { message?
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-violet-50 to-purple-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#f6f3ee] flex items-center justify-center px-4">
       <div className="text-center max-w-xs">
         <div className="w-16 h-16 mx-auto mb-6 bg-linear-to-br from-violet-600 to-purple-700 rounded-full flex items-center justify-center">
           <span className="text-white font-bold text-xl animate-pulse">AG</span>
