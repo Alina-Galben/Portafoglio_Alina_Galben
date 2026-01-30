@@ -114,3 +114,11 @@ export const validateSearchParams = (req, res, next) => {
 
   next();
 };
+
+export const validateProjectSlug = (req, res, next) => {
+   const { slug } = req.params;
+   if (!slug) return res.status(400).json({ error: 'Missing slug' });
+   if (!/^[a-z0-9-]+$/.test(slug)) return res.status(400).json({ error: 'Invalid slug format' });
+   if (slug.length > 100) return res.status(400).json({ error: 'Slug too long' });
+   next();
+ };

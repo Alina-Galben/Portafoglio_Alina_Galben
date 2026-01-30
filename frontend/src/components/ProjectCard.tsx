@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { Github, ExternalLink } from "lucide-react";
 import { documentToPlainTextString } from "@contentful/rich-text-plain-text-renderer";
@@ -19,7 +20,9 @@ interface ProjectCardProps {
 const safeArray = <T,>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 
 export default function ProjectCard({ project }: ProjectCardProps) {
-  const { title, description, technologies, gitHubUrl, liveDemoUr: demoLink, coverImage } = project.fields;
+  const { title, description, technologies, gitHubUrl, liveDemoUr, coverImage, slug } = project.fields as any;
+
+  const navigate = useNavigate();
 
   const imageUrl = coverImage?.fields?.file?.url ? `https:${coverImage.fields.file.url}` : "";
 
@@ -31,7 +34,6 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     }
   }, [description]);
 
-  // ✅ più compatto: max 4 tech + “+N”
   const techAll = useMemo(() => safeArray<string>(technologies), [technologies]);
   const techTop = useMemo(() => techAll.slice(0, 4), [techAll]);
   const techRemaining = Math.max(0, techAll.length - techTop.length);
@@ -40,12 +42,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     <motion.article
       whileHover={{ y: -3 }}
       transition={{ type: "spring", stiffness: 260, damping: 18 }}
-      className="group relative bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden h-full flex flex-col"
+      className="group relative bg-white rounded-2xl border border-gray-100 shadow-lg overflow-hidden h-full flex flex-col cursor-pointer"
+      onClick={() => slug && navigate(`/projects/${slug}`)}
     >
-      {/* accent */}
       <div className="h-1 w-full bg-linear-to-r from-violet-600 via-fuchsia-500 to-rose-500" />
 
-      {/* image (più bassa = più compatta) */}
       <div className="relative w-full h-52 bg-gray-100 overflow-hidden">
         {imageUrl ? (
           <img
@@ -62,18 +63,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/15 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
 
-      {/* content */}
       <div className="p-4 flex flex-col grow">
         <h3 className="text-base sm:text-lg font-extrabold text-gray-900 line-clamp-2 min-h-12" title={title}>
           {title}
         </h3>
 
-        {/* descrizione più corta = meno variazione */}
         <p className="mt-2 text-gray-600 text-sm leading-relaxed line-clamp-2 min-h-10">
           {plainDescription}
         </p>
 
-        {/* ✅ TECH AREA A ALTEZZA FISSA -> niente buchi */}
         <div className="mt-3 h-10 overflow-hidden flex flex-wrap gap-2">
           {techTop.map((tech) => (
             <span
@@ -95,10 +93,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           )}
         </div>
 
-        {/* footer */}
         <div className="mt-4 grid grid-cols-2 gap-3">
           <a
             href={gitHubUrl || "#"}
+            onClick={(e) => e.stopPropagation()} 
             target="_blank"
             rel="noopener noreferrer"
             aria-disabled={!gitHubUrl}
@@ -112,13 +110,14 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           </a>
 
           <a
-            href={demoLink || "#"}
+            href={liveDemoUr || "#"}
+            onClick={(e) => e.stopPropagation()} 
             target="_blank"
             rel="noopener noreferrer"
-            aria-disabled={!demoLink}
+            aria-disabled={!liveDemoUr}
             className={[
               "inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl font-semibold text-sm transition-all",
-              demoLink
+              liveDemoUr
                 ? "bg-white border-2 border-violet-600 text-violet-700 hover:bg-violet-50"
                 : "bg-gray-100 text-gray-400 pointer-events-none border border-gray-200",
             ].join(" ")}

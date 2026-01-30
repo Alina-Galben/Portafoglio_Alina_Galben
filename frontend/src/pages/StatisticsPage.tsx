@@ -39,8 +39,8 @@ interface Project {
     description: string;
     technologies?: string[];
     coverImage?: any;
-    gitHubURL?: string;
-    liveDemoURL?: string;
+    gitHubUrl?: string;
+    liveDemoUr?: string;
     featured?: boolean;
     order?: number;
   };

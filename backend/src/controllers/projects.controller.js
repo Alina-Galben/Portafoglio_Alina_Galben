@@ -18,11 +18,12 @@ const transformProject = ({ sys, fields }) => ({
   sys: { id: sys.id, createdAt: sys.createdAt, updatedAt: sys.updatedAt },
   fields: {
     ...fields,
+    slug: fields.slug ?? sys.id,
     title: fields.title ?? 'Untitled',
     description: fields.description ?? '',
     technologies: fields.technologies ?? [],
-    gitHubURL: fields.gitHubURL ?? '',
-    liveDemoURL: fields.liveDemoURL ?? '',
+    gitHubUrl: fields.gitHubUrl ?? '',
+    liveDemoUr: fields.liveDemoUr ?? '',
     featured: fields.featured ?? false,
     order: fields.order ?? 0,
     coverImage: fields.coverImage ?? null
@@ -74,8 +75,16 @@ export const getProjectBySlug = async (req, res) => {
     const client = getClient();
     if (!client) throw new Error('Contentful not configured');
 
-    const entry = await client.getEntry(slug);
-    const project = transformProject(entry);
+    const { items } = await client.getEntries ({
+      content_type: 'project',
+      'fields.slug': slug,
+      include: 2,
+      limit: 1,
+    });
+    if (!items || items.length === 0) {
+      return res.status(404).json({ error: 'Not Found', message: 'Progetto non trovato' });
+    }
+    const project = transformProject(items[0]);
 
     cache.slugs.set(slug, { data: project, ts: Date.now() });
     res.json(project);

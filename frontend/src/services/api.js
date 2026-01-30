@@ -74,6 +74,10 @@ export const getBlogTags = async () => {
   return fetchJSON('/api/blog/tags');
 };
 
+export const getProjectBySlug = async (slug) => {
+  return fetchJSON(`/api/projects/${slug}`);
+};
+
 export default {
   submitContactForm,
   checkHealth,
@@ -81,4 +85,5 @@ export default {
   getBlogPostBySlug,
   searchBlogPosts,
   getBlogTags,
+  getProjectBySlug,
 };

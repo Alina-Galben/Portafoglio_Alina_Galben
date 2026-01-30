@@ -5,8 +5,7 @@ import {
   getProjectTechnologies, 
   getProjectBySlug 
 } from '../controllers/projects.controller.js';
-import { validateBlogParams as validateProjectSlug } from '../middleware/validate.js';
-
+import { validateProjectSlug } from '../middleware/validate.js';
 const router = Router();
 
 const projectLimiter = rateLimit({

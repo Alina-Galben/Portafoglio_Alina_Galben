@@ -248,31 +248,7 @@ const ProjectsPage: React.FC = () => {
             className="pt-8"
           />
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
-          >
-            <ElegantStatCard 
-              value={projects.length} 
-              label="Progetti Totali" 
-              color="violet" 
-              icon={<FolderOpen className="w-6 h-6" />} 
-            />
-            <ElegantStatCard 
-              value={projects.filter(p => p.fields.featured).length} 
-              label="Progetti in Evidenza" 
-              color="yellow" 
-              icon={<Star className="w-6 h-6" />} 
-            />
-            <ElegantStatCard 
-              value={Array.from(new Set(projects.flatMap(p => p.fields.technologies || []))).length} 
-              label="Tecnologie Utilizzate" 
-              color="red" 
-              icon={<Code className="w-6 h-6" />} 
-            />
-          </motion.div>
+         
 
           <AnimatePresence>
             {updateNotification && (

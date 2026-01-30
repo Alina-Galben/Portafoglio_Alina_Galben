@@ -16,12 +16,8 @@ interface ContentfulProject {
     title: string;
     description: any;
     technologies: string[];
-    // ✅ supporto entrambi i naming
     gitHubUrl?: string;
-    gitHubURL?: string;
     liveDemoUr?: string;
-    liveDemoURL?: string;
-
     coverImage?: {
       fields: {
         file: { url: string };
@@ -62,12 +58,6 @@ const safeNumber = (v: unknown, fallback: number) => {
   return Number.isFinite(n) ? n : fallback;
 };
 
-/**
- * ✅ Normalizza:
- * - se arriva array -> ok
- * - se arriva payload backend { items: [...] } -> prende items
- * - sistema alias gitHubURL/liveDemoURL -> gitHubUrl/liveDemoUr per la ProjectCard
- */
 const normalizeProjects = (data: unknown): ContentfulProject[] => {
   if (Array.isArray(data)) return data as ContentfulProject[];
 
@@ -79,19 +69,14 @@ const normalizeProjects = (data: unknown): ContentfulProject[] => {
   return [];
 };
 
-const normalizeLinksForCard = (p: ContentfulProject): ContentfulProject => {
-  const gitHubUrl = p.fields.gitHubUrl ?? p.fields.gitHubURL ?? undefined;
-  const liveDemoUr = p.fields.liveDemoUr ?? p.fields.liveDemoURL ?? undefined;
-
-  return {
-    ...p,
-    fields: {
-      ...p.fields,
-      gitHubUrl,
-      liveDemoUr,
-    },
-  };
-};
+const normalizeLinksForCard = (p: ContentfulProject): ContentfulProject => ({
+  ...p,
+  fields: {
+    ...p.fields,
+    gitHubUrl: p.fields.gitHubUrl ?? '',
+    liveDemoUr: p.fields.liveDemoUr ?? '',
+  },
+});
 
 const sortProjects = (a: ContentfulProject, b: ContentfulProject) => {
   const ao = safeNumber(a.fields.order, 9999);
@@ -152,9 +137,8 @@ const HomeFeaturedProjectsSection: React.FC = () => {
     <section className="bg-[#f6f3ee]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="bg-white/70 backdrop-blur-sm border border-white/30 rounded-3xl shadow-xl p-6 sm:p-10">
-          {/* Header */}
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-50 border border-violet-100 text-violet-700 font-semibold text-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-50 border border-violet-100 text-violet-700 font-bold text-2xl">
               <Star className="w-4 h-4" />
               <span>Featured Projects</span>
             </div>

@@ -89,19 +89,18 @@ const HomeServicesSection: React.FC = () => {
           viewport={{ once: true, amount: 0.2 }}
           className="bg-white/70 backdrop-blur-sm border border-white/30 rounded-3xl shadow-2xl p-6 sm:p-10"
         >
-          {/* Header */}
           <motion.div variants={item} className="text-center max-w-3xl mx-auto mb-10">
             
-            <h2 className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-violet-50 border border-violet-100 text-violet-700 font-bold text-4xl ">🚀 Come posso aiutarti</h2>
+            <h2 className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-violet-50 border border-violet-100 text-violet-700 font-bold text-2xl ">🚀 Come posso aiutarti</h2>
             
 
-            <h3 className="mt-6 text-2xl sm:text-5xl font-extrabold text-gray-900">
-              Soluzioni web pensate per essere usate davvero
+            <h3 className="mt-6 text-xl sm:text-4xl font-extrabold text-gray-900">
+              Sviluppo soluzioni web su misura per la realizzazione di siti e applicazioni web
               
             </h3>
 
             <p className="mt-4 text-base sm:text-lg text-gray-600 leading-relaxed">
-              In Home ti mostro solo i servizi principali. Nella pagina “Servizi” trovi il dettaglio completo.
+              Nella pagina “Servizi” trovi il dettaglio completo.
             </p>
           </motion.div>
 

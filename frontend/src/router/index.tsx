@@ -8,6 +8,7 @@ import ErrorPage from '../pages/ErrorPage';
 const HomePage = lazy(() => import('../pages/HomePage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 const ProjectsPage = lazy(() => import('../pages/ProjectsPage'));
+const ProjectDetailPage = lazy(() => import('../pages/ProjectDetailPage'));
 const BlogPage = lazy(() => import('../pages/BlogPage'));
 const BlogDetailPage = lazy(() => import('../pages/BlogDetailPage'));
 const ServicesPage = lazy(() => import('../pages/ServicesPage'));
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
       {
         path: 'projects',
         element: withSuspense(ProjectsPage),
+      },
+      {
+        path: 'projects/:slug',
+        element: withSuspense(ProjectDetailPage),
+      },
+      {
+        path: 'progetti/:slug',
+        element: withSuspense(ProjectDetailPage),
       },
       {
         path: 'blog',

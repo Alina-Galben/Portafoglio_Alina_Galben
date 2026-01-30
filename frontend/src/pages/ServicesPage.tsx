@@ -82,11 +82,11 @@ const ServicesPage: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
           >
-            <ElegantStatCard value={`${services.length}+`} label="Servizi Specializzati" color="blue" icon={<Briefcase className="w-6 h-6" />} />
-            <ElegantStatCard value="10+" label="Progetti Completati" color="green" icon={<CheckCircle className="w-6 h-6" />} />
+            
+            
             <ElegantStatCard value="100%" label="Dedizione e assistenza" color="pink" icon={<Heart className="w-6 h-6" />} />
-            <ElegantStatCard value="Disponibile" label="Per collaborazioni" color="yellow" icon={<Users className="w-6 h-6" />} />
-            <ElegantStatCard value="Sempre" label="Disponibile per nuovi progetti" color="violet" icon={<Zap className="w-6 h-6" />} />
+            <ElegantStatCard value="Disponibile" label="Per collaborazioni e nuovi progetti" color="yellow" icon={<Users className="w-6 h-6" />} />
+            
             <ElegantStatCard value="On Demand" label="Supporto su richiesta" color="red" icon={<Headphones className="w-6 h-6" />} />
           </motion.div>
 
