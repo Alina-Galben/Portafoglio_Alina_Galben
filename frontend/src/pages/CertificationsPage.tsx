@@ -3,12 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { motion, Variants } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Award, BookOpen, ArrowRight, Mail, CalendarRange, LucideIcon } from 'lucide-react';
-
 import CertificationCard from '../components/CertificationCard';
 import CourseCard from '../components/CourseCard';
 import SectionTitle from '../components/SectionTitle';
 import ElegantStatCard from '../components/ElegantStatCard';
-
+import CtaSection from '../components/common/CtaSection';
 import certificationsData from '../data/certifications.json';
 import coursesData from '../data/courses.json';
 
@@ -184,7 +183,7 @@ const CertificationsPage: React.FC = () => {
             variants={ANIMATION_VARIANTS.section}
             initial="hidden"
             animate="visible"
-            className="mb-20"
+            className="mb-8"
           >
             <div className="text-center mb-12">
               <motion.div
@@ -215,37 +214,29 @@ const CertificationsPage: React.FC = () => {
             </motion.div>
           </motion.section>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1 }}
-            className="bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 rounded-2xl p-10 md:p-12 text-center text-white mb-16 shadow-2xl shadow-violet-900/20"
-          >
-            <h2 className="text-4xl font-bold mb-6">Interessato alle mie competenze?</h2>
-            <p className="text-xl opacity-90 mb-10 max-w-2xl mx-auto">
-              Ogni certificazione rappresenta ore di studio, progetti pratici e competenze concrete. Parliamo di come posso aiutarti!
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/projects')}
-                className="inline-flex items-center bg-white text-violet-600 font-bold py-5 px-10 rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30 text-lg"
-              >
-                Vedi i miei progetti
-                <ArrowRight className="ml-3 w-6 h-6" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/contact')}
-                className="inline-flex items-center bg-transparent border-2 border-white text-white font-bold py-5 px-10 rounded-xl hover:bg-white hover:text-violet-600 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30 text-lg"
-              >
-                <Mail className="mr-3 w-6 h-6" />
-                Contattami
-              </motion.button>
-            </div>
-          </motion.div>
+          <CtaSection
+            id="cetification-cta"
+            title="Interessato alle mie competenze?"
+            description="Ogni certificazione rappresenta ore di studio, progetti pratici e competenze concrete. Parliamo di come posso aiutarti!"
+            gradient="from-violet-600 via-purple-600 to-blue-600"
+            actions={[
+              {
+                label: 'Esplora i progetti',
+                onClick: () => navigate('/projects'),
+                icon: ArrowRight,
+                className:
+                  'px-7 py-4 rounded-full bg-white text-violet-700 border-2 border-white hover:bg-violet-50 transition-all shadow-sm',
+              },
+              {
+                label: 'Contattami',
+                onClick: () => navigate('/contact'),
+                icon: Mail,
+                className:
+                  'px-7 py-4 rounded-full bg-white/20 text-white border-2 border-white hover:bg-white/30 transition-all shadow-sm',
+              },
+            ]}
+          />
+
 
         </div>
       </div>

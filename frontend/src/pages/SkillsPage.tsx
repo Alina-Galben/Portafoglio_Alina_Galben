@@ -2,13 +2,13 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, Variants } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Code, Heart, ArrowRight, Cpu, MessageCircle, Calendar, LucideIcon } from 'lucide-react';
-
+import { Code, Heart, ArrowRight, Cpu, MessageCircle, Calendar } from 'lucide-react';
 import SkillCard from '../components/SkillCard';
 import SectionTitle from '../components/SectionTitle';
 import ElegantStatCard from '../components/ElegantStatCard';
 import technicalSkillsData from '../data/technicalSkills.json';
 import softSkillsData from '../data/softSkills.json';
+import CtaSection from '../components/common/CtaSection';
 
 interface Skill {
   id: number;
@@ -81,7 +81,7 @@ const SkillCategorySection: React.FC<SkillSectionProps> = ({
       variants={ANIMATION.section}
       initial="hidden"
       animate="visible"
-      className="mb-20"
+      className="mb-8"
     >
       <div className="text-center mb-12">
         <motion.div
@@ -182,27 +182,20 @@ const SkillsPage: React.FC = () => {
             delayOffset={0.8}
           />
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1 }}
-            className="bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 rounded-2xl p-10 md:p-12 text-center text-white mb-16 shadow-2xl shadow-purple-900/20"
-          >
-            <h2 className="text-4xl md:text-4xl font-bold mb-6">Vuoi vedere queste competenze in azione?</h2>
-            <p className="text-xl md:text-xl opacity-90 mb-10 max-w-2xl mx-auto">
-              Esplora i miei progetti per vedere come applico queste competenze nella creazione di soluzioni web innovative.
-            </p>
-            
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/projects')}
-              className="inline-flex items-center bg-white text-purple-600 font-bold py-5 px-10 rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30 text-lg"
-            >
-              Esplora i miei progetti
-              <ArrowRight className="ml-2 w-6 h-6" />
-            </motion.button>
-          </motion.div>
+          <CtaSection
+            id="skils-cta"
+            title="Vuoi vedere queste competenze in azione?"
+            description="Esplora i miei progetti per vedere come applico queste competenze."
+            gradient="from-violet-600 via-purple-600 to-blue-600"
+            actions={[
+              {
+                label: 'Iniziamo a collaborare',
+                onClick: () => navigate('/contact'),
+                className: 'py-5 px-10 rounded-xl bg-white text-purple-600 hover:shadow-xl transition-all duration-300 text-lg',
+              },
+            ]}
+          />
+
 
         </div>
       </div>

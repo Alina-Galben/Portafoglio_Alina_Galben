@@ -18,7 +18,6 @@ export const handleContactSubmission = async (req, res) => {
       });
     }
 
-    // Fire-and-forget pattern for non-critical auto-reply
     sendAutoReply({ name, email, subject })
       .catch(err => logError('Auto-reply dispatch error', err, { email }));
 

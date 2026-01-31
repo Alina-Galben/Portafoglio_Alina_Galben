@@ -16,7 +16,6 @@ import eventsRoutes from './src/routes/events.routes.js';
 import healthRoutes from './src/routes/health.routes.js';
 import * as blogController from './src/controllers/blog.controller.js';
 
-// 1. Load env vars immediately
 dotenv.config();
 
 const app = express();
@@ -24,7 +23,6 @@ const server = createServer(app);
 
 const { PORT = 3020, NODE_ENV = 'development' } = process.env;
 
-// 2. Core Middleware
 app.set('trust proxy', 1);
 app.use(timeoutHandler(30_000));
 configureSecurity(app);
@@ -38,7 +36,6 @@ app.use(express.json({
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/api', generalLimiter);
 
-// 3. Request Logging
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
@@ -54,7 +51,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// 4. Routes
 app.use('/api/contact', contactRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/projects', projectsRoutes);
@@ -62,7 +58,6 @@ app.use('/api/contentful-webhook', webhookRoutes);
 app.use('/api/events', eventsRoutes);
 app.use('/health', healthRoutes);
 
-// Contentful Proxy (Lazy Init handled inside controller/here)
 app.get('/api/contentful/entries', async (req, res, next) => {
   const { content_type } = req.query;
   if (content_type === 'blogPost') return blogController.getAllBlogPosts(req, res);
@@ -86,7 +81,6 @@ app.get(['/', '/api'], (_, res) => res.json({
   timestamp: new Date().toISOString()
 }));
 
-// 5. Errors & Shutdown
 app.use(notFoundHandler);
 app.use(errorHandler);
 

@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { format, parseISO, startOfMonth, eachMonthOfInterval, subMonths } from 'date-fns';
 import { it } from 'date-fns/locale';
-import { Tag, ArrowRight, RefreshCw } from 'lucide-react';
+import { Tag, ArrowRight, Mail, RefreshCw } from 'lucide-react';
 import useSWR from 'swr';
 import { toast } from 'react-hot-toast';
-
+import CtaSection from '../components/common/CtaSection';
 import StatCard from '../components/StatCard';
 import StatChart from '../components/StatChart';
 import LegendPill from '../components/LegendPill';
@@ -165,7 +165,6 @@ const StatisticsPage: React.FC = () => {
     .slice(0, 6)
     .map(([name, value]) => ({ name, value }));
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -404,39 +403,28 @@ const StatisticsPage: React.FC = () => {
             </div>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.4 }}
-            className="bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 rounded-2xl p-8 md:p-12 text-center text-white mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Crescita continua, risultati concreti
-            </h2>
-            <p className="text-lg md:text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-              Ogni numero racconta una storia di dedizione, apprendimento e passione per lo sviluppo web. Scopri di più sui miei progetti!
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/projects')}
-                className="inline-flex items-center bg-white text-violet-600 font-bold py-4 px-8 rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30"
-              >
-                Esplora i progetti
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => navigate('/contact')}
-                className="inline-flex items-center bg-transparent border-2 border-white text-white font-bold py-4 px-8 rounded-xl hover:bg-white hover:text-violet-600 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30"
-              >
-                Parliamone insieme
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </motion.button>
-            </div>
-          </motion.div>
+          <CtaSection
+            id="statistic-cta"
+            title="Crescita continua, risultati concreti"
+            description="Ogni numero racconta una storia di dedizione, apprendimento e passione per lo sviluppo web."
+            gradient="from-violet-600 via-purple-600 to-blue-600"
+            actions={[
+              {
+                label: 'Esplora i progetti',
+                onClick: () => navigate('/projects'),
+                icon: ArrowRight,
+                className: 'py-5 px-10 rounded-xl bg-white text-purple-600 hover:shadow-xl transition-all duration-300 text-lg',
+              },
+              {
+                label: 'Parliamone insieme',
+                onClick: () => navigate('/contact'),
+                icon: Mail,
+                className: 'py-5 px-10 rounded-xl bg-white text-purple-600 hover:shadow-xl transition-all duration-300 text-lg',
+              },
+            ]}
+          />
+
+          
         </div>
       </div>
     </>

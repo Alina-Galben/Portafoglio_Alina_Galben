@@ -39,7 +39,6 @@ const StatCard: React.FC<StatCardProps> = ({
     const animate = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
-      // EaseOutQuart
       const val = Math.floor((1 - Math.pow(1 - progress, 4)) * value);
       
       setDisplayValue(val);

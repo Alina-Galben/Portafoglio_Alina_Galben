@@ -103,7 +103,7 @@ const HomeFeaturedProjectsSection: React.FC = () => {
         setError(null);
       }
 
-      const res = await fetchProjects(); // può tornare array (frontend) oppure payload (se un domani lo cambi)
+      const res = await fetchProjects();
       const normalized = normalizeProjects(res).map(normalizeLinksForCard);
 
       setProjects(normalized);

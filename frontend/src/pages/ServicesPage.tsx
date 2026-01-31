@@ -6,7 +6,8 @@ import ServiceCard from '../components/ServiceCard';
 import SectionTitle from '../components/SectionTitle';
 import servicesData from '../data/services.json';
 import ElegantStatCard from '../components/ElegantStatCard';
-import { Briefcase, CheckCircle, Users, Zap, Headphones, Heart } from 'lucide-react';
+import CtaSection from '../components/common/CtaSection';
+import { Users, Headphones, Heart } from 'lucide-react';
 
 interface Service {
   id: number;
@@ -94,7 +95,7 @@ const ServicesPage: React.FC = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-16"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-12"
           >
             {services.map((service) => (
               <motion.div
@@ -109,30 +110,8 @@ const ServicesPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 rounded-2xl p-8 md:p-12 text-center text-white mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Pronto a trasformare la tua idea in realtà?
-            </h2>
-            <p className="text-lg md:text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-              Contattami per una consulenza gratuita e scopri come posso aiutarti a raggiungere i tuoi obiettivi digitali.
-            </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/contact')}
-              className="bg-white text-purple-600 font-bold py-4 px-8 rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30"
-            >
-              Inizia il tuo progetto
-            </motion.button>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1 }}
-            className="text-center pb-16"
+            className="text-center pb-4"
           >
             <h3 className="text-3xl font-bold text-gray-900 mb-10">Tecnologie che utilizzo</h3>
             <div className="flex flex-wrap justify-center gap-6">
@@ -152,6 +131,20 @@ const ServicesPage: React.FC = () => {
               ))}
             </div>
           </motion.div>
+
+          <CtaSection
+            id="services-cta"
+            title="Pronto a trasformare la tua idea in realtà?"
+            description="Contattami per una consulenza gratuita"
+            gradient="from-violet-600 via-purple-600 to-blue-600"
+            actions={[
+              {
+                label: 'Inizia il tuo progetto',
+                onClick: () => navigate('/contact'),
+                className: 'py-4 px-8 rounded-xl bg-white text-purple-600 hover:shadow-xl transition-all duration-300 text-lg',
+              },
+            ]}
+          />
         </div>
       </section>
     </>

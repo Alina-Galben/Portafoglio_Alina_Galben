@@ -5,7 +5,6 @@ import { asyncHandler } from '../middleware/errors.js';
 
 const router = Router();
 
-// Raw body capture is handled by global express.json() verify hook in server.js
 router.post('/', webhookLimiter, asyncHandler(handleContentfulWebhook));
 router.get('/stats', asyncHandler(getWebhookStats));
 router.post('/test', asyncHandler(testWebhook));

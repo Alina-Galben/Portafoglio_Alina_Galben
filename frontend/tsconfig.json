@@ -12,12 +12,10 @@
     "noEmit": true,
     "jsx": "react-jsx",
     
-    /* Configurazione Ibrida JS/TS */
     "strict": true,
-    "noImplicitAny": false,      /* Permette di non essere troppo severi */
-    "allowJs": true,             /* FONDAMENTALE: Accetta i file .jsx e .js */
+    "noImplicitAny": false,
+    "allowJs": true, 
     
-    /* Tipi globali */
     "types": ["vite/client", "node"]
   },
   "include": ["src"]

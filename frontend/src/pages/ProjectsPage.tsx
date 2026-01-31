@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { RefreshCw, Calendar, Zap, AlertCircle, Wifi, WifiOff, Briefcase, FolderOpen, Star, Code } from 'lucide-react';
+import { RefreshCw, Calendar, Zap, AlertCircle, Wifi, WifiOff, Briefcase } from 'lucide-react';
 import { fetchProjects } from '../contentfulClient';
 import useSSE from '../hooks/useSSE';
 import ProjectCard from '../components/ProjectCard';
 import SectionTitle from '../components/SectionTitle';
-import ElegantStatCard from '../components/ElegantStatCard';
+import CtaSection from '../components/common/CtaSection';
 
 interface ContentfulProject {
   sys: {
@@ -326,7 +326,6 @@ const ProjectsPage: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.7 }}
-                className="mb-8"
               >
                 <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
                   📁 Tutti i Progetti
@@ -335,7 +334,7 @@ const ProjectsPage: React.FC = () => {
                   initial="hidden"
                   animate="visible"
                   variants={containerVariants}
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-12"
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-8"
                 >
                   {projects.map((project) => (
                     <motion.div
@@ -352,7 +351,7 @@ const ProjectsPage: React.FC = () => {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.2 }}
-                className="flex flex-col sm:flex-row items-center justify-between mb-12 p-3 sm:p-4 bg-white rounded-lg shadow-sm border border-gray-100"
+                className="flex flex-col sm:flex-row items-center justify-between p-3 sm:p-4 bg-white rounded-lg shadow-sm border border-gray-100"
               >
                 <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
                   <div className="flex items-center space-x-2">
@@ -384,27 +383,19 @@ const ProjectsPage: React.FC = () => {
                 </button>
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-                className="bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 rounded-2xl p-10 md:p-16 text-center text-white mb-16"
-              >
-                <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                  Ti piace quello che vedi?
-                </h2>
-                <p className="text-xl md:text-2xl opacity-90 mb-10 max-w-2xl mx-auto">
-                  Questi sono solo alcuni dei progetti che ho realizzato. Contattami per discutere del tuo prossimo progetto!
-                </p>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => navigate('/contact')}
-                  className="bg-white text-purple-600 font-bold py-5 px-10 rounded-xl hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-white/30 text-lg"
-                >
-                  Iniziamo a collaborare
-                </motion.button>
-              </motion.div>
+              <CtaSection
+                id="projects-cta"
+                title="Ti piace quello che vedi?"
+                description="Questi sono solo alcuni dei progetti che ho realizzato. Contattami per discutere del tuo prossimo progetto!"
+                gradient="from-violet-600 via-purple-600 to-blue-600"
+                actions={[
+                  {
+                    label: 'Iniziamo a collaborare',
+                    onClick: () => navigate('/contact'),
+                    className: 'py-5 px-10 rounded-xl bg-white text-purple-600 hover:shadow-xl transition-all duration-300 text-lg',
+                  },
+                ]}
+              />
             </>
           )}
         </div>
